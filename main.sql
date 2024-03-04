@@ -3,7 +3,7 @@
 DROP DATABASE IF EXISTS team;
 CREATE DATABASE team;
 USE team;
--- set userID to automatically increment for now.
+-- Any tables with numeric IDs automatically increment for now. TODO: Some other method?
 CREATE TABLE user (
     userID INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(20),
@@ -55,6 +55,7 @@ CREATE TABLE ProjectFiles(
     file LONGBLOB,
     PRIMARY KEY (projectID, filename)
 );
+-- TODO: Ensure that student exists in students table?
 CREATE TABLE StudentPreferences(
     netID CHAR(8),
     FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
