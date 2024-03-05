@@ -29,12 +29,16 @@ CREATE TABLE Project(
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     description VARCHAR(255),
     projectName VARCHAR(50) UNIQUE,
-    teamSize INT CHECK(teamSize >= 1 AND teamSize <= 6)
+    teamSize INT CHECK(
+        teamSize >= 1
+        AND teamSize <= 6
+    )
 );
 CREATE TABLE Team(
     teamID INT PRIMARY KEY AUTO_INCREMENT,
     projectID INT,
-    FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE SET NULL
+    FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE
+    SET NULL
 );
 CREATE TABLE student(
     netID CHAR(8) PRIMARY KEY UNIQUE,
@@ -42,7 +46,8 @@ CREATE TABLE student(
     resumeFile BLOB,
     phoneNumber VARCHAR(10) CHECK (phoneNumber LIKE '(\+\d+)? \d{3}-\d{3}-\d{4}'),
     teamID INT,
-    FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE SET NULL
+    FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
+    SET NULL
 );
 CREATE TABLE Faculty(
     netID CHAR(8),
@@ -61,7 +66,8 @@ CREATE TABLE StudentPreferences(
     FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
-    preference INT,  -- Limit? Maybe -5 to +5?
+    preference INT,
+    -- Limit? Maybe -5 to +5?
     PRIMARY KEY (netID, projectID)
 );
 CREATE TABLE Skills(
@@ -89,7 +95,8 @@ CREATE TABLE TeamPreferences(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
-    preference INT,  -- TODO: Limit? Maybe -5 to +5?
+    preference INT,
+    -- TODO: Limit? Maybe -5 to +5?
     PRIMARY KEY (teamID, projectID)
 );
 CREATE TABLE PendingInvites(
