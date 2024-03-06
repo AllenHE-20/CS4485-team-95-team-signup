@@ -1,0 +1,12 @@
+﻿*{
+        margin: 0;
+        padding: 0;
+}
+.header {
+    min-height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(90deg, rgba(121,121,121,0.2) 0%, rgba(117,117,117,0.2) 35%, rgba(51,51,51,0.2) 100%), url(images/UTD-Mall-1920.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
