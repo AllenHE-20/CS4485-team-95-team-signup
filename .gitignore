@@ -1,0 +1,7 @@
+# Editor configuration
+.vscode/
+.vs/
+
+# OS files
+.DS_Store
+._*
