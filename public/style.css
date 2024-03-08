@@ -4,13 +4,8 @@
     font-family: 'Helvetica Neue', sans-serif;
 }
 
-.header {
-    min-height: 100vh;
-    width: 100%;
+.utd-mall {
     background-image: linear-gradient(90deg, rgba(121,121,121,0.2) 0%, rgba(117,117,117,0.2) 35%, rgba(51,51,51,0.2) 100%), url(images/UTD-Mall-1920.jpg);
-    background-position: center;
-    background-size: cover;
-    position: relative;
 }
 
 nav{
@@ -58,11 +53,15 @@ nav{
     width: 100%;
 }
 
-.background-logo{
-    flex: 1;
+.index-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.index-logo-box {
     position: absolute;
     top: 20%;
-    left: 33%;
 }
 
 .navbar {
