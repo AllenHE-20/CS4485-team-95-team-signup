@@ -81,3 +81,66 @@ nav{
     flex: 1;
     text-align: left;
 }
+
+body{
+    background-color:#0d4a1b;
+}
+
+.userPage{
+    background-color: #fff3f3;
+    width: 90%;
+    margin: auto;
+    padding-top: 10px;
+    text-align: center;
+    position: absolute;
+    top:15%;
+    left: 5%;
+    border-radius: 10px;
+}
+
+.userInfo{
+    padding: 20px;
+}
+
+.user-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-col{
+    align-items: center;
+    margin-right: 30px;
+}
+
+.user-col p{
+    padding:10px;
+}
+
+.user-row h3{
+    text-align: center;
+    padding: 20px;
+}
+
+.user-row p{
+    display: flex;
+}
+
+.invite-link{
+    padding:10px;
+}
+
+.projects{
+    padding: 10px;
+}
+
+.projects h3{
+    padding:10px;
+}
+
+.add-info{
+    padding: 10px;
+}
+.add-info p{
+    padding: 10px;
+}
