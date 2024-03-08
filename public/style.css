@@ -69,12 +69,6 @@ nav{
     height: 2vh;
 }
 
-.linkButtons{
-    position: absolute;
-    top: 30%;
-    left: 10%;
-}
-
 .setting-links li{
     display: inline;
     flex: 1;
@@ -85,7 +79,7 @@ body{
     background-color:#0d4a1b;
 }
 
-.userPage{
+main {
     background-color: #fff3f3;
     width: 90%;
     margin: auto;
