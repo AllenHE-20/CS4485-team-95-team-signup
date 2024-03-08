@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class = "header">
+    <nav class="navbar">
+        <a href="index.html"><img src="images/LOGO.png" width="200" height="85"></a>
+
+        <div class="nav-links">
+            <ul>
+                <li><a href="">HOME</a></li>
+                <li><a href="">PROJECT LIST</a></li>
+                <li><a href="">TEAM LIST</a></li>
+                <li><a href="">STUDENT LIST</a></li>
+                <li><a href="">PROFILE</a></li>
+            </ul>
+        </div>        
+    </nav>
+</section>
+
+<main>
+    <form action="profile.html" method="post" class="pref-form" onsubmit="prefFormLog()">
+        <div class="outsidePrefs">
+            <h3>Enter outside project preferences:</h3>
+            <div class="formField">
+                <label for="preference1">Enter your 1st external project.</label>
+                <input type="number" name="preference1" id="preference1" required />
+            </div>
+            <div class="formField">
+                <label for="preference2">Enter your 2nd external project.</label>
+                <input type="number" name="preference2" id="preference2" required />
+            </div>
+            <div class="formField">
+                <label for="preference3">Enter your 3rd external project.</label>
+                <input type="number" name="preference3" id="preference3" required />
+            </div>
+            <div class="formField">
+                <label for="preference4">Enter your 4th external project.</label>
+                <input type="number" name="preference4" id="preference4" required />
+            </div>
+            <div class="formField">
+                <label for="preference5">Enter your 5th external project.</label>
+                <input type="number" name="preference5" id="preference5" required />
+            </div>
+        </div>
+        <div class="csPrefs">
+            <h3>Enter CS project preferences:</h3>
+            <div class="formField">
+                <label for="preference6">Enter your 1st CS project.</label>
+                <input type="number" name="preference6" id="preference6" required />
+            </div>
+            <div class="formField">
+                <label for="preference7">Enter your 2nd CS project.</label>
+                <input type="number" name="preference7" id="preference7" required />
+            </div>
+            <div class="formField">
+                <label for="preference8">Enter your 3rd CS project.</label>
+                <input type="number" name="preference8" id="preference8" required />
+            </div>
+            <div class="formField">
+                <label for="preference9">Enter your 4th CS project.</label>
+                <input type="number" name="preference9" id="preference9" required />
+            </div>
+            <div class="formField">
+                <label for="preference10">Enter your 5th CS project.</label>
+                <input type="number" name="preference10" id="preference10" required />
+            </div>
+        </div>
+        <div class="prefSubmitButton">
+            <input type="submit" value="Submit Preferences" />
+        </div>
+    </form>
+</main>
+<script src="main.js"></script>
+</body>
+</html>
