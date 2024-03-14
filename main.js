@@ -1,53 +1,18 @@
 const bodyParser = require('body-parser');
 const express = require("express");
-const Joi = require('joi');
+
+const schemas = require("./schemas");
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(express.static("public"));
 
-const preferencesSchema = Joi.object({
-    //netid: Joi.string()
-    //    .regex(/^[a-z]{3}[0-9]{5}/),
-
-    preference1: Joi.number()
-        .integer()
-        .required(),
-    preference2: Joi.number()
-        .integer()
-        .required(),
-    preference3: Joi.number()
-        .integer()
-        .required(),
-    preference4: Joi.number()
-        .integer()
-        .required(),
-    preference5: Joi.number()
-        .integer()
-        .required(),
-    preference6: Joi.number()
-        .integer()
-        .required(),
-    preference7: Joi.number()
-        .integer()
-        .required(),
-    preference8: Joi.number()
-        .integer()
-        .required(),
-    preference9: Joi.number()
-        .integer()
-        .required(),
-    preference10: Joi.number()
-        .integer()
-        .required(),
-});
-
-app.post("/submitPreferences/", urlencodedParser, (req, res) => {
+app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
     // TODO: Authenticate and determine user to update
 
-    const result = preferencesSchema.validate(req.body);
+    const result = schemas.preferences.validate(req.body);
     if (result.error)
         return res.status(400).send(result.error.details[0].message);
 
@@ -80,6 +45,22 @@ app.post("/submitPreferences/", urlencodedParser, (req, res) => {
     // Send the browser to the user's own page to view new preferences
     // TODO: Update this URL when that gets set up
     res.redirect("/user.html");
+});
+
+app.post("/invites/:teamid/respond", urlencodedParser, (req, res) => {
+    console.log("Invite response request:", req.body);
+    // TODO: Authenticate and determine user to update
+
+    const result = schemas.inviteResponse.validate(req.body);
+    if (result.error)
+        return res.status(400).send(result.error.details[0].message);
+
+    // TODO: Ensure user is not on a team if accepting
+    // TODO: Apply team change
+
+    // Send the user to their new team's page
+    // TODO: Update this URL when that gets set up
+    res.redirect("/team.html");
 });
 
 const port = process.env.PORT || 3000;
