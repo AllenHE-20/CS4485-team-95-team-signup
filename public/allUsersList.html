@@ -24,7 +24,18 @@
     </nav>
 </section>
     
-
+<main>
+    <div class="listHeading" onload="populateUserList()">
+        <p class="pageIndicator">Currently viewing page x of y.</p>
+        <input class="prevButton" type="button" value="Previous Page" />
+        <input class="nextButton" type="button" value="Next Page" />
+    </div>
     
+    <section class="listContainer">
+        <ol class="listBody"></ol>
+    </section>
+</main>
+    
+<script src="main.js"></script>
 </body>
 </html>
