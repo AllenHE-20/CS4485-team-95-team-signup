@@ -40,14 +40,25 @@
     
 <script>
     var curPageNo = 1;
+    //TODO: Replace this with an API call to fetch the info on page load
+    const maxPageNo = Math.ceil(25/25); //Number of participants divided by # of participants per page
     
     function incrementPageNo() {
-        curPageNo++;
+        const tempNewVal = curPageNo + 1;
+        if(tempNewVal <= maxPageNo) {
+            curPageNo++;
+            //TODO: Invocation of populateUserList with new page # goes here
+        }
         console.log(curPageNo);
     }
     
     function decrementPageNo() {
-        curPageNo--;
+        if(curPageNo > 1) {
+            curPageNo--;
+            //TODO: Invocation of populateUserList with new page # goes here
+        }
+        
+        
         console.log(curPageNo);
     }
     
