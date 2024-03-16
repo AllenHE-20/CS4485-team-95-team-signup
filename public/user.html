@@ -56,8 +56,8 @@
             </div>
 
             <div class="add-info">
-                <h3>Additional Information</h3>
-                <p>N/A</p>
+                <h3>Contact Information</h3>
+                <p id="contactInfoText">N/A</p>
             </div>
 
         </div>
@@ -80,6 +80,10 @@
                 //projListElements[i].textContent = demoObj[i]; //This line was for testing purposes
             }
         }
+        
+        const contactSection = document.getElementById("contactInfoText");
+        contactSection.textContent = "Email: demo@utdallas.edu | Phone number: 123-456-7890 | Discord: clyde";
+        
 });
     
 </script>
