@@ -103,15 +103,42 @@ function populateUserList(pageNum) {
       "name": "Michael Walker", 
       "profileLink": "https://example.com/michael-walker"
   },
+  {"name": "Samantha Hall", "profileLink": "https://example.com/samantha-hall"},
+  {"name": "Joshua Allen", "profileLink": "https://example.com/joshua-allen"},
+  {"name": "Jessica Young", "profileLink": "https://example.com/jessica-young"},
+  {"name": "Matthew Hernandez", "profileLink": "https://example.com/matthew-hernandez"},
+  {"name": "Ashley King", "profileLink": "https://example.com/ashley-king"},
+  {"name": "Daniel Wright", "profileLink": "https://example.com/daniel-wright"},
+  {"name": "Amanda Scott", "profileLink": "https://example.com/amanda-scott"},
+  {"name": "Joseph Green", "profileLink": "https://example.com/joseph-green"},
+  {"name": "Brittany Baker", "profileLink": "https://example.com/brittany-baker"},
+  {"name": "Andrew Adams", "profileLink": "https://example.com/andrew-adams"},
+  {"name": "Lauren Nelson", "profileLink": "https://example.com/lauren-nelson"},
+  {"name": "William Carter", "profileLink": "https://example.com/william-carter"},
+  {"name": "Morgan Mitchell", "profileLink": "https://example.com/morgan-mitchell"},
+  {"name": "Ryan Perez", "profileLink": "https://example.com/ryan-perez"},
+  {"name": "Megan Roberts", "profileLink": "https://example.com/megan-roberts"},
+  {"name": "Jacob Turner", "profileLink": "https://example.com/jacob-turner"},
+  {"name": "Kimberly Phillips", "profileLink": "https://example.com/kimberly-phillips"},
+  {"name": "Michael Campbell", "profileLink": "https://example.com/michael-campbell"},
+  {"name": "Samantha Parker", "profileLink": "https://example.com/samantha-parker"},
+  {"name": "Joshua Evans", "profileLink": "https://example.com/joshua-evans"},
+  {"name": "Jessica Edwards", "profileLink": "https://example.com/jessica-edwards"},
+  {"name": "Matthew Collins", "profileLink": "https://example.com/matthew-collins"},
+  {"name": "Ashley Stewart", "profileLink": "https://example.com/ashley-stewart"},
+  {"name": "Daniel Sanchez", "profileLink": "https://example.com/daniel-sanchez"},
+  {"name": "Amanda Morris", "profileLink": "https://example.com/amanda-morris"}
  
 ];
+    
+    document.getElementById("listBody").innerHTML=""; //Before adding any content, blank the list
     
     //These values indicate the range of student listings that the API will return.
     //const startOfRange = (pageNum - 1) * 50;
     //const endOfRange = (pageNum * 50) - 1;
     //TODO: Replace the constant data with an API call and formula-determined range bounds
-    const startOfRange = 0;
-    const endOfRange = 24;
+    const startOfRange = (pageNum - 1) * 25;
+    const endOfRange = (pageNum * 25) - 1;
     
     //TODO: Add a way to know or get the current number of people participating, and what page you are currently on.
     const desList = document.getElementById("listBody");
