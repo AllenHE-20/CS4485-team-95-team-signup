@@ -1,28 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Participating Students</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<%- include("partials/doc-head.ejs", {title: "View Participating Students"}); %>
 <body>
 
-<section class = "header">
-    <nav class="navbar">
-        <a href="index"><img src="images/LOGO.png" width="200" height="85"></a>
-
-        <div class="nav-links">
-            <ul>
-                <li><a href="">HOME</a></li>
-                <li><a href="">PROJECT LIST</a></li>
-                <li><a href="">TEAM LIST</a></li>
-                <li><a href="">STUDENT LIST</a></li>
-                <li><a href="">PROFILE</a></li>
-            </ul>
-        </div>        
-    </nav>
-</section>
+<%- include('partials/header.ejs'); %>
     
 <main>
     <div class="listHeading">
