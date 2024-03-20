@@ -10,48 +10,35 @@
         <article>
             <h1>Invites</h1>
 
-            <p class="current-team">YOUR TEAM: No team assigned</p>
+            <%- include('partials/current-team.ejs'); %>
 
             <ul class="profile-list">
+                <% invites.forEach(invite => { team = invite.team; %>
                 <li>
                     <a href="/team">
                         <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
+                            <img class="profile-image" src="<%= team.avatar %>" />
                         </div>
                         <div class="profile-box">
-                            <h2 class="team">Team 9</h2>
+                            <h2 class="team">Team <%= team.id %></h2>
                             <div class="inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Interested Projects", list: team.interests, emptymsg: "None set" }); %>
                             </div>
                             <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Skills", list: team.skills, emptymsg: "None set" }); %>
                             </div>
                             <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                    <li>John Doe</li>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Members", list: team.members }); %>
                             </div>
-                            <p class="invite-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <p class="invite-message">
+                                <%= invite.message %>
+                            </p>
                             <div class="invite-actions">
-                                <form action="/invites/0/respond" method="post">
+                                <form action="/invites/<%= team.id %>/respond" method="post">
                                     <input type="hidden" name="action" value="accept"/>
                                     <input type="submit" value="Accept"/>
                                 </form>
-                                <form action="/invites/0/respond" method="post">
+                                <form action="/invites/<%= team.id %>/respond" method="post">
                                     <input type="hidden" name="action" value="decline"/>
                                     <input type="submit" value="Decline"/>
                                 </form>
@@ -59,108 +46,7 @@
                         </div>
                     </a>
                 </li>
-                <li>
-                    <a href="/team">
-                        <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
-                        </div>
-                        <div class="profile-box">
-                            <h2 class="team">Team 12</h2>
-                            <div class="inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
-                            </div>
-                            <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
-                            </div>
-                            <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                    <li>Michael Pham</li>
-                                    <li>Allen Elledge</li>
-                                    <li>Nghia Nguyen</li>
-                                    <li>David Wilkinson</li>
-                                    <li>Justin Eggers</li>
-                                </ul>
-                            </div>
-                            <p class="invite-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            <div class="invite-actions">
-                                <form action="/invites/0/respond" method="post">
-                                    <input type="hidden" name="team" value="0"/>
-                                    <input type="hidden" name="action" value="accept"/>
-                                    <input type="submit" value="Accept"/>
-                                </form>
-                                <form action="/invites/0/respond" method="post">
-                                    <input type="hidden" name="team" value="0"/>
-                                    <input type="hidden" name="action" value="decline"/>
-                                    <input type="submit" value="Decline"/>
-                                </form>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="/team">
-                        <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
-                        </div>
-                        <div class="profile-box">
-                            <h2 class="team">Team 27</h2>
-                            <div class="inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
-                            </div>
-                            <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
-                            </div>
-                            <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                    <li>Bob Joel</li>
-                                    <li>Jimmy James</li>
-                                    <li>Timothy Nguyen</li>
-                                </ul>
-                            </div>
-                            <p class="invite-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            <div class="invite-actions">
-                                <form action="/invites/0/respond" method="post">
-                                    <input type="hidden" name="team" value="0"/>
-                                    <input type="hidden" name="action" value="accept"/>
-                                    <input type="submit" value="Accept"/>
-                                </form>
-                                <form action="/invites/0/respond" method="post">
-                                    <input type="hidden" name="team" value="0"/>
-                                    <input type="hidden" name="action" value="decline"/>
-                                    <input type="submit" value="Decline"/>
-                                </form>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                <% }) %>
             </ul>
         </article>
     </main>

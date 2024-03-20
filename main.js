@@ -4,6 +4,7 @@ const express = require("express");
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
 // console.debug(httpStatus);
+const dummyData = require("./dummy_data");
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -36,11 +37,11 @@ app.get("/submitPreferences", (req, res) => {
 })
 
 app.get("/teams", (req, res) => {
-    res.render("team-list.ejs");
+    res.render("team-list.ejs", dummyData.TEAM_LIST);
 })
 
 app.get("/invites", (req, res) => {
-    res.render("invite-inbox.ejs");
+    res.render("invite-inbox.ejs", dummyData.INVITES);
 })
 
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
@@ -67,7 +68,7 @@ app.post("/submitPreferences", urlencodedParser, (req, res) => {
 });
 
 app.post("/invites/:teamid/respond", urlencodedParser, (req, res) => {
-    console.log("Invite response request:", req.body);
+    console.log("Invite response request:", req.params.teamid, req.body);
     // TODO: Authenticate and determine user to update
 
     const result = schemas.inviteResponse.validate(req.body);
