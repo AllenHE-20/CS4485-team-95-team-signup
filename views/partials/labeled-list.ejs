@@ -1,0 +1,14 @@
+<%= label %>:
+    <% if (list.length == 0) { %>
+        <% if ("emptymsg" in this) { %>
+            <%= emptymsg %>
+        <% } else { %>
+            <ul></ul>
+        <% } %>
+    <% } else { %>
+        <ul>
+        <% list.forEach(item => { %>
+            <li><%= item %></li>
+        <% }); %>
+        </ul>
+<% } %>

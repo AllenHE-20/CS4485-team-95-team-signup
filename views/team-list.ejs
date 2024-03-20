@@ -10,128 +10,45 @@
         <article>
             <h1>Team List</h1>
 
-            <p class="current-team">YOUR TEAM: No team assigned | <a class="team" href="/team">Team 12</a></p>
+            <%- include('partials/current-team.ejs'); %>
 
             <ul class="profile-list">
+                <% invites.forEach(team => { %>
                 <li>
-                    <a href="/team">
+                    <a href="/team/<%= team.id %>">
                         <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
+                            <img class="profile-image" src="<%= team.avatar %>" />
                         </div>
                         <div class="profile-box">
-                            <h2 class="team">Team 9</h2>
+                            <h2 class="team">
+                                Team <%= team.id %>
+                                <% if (team.id === yourTeam) { %>
+                                    <span class="your-team-indicator">Your Team</span>
+                                <% } %>
+                            </h2>
                             <div class="profile-project-interest inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Interested Projects", list: team.interests, emptymsg: "None set" }); %>
                             </div>
                             <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Skills", list: team.skills, emptymsg: "None set" }); %>
                             </div>
                             <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                </ul>
+                                <%- include("partials/labeled-list.ejs", { label: "Members", list: team.members }); %>
                             </div>
                             <div class="team-status-box">
-                                <p>Team Status: <span class="team-status-open">Open</span></p>
+                                <p>
+                                    Team Status:
+                                    <% if (team.open) {%>
+                                        <span class="team-status-open">Open</span>
+                                    <% } else { %>
+                                        <span class="team-status-closed">Closed</span>
+                                    <% } %>
+                                </p>
                             </div>
                         </div>
                     </a>
                 </li>
-                <li>
-                    <a href="/team">
-                        <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
-                        </div>
-                        <div class="profile-box">
-                            <h2 class="team">Team 12 <span class="your-team-indicator">Your Team</span></h2>
-                            <div class="profile-project-interest inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
-                            </div>
-                            <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
-                            </div>
-                            <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                    <li>Michael Pham</li>
-                                    <li>Allen Elledge</li>
-                                    <li>Nghia Nguyen</li>
-                                    <li>David Wilkinson</li>
-                                    <li>Justin Eggers</li>
-                                </ul>
-                            </div>
-                            <div class="team-status-box">
-                                <p>Team Status: <span class="team-status-closed">Closed</span></p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="/team">
-                        <div class="profile-image-box">
-                            <img class="profile-image" src="profile.png" />
-                        </div>
-                        <div class="profile-box">
-                            <h2 class="team">Team 27</h2>
-                            <div class="profile-project-interest inline-list">
-                                Interested Projects:
-                                <ul>
-                                    <li>Raytheon Drone Showcase</li>
-                                    <li>Team Sign-Up</li>
-                                    <li>Dr. Becker Software-Software Project</li>
-                                </ul>
-                            </div>
-                            <div class="profile-skills inline-list">
-                                Skills:
-                                <ul>
-                                    <li>Software development</li>
-                                    <li>ML programming</li>
-                                    <li>C++</li>
-                                    <li>Front-end design</li>
-                                    <li>Orchestrator</li>
-                                    <li>TensorFlow</li>
-                                </ul>
-                            </div>
-                            <div class="profile-members inline-list">
-                                Members:
-                                <ul>
-                                    <li>Bob Joel</li>
-                                    <li>Jimmy James</li>
-                                    <li>Timothy Nguyen</li>
-                                </ul>
-                            </div>
-                            <div class="team-status-box">
-                                <p>Team Status: <span class="team-status-open">Open</span></p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                <% }) %>
             </ul>
         </article>
     </main>
