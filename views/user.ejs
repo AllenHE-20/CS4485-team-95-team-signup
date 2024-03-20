@@ -1,28 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Information</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<%- include("partials/doc-head.ejs", {title: "User Information"}); %>
 <body>
-
-<section class = "header">
-    <nav class="navbar">
-        <a href="index.html"><img src="images/LOGO.png" width="200" height="85"></a>
-
-        <div class="nav-links">
-            <ul>
-                <li><a href="">HOME</a></li>
-                <li><a href="">PROJECT LIST</a></li>
-                <li><a href="">TEAM LIST</a></li>
-                <li><a href="">STUDENT LIST</a></li>
-                <li><a href="">PROFILE</a></li>
-            </ul>
-        </div>        
-    </nav>
-</section>
+<%- include('partials/header.ejs'); %>
     
 <main class="userPage">
     <h1>Placeholder Name</h1>
@@ -41,14 +21,14 @@
                     <a href="#" class="invite-link">
                         <img src="images/invite.svg"
                         width="50" height="auto">
-                    </a>       
-                    <p>Invite</p>             
+                    </a>
+                    <p>Invite</p>
                 </div>
             </div>
-            
+
             <div class="projects">
-                <h3>Project Preferences</h3>                                
-                <p class="projListElement">Project 1</p>       
+                <h3>Project Preferences</h3>
+                <p class="projListElement">Project 1</p>
                 <p class="projListElement">Project 2</p>
                 <p class="projListElement">Project 3</p>
                 <p class="projListElement">Project 4</p>
@@ -66,7 +46,7 @@
 
     
 <script>
-    document.addEventListener("DOMContentLoaded", function() { 
+    document.addEventListener("DOMContentLoaded", function() {
         // this function runs when the DOM is ready, i.e. when the document has been parsed
         const demoObj = {'prefOne': "83", 'prefTwo': "9", 'prefThree': "17", 'prefFour': "18", 'prefFive': "11"};
         //const demoObj = ["33", "9", "17", "18", "11"]; //This line was for testing purposes
