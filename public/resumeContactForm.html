@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume & Contact Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class = "header">
+    <nav class="navbar">
+        <a href="index.html"><img src="images/LOGO.png" width="200" height="85"></a>
+
+        <div class="nav-links">
+            <ul>
+                <li><a href="">HOME</a></li>
+                <li><a href="">PROJECT LIST</a></li>
+                <li><a href="">TEAM LIST</a></li>
+                <li><a href="">STUDENT LIST</a></li>
+                <li><a href="">PROFILE</a></li>
+            </ul>
+        </div>        
+    </nav>
+</section>
+    
+<main>
+    <form action="profile.html" method="post" class="resume-form">
+        <div class="resumeUploadSection">
+            <label for="resumeUploadButton">Select a PDF file to upload as your resume:</label>
+            <input type="file" id="resumeUploadButton" name="resumeUploadButton" accept="application/pdf" />
+        </div>
+        
+        <div class="contactInfoSection">
+            <div class="contactItemEmail">
+                <label for="contactByEmail">Enter your email address (optional):</label>
+                <input type="email" name="contactByEmail" id="contactByEmail" /> <!--May need to add pattern specifier to this-->
+            </div>
+            
+            <div class="contactItemPhone">
+                <label for="contactByPhone">Enter your phone number (optional):</label>
+                <input type="tel" name="contactByPhone" id="contactByPhone" />
+            </div>
+            
+            <div class="contactItemDiscord">
+                <label for="contactByDiscord">Enter your Discord handle (optional):</label>
+                <input type="text" name="contactByDiscord" id="contactByDiscord" />
+            </div>
+            
+            <div class="contactItemGroupme">
+                <label for="contactByGroupme">Enter your Groupme username (optional):</label>
+                <input type="text" name="contactByGroupme" id="contactByGroupme" />
+            </div>
+            
+            <div class="contactItemInstagram">
+                <label for="contactByX">Enter your Instagram handle (optional):</label>
+                <input type="text" name="contactByInstagram" id="contactByInstagram" />
+            </div>
+        </div>
+        
+        <div class="contactSubmitButton">
+            <input type="submit" value="Submit Resume & Contact Information" />
+        </div>
+    </form>
+</main>
+    
+</body>
+</html>

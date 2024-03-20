@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Project Preferences</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class = "header">
+    <nav class="navbar">
+        <a href="index.html"><img src="images/LOGO.png" width="200" height="85"></a>
+
+        <div class="nav-links">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="">PROJECT LIST</a></li>
+                <li><a href="">TEAM LIST</a></li>
+                <li><a href="">STUDENT LIST</a></li>
+                <li><a href="profile.html">PROFILE</a></li>
+            </ul>
+        </div>
+    </nav>
+</section>
+
+<main>
+    <form action="/submitPreferences/" method="post" class="pref-form" onsubmit="prefFormLog()">
+        <div class="projectPrefs">
+            <h3>Enter your top 5 project preferences:</h3>
+            <div class="formField">
+                <label for="preference1">Enter your 1st project.</label>
+                <input type="number" name="preference1" id="preference1" required />
+            </div>
+            <div class="formField">
+                <label for="preference2">Enter your 2nd project.</label>
+                <input type="number" name="preference2" id="preference2" required />
+            </div>
+            <div class="formField">
+                <label for="preference3">Enter your 3rd project.</label>
+                <input type="number" name="preference3" id="preference3" required />
+            </div>
+            <div class="formField">
+                <label for="preference4">Enter your 4th project.</label>
+                <input type="number" name="preference4" id="preference4" required />
+            </div>
+            <div class="formField">
+                <label for="preference5">Enter your 5th project.</label>
+                <input type="number" name="preference5" id="preference5" required />
+            </div>
+        </div>
+        
+        <div class="prefSubmitButton">
+            <input type="submit" value="Submit Preferences" />
+        </div>
+    </form>
+</main>
+<script src="main.js"></script>
+</body>
+</html>
