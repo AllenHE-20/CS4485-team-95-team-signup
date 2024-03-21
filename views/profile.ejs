@@ -3,15 +3,49 @@
 <%- include("partials/doc-head.ejs", {title: "Profile Page"}); %>
 <body>
 <%- include('partials/header.ejs'); %>
-    
-<main class="linkButtons">
+
+<!--TODO: get name from database/SSO --> 
+<% const name = 'Placeholder Name' %>
+
+<main class="profile-page">
+    <h1><%= name %></h1>
     <div class="setting-links">
-        <ul>
-            <li><a href="">Upload Resume & Contact Information</a></li>
-            <li><a href="submitPreferences">Set Project Preferences</a></li>
-        </ul>
+        <a href="/resumeContact">Upload Resume & Contact Information</a>       
+        <a href="/submitPreferences">Set Project Preferences</a>    
     </div>
+
+    <!--TODO:link to resume-->
+    <% resume = null %>
+
+    <section>
+        <div class="user-info">              
+            <% if (resume==null) {%>                
+                <h4>&times; Resume not found!</h4>
+            <% } else{ %>
+                <a href="#" class="resume-link">
+                    <img src="/images/resume.svg"
+                    width="50" height="auto">
+                </a>
+                <p>Resume</p>
+            <% } %>            
+    
+            <div class="projects">
+                <h3>Project Preferences</h3>
+                <p class="projListElement"></p>
+                <p class="projListElement"></p>
+                <p class="projListElement"></p>
+                <p class="projListElement"></p>
+                <p class="projListElement"></p>
+            </div>
+    
+            <div class="add-info">
+                <h3>Contact Information</h3>
+                <p id="contactInfoText"></p>
+            </div>
+        </div>
 </main>
+
+<%- include('partials/load-profile.ejs'); %>
 
 </body>
 </html>
