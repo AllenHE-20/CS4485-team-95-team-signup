@@ -1,0 +1,21 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // this function runs when the DOM is ready, i.e. when the document has been parsed
+        const demoObj = {'prefOne': "83", 'prefTwo': "9", 'prefThree': "17", 'prefFour': "18", 'prefFive': "11"};
+        //const demoObj = ["33", "9", "17", "18", "11"]; //This line was for testing purposes
+
+        const projListElements = document.querySelectorAll('.projListElement');
+        const projKeys = Object.keys(demoObj);
+
+        for (let i = 0; i < 5; i++) {
+            if (i < 5) {
+                projListElements[i].textContent = demoObj[projKeys[i]];
+                //projListElements[i].textContent = demoObj[i]; //This line was for testing purposes
+            }
+        }
+        
+        const contactSection = document.getElementById("contactInfoText");
+        contactSection.textContent = "Email: demo@utdallas.edu | Phone number: 123-456-7890 | Discord: clyde";
+        
+});
+</script>

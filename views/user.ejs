@@ -3,68 +3,48 @@
 <%- include("partials/doc-head.ejs", {title: "User Information"}); %>
 <body>
 <%- include('partials/header.ejs'); %>
-    
-<main class="userPage">
-    <h1>Placeholder Name</h1>
-    <div>
-        <div class="userInfo">
-            <div class="user-row">
-                <div class="user-col">
-                    <a href="#" class="resume-link">
-                        <img src="images/resume.svg"
-                        width="50" height="auto">
-                    </a>
-                    <p>Resume</p>
-                </div>
+  
+<!--TODO: get name from database/SSO --> 
+<% const name = 'Placeholder Name' %>
 
-                <div class="user-col">
-                    <a href="#" class="invite-link">
-                        <img src="images/invite.svg"
-                        width="50" height="auto">
-                    </a>
-                    <p>Invite</p>
-                </div>
+<main class="user-page">
+    <h1><%= name %></h1>
+    <div class="user-info">
+        <div class="user-row">
+            <div class="user-col">
+                <a href="#" class="resume-link">
+                    <img src="/images/resume.svg"
+                    width="50" height="auto">
+                </a>
+                <p>Resume</p>
             </div>
 
-            <div class="projects">
-                <h3>Project Preferences</h3>
-                <p class="projListElement">Project 1</p>
-                <p class="projListElement">Project 2</p>
-                <p class="projListElement">Project 3</p>
-                <p class="projListElement">Project 4</p>
-                <p class="projListElement">Project 5</p>
+            <div class="user-col">
+                <a href="#" class="invite-link">
+                    <img src="/images/invite.svg"
+                    width="50" height="auto">
+                </a>
+                <p>Invite</p>
             </div>
+        </div>
 
-            <div class="add-info">
-                <h3>Contact Information</h3>
-                <p id="contactInfoText">N/A</p>
-            </div>
+        <div class="projects">
+            <h3>Project Preferences</h3>
+            <p class="projListElement"></p>
+            <p class="projListElement"></p>
+            <p class="projListElement"></p>
+            <p class="projListElement"></p>
+            <p class="projListElement"></p>
+        </div>
 
+        <div class="add-info">
+            <h3>Contact Information</h3>
+            <p id="contactInfoText"></p>
         </div>
     </div>
 </main>
 
-    
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // this function runs when the DOM is ready, i.e. when the document has been parsed
-        const demoObj = {'prefOne': "83", 'prefTwo': "9", 'prefThree': "17", 'prefFour': "18", 'prefFive': "11"};
-        //const demoObj = ["33", "9", "17", "18", "11"]; //This line was for testing purposes
-
-        const projListElements = document.querySelectorAll('.projListElement');
-        const projKeys = Object.keys(demoObj);
-
-        for (let i = 0; i < 5; i++) {
-            if (i < 5) {
-                projListElements[i].textContent = demoObj[projKeys[i]];
-                //projListElements[i].textContent = demoObj[i]; //This line was for testing purposes
-            }
-        }
-        
-        const contactSection = document.getElementById("contactInfoText");
-        contactSection.textContent = "Email: demo@utdallas.edu | Phone number: 123-456-7890 | Discord: clyde";
-        
-});
+<%- include('partials/load-profile.ejs'); %>
     
 </script>
 </body>
