@@ -13,7 +13,7 @@
             <%- include('partials/current-team.ejs'); %>
 
             <ul class="profile-list">
-                <% invites.forEach(team => { %>
+                <% teams.forEach(team => { %>
                 <li>
                     <a href="/team/<%= team.id %>">
                         <div class="profile-image-box">
@@ -38,7 +38,7 @@
                             <div class="team-status-box">
                                 <p>
                                     Team Status:
-                                    <% if (team.open) {%>
+                                    <% if (team.open) { %>
                                         <span class="team-status-open">Open</span>
                                     <% } else { %>
                                         <span class="team-status-closed">Closed</span>
