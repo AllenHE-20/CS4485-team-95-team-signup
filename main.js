@@ -44,6 +44,10 @@ app.get("/invites", (req, res) => {
     res.render("invite-inbox.ejs", dummyData.INVITES);
 })
 
+app.get("/adminHomepage", (req, res) => {
+    res.render("adminHomePage.ejs");
+})
+
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
     // TODO: Authenticate and determine user to update
