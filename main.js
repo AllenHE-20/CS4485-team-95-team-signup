@@ -48,6 +48,10 @@ app.get("/adminHomepage", (req, res) => {
     res.render("adminHomePage.ejs");
 })
 
+app.get("/adminClearProfile", (req, res) => {
+    res.render("adminClearProfile.ejs");
+})
+
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
     // TODO: Authenticate and determine user to update
