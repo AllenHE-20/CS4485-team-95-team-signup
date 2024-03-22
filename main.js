@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require("express");
+const fileUpload = require("express-fileupload");
+const path = require("path")
 
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
@@ -60,6 +62,20 @@ app.get("/adminClearProfile", (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
+//resumeContactInfo
+app.post('/api/profile',urlencodedParser, (req, res) => {
+    // Extract form data from the request body
+    const {
+        resumeUploadButton,
+        contactByEmail,
+        contactByPhone,
+        contactByDiscord,
+        contactByGroupme,
+        contactByInstagram
+    } = req.body;
+    console.log(req.body);
+    res.status(200).send("form submitted.");
+});
 
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);

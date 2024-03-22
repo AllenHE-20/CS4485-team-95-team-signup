@@ -61,14 +61,25 @@ CREATE TABLE ProjectFiles(
     PRIMARY KEY (projectID, filename)
 );
 -- TODO: Ensure that student exists in students table?
+/*
+ CREATE TABLE StudentPreferences(
+ netID CHAR(8),
+ FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
+ projectID INT,
+ FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
+ preference INT,
+ -- Limit? Maybe -5 to +5?
+ PRIMARY KEY (netID, projectID)
+ );
+ */
 CREATE TABLE StudentPreferences(
     netID CHAR(8),
     FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
-    preference INT,
-    -- Limit? Maybe -5 to +5?
-    PRIMARY KEY (netID, projectID)
+    preference_number INT CHECK (
+        preference_number BETWEEN 1 AND 5
+    )
 );
 CREATE TABLE Skills(
     skillID INT PRIMARY KEY AUTO_INCREMENT,
