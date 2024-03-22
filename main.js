@@ -44,6 +44,10 @@ app.get("/teams", (req, res) => {
     res.render("team-list.ejs", dummyData.TEAM_LIST);
 })
 
+app.get("/projects", (req, res) => {
+    res.render("project-list.ejs");
+})
+
 app.get("/invites", (req, res) => {
     res.render("invite-inbox.ejs", dummyData.INVITES);
 })
@@ -55,6 +59,7 @@ app.get("/adminHomepage", (req, res) => {
 app.get("/adminClearProfile", (req, res) => {
     res.render("adminClearProfile.ejs");
 })
+
 
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
