@@ -55,6 +55,32 @@ CREATE TABLE student(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL
 );
+CREATE TRIGGER maxTeamsPerProject BEFORE
+INSERT ON Team FOR EACH ROW BEGIN IF (
+        SELECT COUNT(*)
+        FROM Team
+        WHERE projectID = NEW.projectID
+    ) >= (
+        SELECT maxTeams
+        FROM Project
+        WHERE projectID = NEW.projectID
+    ) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Max teams are assigned to this project already.';
+END IF;
+END;
+CREATE TRIGGER emptyTeam
+AFTER DELETE ON student FOR EACH ROW BEGIN
+DECLARE team_count INT;
+IF OLD.teamID IS NOT NULL THEN IF NOT EXISTS (
+    SELECT 1
+    FROM student
+    WHERE teamID = OLD.teamID
+) THEN
+DELETE FROM team
+WHERE teamID = OLD.teamID;
+END IF;
+END IF;
+END;
 CREATE TABLE Faculty(
     netID CHAR(8),
     FOREIGN KEY(netID) REFERENCES UTD(netID) ON DELETE CASCADE
