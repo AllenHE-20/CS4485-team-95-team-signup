@@ -27,11 +27,11 @@ app.get("/users", (req, res) => {
 })
 
 app.get("/user", (req, res) => {
-    res.render("user.ejs");
+    res.render("user.ejs", dummyData.user);
 })
 
 app.get("/profile", (req, res) => {
-    res.render("profile.ejs");
+    res.render("profile.ejs", dummyData.user);
 })
 
 app.get("/resumeContact", (req, res) => {

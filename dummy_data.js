@@ -87,6 +87,21 @@ const invites = {
     ],
 }
 
+const user = {
+    name: "Placeholder Name",
+    avatar: "images/profile.png",
+    resume: null,
+    email: "demo@utdallas.edu",
+    phone: "123-456-7890",
+    discord: "clyde",
+    interests: [
+        "Dr. Becker Software-Software Project",
+        "Raytheon Drone Showcase",
+        "Team Sign-Up",
+    ],
+}
+
 module.exports.teams = teams;
 module.exports.teamList = teamList;
 module.exports.invites = invites;
+module.exports.user = user;

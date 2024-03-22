@@ -30,21 +30,19 @@
 
         <div class="projects">
             <h3>Project Preferences</h3>
-            <p class="projListElement"></p>
-            <p class="projListElement"></p>
-            <p class="projListElement"></p>
-            <p class="projListElement"></p>
-            <p class="projListElement"></p>
+            <ul>
+            <% interests.forEach(project => { %>
+                <li><%= project %></li>
+            <% }) %>
+            </ul>
         </div>
 
         <div class="add-info">
             <h3>Contact Information</h3>
-            <p id="contactInfoText"></p>
+            <p>Email: <%= email %> | Phone: <%= phone %> | Discord: <%= discord %></p>
         </div>
     </div>
 </main>
-
-<%- include('partials/load-profile.ejs'); %>
     
 </script>
 </body>
