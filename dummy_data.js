@@ -71,6 +71,10 @@ const teams = [
     },
 ];
 
+const projects = {
+
+}
+
 const teamList = {
     yourTeam: 12,
     teams: teams,
