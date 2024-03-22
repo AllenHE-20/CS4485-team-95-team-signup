@@ -16,6 +16,10 @@ app.get("/", (req, res) => {
     res.render("index.ejs");
 })
 
+app.get("/landing", (req, res) => {
+    res.render("landing.ejs");
+})
+
 app.get("/users", (req, res) => {
     res.render("allUsersList.ejs");
 })
