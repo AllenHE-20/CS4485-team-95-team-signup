@@ -32,7 +32,28 @@ const inviteResponse = Joi.object({
         .required(),
 });
 
-module.exports = {
-    preferences: preferences,
-    inviteResponse: inviteResponse,
-}
+const resumeContact = Joi.object({
+        resumeUploadButton: Joi.any()
+            .allow("")
+            .optional(),
+        contactByEmail: Joi.string()
+            .email()
+            .allow("")
+            .optional(),
+        contactByPhone: Joi.string()
+            .allow("")
+            .optional(),
+        contactByDiscord: Joi.string()
+            .allow("")
+            .optional(),
+        contactByGroupme: Joi.string()
+            .allow("")
+            .optional(),
+        contactByInstagram: Joi.string()
+            .allow("")
+            .optional(),
+})
+
+module.exports.preferences = preferences;
+module.exports.inviteResponse = inviteResponse;
+module.exports.resumeContact = resumeContact;

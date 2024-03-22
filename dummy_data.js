@@ -1,4 +1,4 @@
-const TEAMS = [
+const teams = [
     {
         id: 9,
         avatar: "/profile.png",
@@ -71,24 +71,41 @@ const TEAMS = [
     },
 ];
 
-const TEAM_LIST = {
+const projects = {
+
+}
+
+const teamList = {
     yourTeam: 12,
-    teams: TEAMS,
+    teams: teams,
 };
 
 const LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 
-const INVITES = {
+const invites = {
     yourTeam: null,
     invites: [
-        { team: TEAMS[0], message: LOREM_IPSUM },
-        { team: TEAMS[1], message: LOREM_IPSUM },
-        { team: TEAMS[2], message: LOREM_IPSUM },
+        { team: teams[0], message: LOREM_IPSUM },
+        { team: teams[1], message: LOREM_IPSUM },
+        { team: teams[2], message: LOREM_IPSUM },
     ],
 }
 
-module.exports = {
-    "TEAMS": TEAMS,
-    "TEAM_LIST": TEAM_LIST,
-    "INVITES": INVITES,
+const user = {
+    name: "Placeholder Name",
+    avatar: "images/profile.png",
+    resume: null,
+    email: "demo@utdallas.edu",
+    phone: "123-456-7890",
+    discord: "clyde",
+    interests: [
+        "Dr. Becker Software-Software Project",
+        "Raytheon Drone Showcase",
+        "Team Sign-Up",
+    ],
 }
+
+module.exports.teams = teams;
+module.exports.teamList = teamList;
+module.exports.invites = invites;
+module.exports.user = user;

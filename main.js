@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require("express");
+const pool = require('./database')
+
 
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
@@ -25,11 +27,11 @@ app.get("/users", (req, res) => {
 })
 
 app.get("/user", (req, res) => {
-    res.render("user.ejs");
+    res.render("user.ejs", dummyData.user);
 })
 
 app.get("/profile", (req, res) => {
-    res.render("profile.ejs");
+    res.render("profile.ejs", dummyData.user);
 })
 
 app.get("/resumeContact", (req, res) => {
@@ -41,11 +43,15 @@ app.get("/submitPreferences", (req, res) => {
 })
 
 app.get("/teams", (req, res) => {
-    res.render("team-list.ejs", dummyData.TEAM_LIST);
+    res.render("team-list.ejs", dummyData.teamList);
+})
+
+app.get("/projects", (req, res) => {
+    res.render("project-list.ejs");
 })
 
 app.get("/invites", (req, res) => {
-    res.render("invite-inbox.ejs", dummyData.INVITES);
+    res.render("invite-inbox.ejs", dummyData.invites);
 })
 
 app.get("/adminHomepage", (req, res) => {
@@ -55,6 +61,34 @@ app.get("/adminHomepage", (req, res) => {
 app.get("/adminClearProfile", (req, res) => {
     res.render("adminClearProfile.ejs");
 })
+
+//resumeContactInfo
+//not sure how to get res.redirect to work properly
+app.post('/api/profile',urlencodedParser, (req, res) => {
+    // Extract form data from the request body
+
+    const result = schemas.resumeContact.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {
+        resumeUploadButton,
+        contactByEmail,
+        contactByPhone,
+        contactByDiscord,
+        contactByGroupme,
+        contactByInstagram
+    } = Object.fromEntries(
+        Object.entries(result.value).filter(([_, val]) => val)
+    );
+
+    // TODO: Update data storage for preferences
+
+    // Send the browser to the user's own page to view new preferences
+    // TODO: Update this URL when that gets set up
+    console.log(req.body);
+    res.redirect("/user");
+});
 
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
