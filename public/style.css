@@ -5,7 +5,12 @@
 }
 
 .utd-mall {
+    min-height: 100vh;
+    width: 100%;
     background-image: linear-gradient(90deg, rgba(121,121,121,0.2) 0%, rgba(117,117,117,0.2) 35%, rgba(51,51,51,0.2) 100%), url(images/UTD-Mall-1920.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
 }
 
 nav{
@@ -38,7 +43,7 @@ nav{
 .nav-links ul li::after {
     content: '';
     width: 0%;
-    height: 4px;
+    height: 1px;
     background: #247730;
     display: block;
     padding-bottom: 5px;
@@ -61,19 +66,24 @@ nav{
     top: 20%;
 }
 
+.setting-links li{
+    display: inline;
+    flex: 1;
+    text-align: left;
+}
+
 body{
-    background-color:#0d4a1b;
+    background-color:#f6f6f8;
 }
 
 main {
-    background-color: #fff3f3;
-    width: 90%;
+    background-color: #ebebeb;
+    width: 100%;
     margin: auto;
     padding-top: 10px;
     text-align: center;
     position: absolute;
-    top:15%;
-    left: 5%;
+    top: 6.5%;
     border-radius: 10px;
 }
 
@@ -85,7 +95,10 @@ main {
     display: inline-block;        
     padding: 10px;
     width: 320px;
-    height: 20px;		
+    height: 20px;	
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;	
     background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);
     color:#fff;
     font-weight: bold;
@@ -107,6 +120,10 @@ main {
 
 .user-info h4{
     color:rgb(191, 4, 4)
+}
+
+.userInfo{
+    padding: 20px;
 }
 
 .user-row{
@@ -162,7 +179,7 @@ main {
 
 .profile-list {
     text-align: left;
-    background-color:lightgray;
+    background-color: #ebebeb;
     padding: 1em;
     list-style-type: none;
     line-height: 1.8em;
@@ -252,4 +269,77 @@ main {
 
 .invite-actions > form {
     margin-right: 0.3em;
+}
+
+
+.listBody {
+    list-style-type: none;
+}
+
+.resumeUploadSection,
+.contactSubmitButton{
+    padding: 10px;
+}
+
+.contactRow{
+    padding: 5px;
+}
+
+.contactRow label{
+    display: block;
+    margin-right: 10px;    
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px;
+
+  }
+
+  input[type="submit"]{
+    font-size: 16px;
+    width: 100px;
+    cursor: pointer;
+  }
+
+  .card{
+    width: 400px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #333;
+  }
+
+  .card h1{
+    font-weight: 500;
+    color: #000;
+  }
+
+  .card img{
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+
+.image-link{
+    display: block;
+    width: 200px;
+    background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);
+    color: #fff;
+    padding: 12px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-picture{
+    display: none;
 }

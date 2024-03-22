@@ -9,8 +9,9 @@ CREATE TABLE user (
     firstName VARCHAR(20),
     middleName VARCHAR(20),
     lastName VARCHAR(20),
-    email VARCHAR(255) CHECK(email LIKE '.+@.+\..+$')
+    email VARCHAR(255)
 );
+--
 CREATE TABLE organizer(
     userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
@@ -19,20 +20,21 @@ CREATE TABLE organizer(
 -- depending on how the SSO works we might be able to add email here and grab it
 -- then, we could put a seperate email into Organizer.
 CREATE TABLE UTD (
-    netID CHAR(8) CHECK(netID REGEXP '^[A-Za-z]{3}[0-9]{5}$') PRIMARY KEY UNIQUE,
+    netID CHAR(9) CHECK(netID REGEXP '^[A-Za-z]{3}[0-9]{5}$') PRIMARY KEY UNIQUE,
     userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
 );
-CREATE TABLE Project(
+CREATE TABLE Project (
     projectID INT PRIMARY KEY AUTO_INCREMENT,
     userID INT,
-    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
-    description VARCHAR(255),
+    FOREIGN KEY (userID) REFERENCES user(userID) ON DELETE CASCADE,
+    description VARCHAR(500),
     projectName VARCHAR(50) UNIQUE,
-    teamSize INT CHECK(
-        teamSize >= 1
+    teamSize INT CHECK (
+        teamSize >= 4
         AND teamSize <= 6
-    )
+    ),
+    maxTeams INT
 );
 CREATE TABLE Team(
     teamID INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,10 +43,14 @@ CREATE TABLE Team(
     SET NULL
 );
 CREATE TABLE student(
-    netID CHAR(8) PRIMARY KEY UNIQUE,
+    netID CHAR(9) PRIMARY KEY UNIQUE,
     FOREIGN KEY(netID) REFERENCES UTD(netID) ON DELETE CASCADE,
     resumeFile BLOB,
-    phoneNumber VARCHAR(10) CHECK (phoneNumber LIKE '(\+\d+)? \d{3}-\d{3}-\d{4}'),
+    phoneNumber VARCHAR(12),
+    email VARCHAR(255),
+    discord VARCHAR(255),
+    groupme VARCHAR(255),
+    instagram VARCHAR(255),
     teamID INT,
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL
@@ -61,14 +67,25 @@ CREATE TABLE ProjectFiles(
     PRIMARY KEY (projectID, filename)
 );
 -- TODO: Ensure that student exists in students table?
+/*
+ CREATE TABLE StudentPreferences(
+ netID CHAR(8),
+ FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
+ projectID INT,
+ FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
+ preference INT,
+ -- Limit? Maybe -5 to +5?
+ PRIMARY KEY (netID, projectID)
+ );
+ */
 CREATE TABLE StudentPreferences(
     netID CHAR(8),
     FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
-    preference INT,
-    -- Limit? Maybe -5 to +5?
-    PRIMARY KEY (netID, projectID)
+    preference_number INT CHECK (
+        preference_number BETWEEN 1 AND 5
+    )
 );
 CREATE TABLE Skills(
     skillID INT PRIMARY KEY AUTO_INCREMENT,
