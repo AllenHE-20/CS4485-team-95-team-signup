@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require("express");
-const fileUpload = require("express-fileupload");
-const path = require("path")
+const pool = require('./database')
+
 
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
@@ -63,6 +63,7 @@ app.get("/adminClearProfile", (req, res) => {
 })
 
 //resumeContactInfo
+//not sure how to get res.redirect to work properly
 app.post('/api/profile',urlencodedParser, (req, res) => {
     // Extract form data from the request body
     const {

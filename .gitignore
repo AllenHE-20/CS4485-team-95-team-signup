@@ -8,3 +8,6 @@ node_modules/
 # OS files
 .DS_Store
 ._*
+
+# environment variables
+.env

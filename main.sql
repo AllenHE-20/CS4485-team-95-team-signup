@@ -9,8 +9,11 @@ CREATE TABLE user (
     firstName VARCHAR(20),
     middleName VARCHAR(20),
     lastName VARCHAR(20),
-    email VARCHAR(255) CHECK(email LIKE '.+@.+\..+$')
+    email VARCHAR(255)
 );
+INSERT INTO user(userID, firstName, middleName, lastName, email)
+VALUES('1', 'John', 'A', 'Doe', 'aReal@gmail.com');
+--
 CREATE TABLE organizer(
     userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
