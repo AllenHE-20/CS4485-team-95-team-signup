@@ -253,3 +253,38 @@ main {
 .invite-actions > form {
     margin-right: 0.3em;
 }
+
+.listBody {
+    list-style-type: none;
+}
+
+.resumeUploadSection,
+.contactSubmitButton{
+    padding: 10px;
+}
+
+.contactRow{
+    padding: 5px;
+}
+
+.contactRow label{
+    display: block;
+    margin-right: 10px;    
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px;
+        
+  }
+
+  input[type="submit"]{
+    font-size: 16px;
+    width: 100px;
+    cursor: pointer;
+  }
