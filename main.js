@@ -37,15 +37,33 @@ app.get("/submitPreferences", (req, res) => {
 })
 
 app.get("/teams", (req, res) => {
-    res.render("team-list.ejs", dummyData.TEAM_LIST);
+    res.render("team-list.ejs", dummyData.teamList);
 })
 
 app.get("/invites", (req, res) => {
-    res.render("invite-inbox.ejs", dummyData.INVITES);
+    res.render("invite-inbox.ejs", dummyData.invites);
 })
 
 app.get("/adminHomepage", (req, res) => {
     res.render("adminHomePage.ejs");
+})
+
+app.post("/resumeContact", urlencodedParser, (req, res) => {
+    console.log("Resume/contact request:", req.body);
+
+    const result = schemas.resumeContact.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const fields = Object.fromEntries(
+        Object.entries(result.value).filter(([_, val]) => val)
+    );
+
+    // TODO: Update data storage for preferences
+
+    // Send the browser to the user's own page to view new preferences
+    // TODO: Update this URL when that gets set up
+    res.redirect("/user");
 })
 
 app.post("/submitPreferences", urlencodedParser, (req, res) => {
