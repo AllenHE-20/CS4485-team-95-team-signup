@@ -3,13 +3,10 @@
 <%- include("partials/doc-head.ejs", {title: "Profile Page"}); %>
 <body>
 <%- include('partials/header.ejs'); %>
-<!--TODO: get name from database/SSO --> 
-
-<% const name = 'Placeholder Name' %>
 
 <main class="profile-page">
     <div class = "card">
-        <img src ="images/profile.png" id = "profile-pic">
+        <img src ="<%= avatar %>" id = "profile-pic">
         <h1><%= name %></h1>
         <div class="image-link">
             <label for="input-file"> Upload Image</label>
@@ -19,7 +16,7 @@
         </div>
         <div class="add-info">
             <h3>Contact Information</h3>
-            <p id="contactInfoText"></p>
+            <p>Email: <%= email %> | Phone: <%= phone %> | Discord: <%= discord %></p>
         </div>
     </div>
     
@@ -37,9 +34,6 @@
         <a href="/submitPreferences">Set Project Preferences</a>    
     </div>
 
-    <!--TODO:link to resume-->
-    <% resume = null %>
-
     <section>
         <div class="user-info">              
             <% if (resume==null) {%>                
@@ -54,16 +48,14 @@
     
             <div class="projects">
                 <h3>Project Preferences</h3>
-                <p class="projListElement"></p>
-                <p class="projListElement"></p>
-                <p class="projListElement"></p>
-                <p class="projListElement"></p>
-                <p class="projListElement"></p>
+                <ul>
+                <% interests.forEach(project => { %>
+                    <li><%= project %></li>
+                <% }) %>
+                </ul>
             </div>
         </div>
 </main>
-
-<%- include('partials/load-profile.ejs'); %>
 
 </body>
 </html>
