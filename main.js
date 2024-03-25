@@ -1,8 +1,10 @@
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 const express = require("express");
-const pool = require('./database')
+const session = require("express-session");
+const MySqlStore = require("express-mysql-session")(session);
 
-
+const mySqlPool = require('./database')
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
 // console.debug(httpStatus);
@@ -10,9 +12,25 @@ const dummyData = require("./dummy_data");
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
+dotenv.config();
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+
+const sessionStore = new MySqlStore({}, mySqlPool);
+
+const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    createDatabaseTable: true,
+    store: sessionStore,
+    cookie: {
+        maxAge: SESSION_MAX_AGE,
+    },
+}));
 
 app.get("/", (req, res) => {
     res.render("index.ejs");
