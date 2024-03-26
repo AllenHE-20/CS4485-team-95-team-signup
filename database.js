@@ -9,15 +9,38 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
-module.exports = pool;
 /* Various basic function examples.
-async function getUsers() {    
+async function getUsers() {
     const [rows] = await pool.query("SELECT * FROM user");
     return rows;
 }
 
 async function getUser(id) {
     const [rows] = await pool.query(`SELECT * FROM user WHERE userID = ?`, [id]);
+    return rows[0];
+}
+*/
+
+async function getUserByEmail(email) {
+    const [rows] = await pool.query(`
+        SELECT * FROM
+        user U
+        WHERE U.email = ?`, [email]);
+    return rows[0];
+}
+
+async function addLogin(userID, hash, salt) {
+    const result = await pool.query(`
+        INSERT INTO login(userID, passwordHash, passwordSalt)
+        VALUES (?, ?, ?)`, [userID, hash, salt]);
+    return result;
+}
+
+async function getLoginByEmail(netid) {
+    const [rows] = await pool.query(`
+        SELECT *
+        FROM user U, login L
+        WHERE U.email = ? AND U.userID = L.userID`, [netid]);
     return rows[0];
 }
 
@@ -28,6 +51,11 @@ async function createUser(firstName, middleName, lastName) {
     return result;
 }
 
+async function createStudent(firstName, middleName, lastName, netid) {
+    let result = createUser(firstName, middleName, lastName);
+}
+
+/*
 async function fetchUsers() {
     const users = await getUsers();
     console.log(users);
@@ -35,3 +63,12 @@ async function fetchUsers() {
 
 fetchUsers();
 */
+
+module.exports.pool = pool;
+module.exports.getLoginByEmail = getLoginByEmail;
+module.exports.getUserByEmail = getUserByEmail;
+module.exports.addLogin = addLogin;
+module.exports.createUser = createUser;
+module.exports.createStudent = createStudent;
+
+//getStudent("jfd00000").then(console.log);

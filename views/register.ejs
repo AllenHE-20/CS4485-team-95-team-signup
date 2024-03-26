@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("partials/doc-head.ejs", {title: "Register"}); %>
+<body>
+
+<%- include('partials/header.ejs'); %>
+    
+<main>
+    <h1>Register</h1>
+    <form method="post", action="/register">
+        <label for="email">Email: </label><input type="text" name="email" /><br>
+        <label for="password">Password: </label><input type="password" name="password" /><br>
+        <input type="submit" value="Submit">
+    </form>
+   
+
+</body>
+</html>

@@ -7,7 +7,9 @@
     "express-mysql-session": "^3.0.0",
     "express-session": "^1.18.0",
     "joi": "^17.12.2",
-    "mysql2": "^3.9.2"
+    "mysql2": "^3.9.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   },
   "scripts": {
     "start": "node"

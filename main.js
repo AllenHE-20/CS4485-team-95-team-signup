@@ -2,13 +2,16 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const express = require("express");
 const session = require("express-session");
+const passport = require("passport");
 const MySqlStore = require("express-mysql-session")(session);
 
-const mySqlPool = require('./database')
+const database = require('./database');
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
 // console.debug(httpStatus);
 const dummyData = require("./dummy_data");
+const password = require("./password");
+require("./passport-config")
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -17,7 +20,7 @@ dotenv.config();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-const sessionStore = new MySqlStore({}, mySqlPool);
+const sessionStore = new MySqlStore({}, database.pool);
 
 const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
 
@@ -38,6 +41,14 @@ app.get("/", (req, res) => {
 
 app.get("/landing", (req, res) => {
     res.render("landing.ejs");
+})
+
+app.get("/register", (req, res) => {
+    res.render("register.ejs");
+})
+
+app.get("/login", (req, res) => {
+    res.render("login.ejs");
 })
 
 app.get("/users", (req, res) => {
@@ -80,9 +91,22 @@ app.get("/adminClearProfile", (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
+app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/'}));
+
+app.post("/register", urlencodedParser, (req, res) => {
+    database.getUserByEmail(req.body.email).then((user) => {
+        const {salt, hash} = password.genPassword(req.body.password);
+        database.addLogin(user.userID, hash, salt);
+        res.redirect("/login");
+    }).catch((err) => {
+        console.log(err);
+        res.status(httpStatus.BAD_REQUEST).send(err);
+    });
+});
+
 //resumeContactInfo
 //not sure how to get res.redirect to work properly
-app.post('/api/profile',urlencodedParser, (req, res) => {
+app.post('/api/profile', urlencodedParser, (req, res) => {
     // Extract form data from the request body
 
     const result = schemas.resumeContact.validate(req.body);
