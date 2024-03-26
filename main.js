@@ -8,7 +8,7 @@ const MySqlStore = require("express-mysql-session")(session);
 const database = require('./database');
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
-// console.debug(httpStatus);
+console.debug(httpStatus);
 const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
@@ -95,6 +95,9 @@ app.post("/login", urlencodedParser, passport.authenticate("local", { successRed
 
 app.post("/register", urlencodedParser, (req, res) => {
     database.getUserByEmail(req.body.email).then((user) => {
+        if (!user)
+            return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
+
         const {salt, hash} = password.genPassword(req.body.password);
         database.addLogin(user.userID, hash, salt);
         res.redirect("/login");
