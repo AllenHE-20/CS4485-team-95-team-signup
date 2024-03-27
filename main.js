@@ -47,7 +47,7 @@ app.get("/teams", (req, res) => {
 })
 
 app.get("/projects", (req, res) => {
-    res.render("project-list.ejs");
+    res.render("project-list.ejs", dummyData.teamList);
 })
 
 app.get("/invites", (req, res) => {

@@ -9,7 +9,46 @@
     <main>
         <article>
             <h1>Project List</h1>
+            
+            <%- include('partials/current-project.ejs'); %>
 
+            <ul class="profile-list">
+                <% projects.forEach(project => { %> 
+                    <li>
+                        <a href="/team/<%= team.id %>">
+                            <div class="profile-image-box">
+                                <img class = "profile-image" src="<%= project.avatar %>" />
+                            </div>
+                            <div class="profile-box">
+                                <h2 class="project-name">
+                                        <%= project.title %>
+                                    <% if (project.id == yourProject) { %>
+                                        <span class="your-project-indicator">Your Project</span>
+                                    <% } %>
+                                </h2>
+                                <div class="project-sponsor">
+                                    <%= project.sponsor%> 
+                                </div>
+                                <div class="project-description">
+                                    <%= project.description%>
+                                </div>
+                                <div class =project-skills>
+                                    <%- include("partials/labeled-list.ejs", { label: Skills needed", list: project.skills, emptymsg: "None set" }); %>
+                                </div>
+                                <div class="project-status-box">
+                                    <p>
+                                        Team Status:
+                                        <% if (project.team_assigned == "Open") { %>
+                                            <span class="project-status-open">Open</span>
+                                        <% } else { %>
+                                            <span class ="project-status-closed">project.team_assigned</span>
+                                        <% } %>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                <% }) %>
+            </ul>
         </article>
     </main>
 </body>

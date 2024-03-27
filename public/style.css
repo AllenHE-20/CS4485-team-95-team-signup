@@ -244,6 +244,14 @@ main {
     text-transform: uppercase;
 }
 
+.project-name {
+    text-transform: uppercase;
+}
+
+.your-project-indicator {
+    font-size: 0.5em;
+}
+
 .your-team-indicator {
     font-size: 0.5em;
 }
@@ -262,6 +270,11 @@ main {
 }
 
 .profile-project-interest {
+    font-size: 1.3rem;
+    margin-bottom: 0.5em;
+}
+
+.project-sponsor {
     font-size: 1.3rem;
     margin-bottom: 0.5em;
 }
@@ -299,6 +312,12 @@ main {
     flex-grow: 1;
 }
 
+.project-status-box {
+    display: flex;
+    align-items: flex-end;
+    flex-grow: 1;
+}
+
 .profile-list > li > a {
     color: inherit;
     text-decoration: none;
@@ -323,6 +342,14 @@ main {
 
 .team-status-open {
     color: green;
+}
+
+.project-status-open {
+    color: green;
+}
+
+.team-status-closed {
+    color: red;
 }
 
 .team-status-closed {

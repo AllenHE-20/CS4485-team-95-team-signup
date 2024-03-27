@@ -1,0 +1,8 @@
+<p class="current-project">
+    YOUR TEAM:
+    <% if (yourProject===null) { %>
+        No project assigned
+    <% } else { %>
+        <a class="project" href="/project/<%= yourProject %>">Team Sign-Up!</a>
+    <% } %>
+</p>
