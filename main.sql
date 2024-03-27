@@ -9,7 +9,14 @@ CREATE TABLE user (
     firstName VARCHAR(20),
     middleName VARCHAR(20),
     lastName VARCHAR(20),
-    email VARCHAR(255)
+    email VARCHAR(255) UNIQUE NOT NULL,
+    admin BOOLEAN NOT NULL
+);
+CREATE TABLE login (
+    userID INT PRIMARY KEY UNIQUE NOT NULL,
+    passwordHash VARCHAR(128) CHECK(passwordHash REGEXP '^[0-9A-Za-z]{128}$') NOT NULL,
+    passwordSalt VARCHAR(64) CHECK(passwordSalt REGEXP '^[0-9A-Za-z]{64}$') NOT NULL,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
 );
 --
 CREATE TABLE organizer(

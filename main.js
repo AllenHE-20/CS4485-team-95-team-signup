@@ -1,70 +1,139 @@
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 const express = require("express");
-const pool = require('./database')
+const session = require("express-session");
+const passport = require("passport");
+const MySqlStore = require("express-mysql-session")(session);
 
-
+const database = require('./database');
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
-// console.debug(httpStatus);
+//console.debug(httpStatus);
 const dummyData = require("./dummy_data");
+const password = require("./password");
+require("./passport-config")
+const auth = require("./authMiddleware");
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
+dotenv.config();
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
+const sessionStore = new MySqlStore({}, database.pool);
+
+const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
+
+app.use(passport.initialize());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    createDatabaseTable: true,
+    store: sessionStore,
+    cookie: {
+        maxAge: SESSION_MAX_AGE,
+    },
+}));
+app.use(passport.session());
+
 app.get("/", (req, res) => {
+    if (!req.isAuthenticated())
+        return res.render("landing.ejs");
+
     res.render("index.ejs");
 })
 
-app.get("/landing", (req, res) => {
-    res.render("landing.ejs");
+app.get("/register", (req, res) => {
+    if (req.isAuthenticated())
+        return res.redirect("/");
+
+    res.render("register.ejs");
 })
 
-app.get("/users", (req, res) => {
+app.get("/login", (req, res) => {
+    if (req.isAuthenticated())
+        return res.redirect("/");
+
+    res.render("login.ejs");
+})
+
+app.get("/logout", (req, res) => {
+    req.logout(function (err) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        res.redirect('/');
+    });
+})
+
+app.get("/users", auth.isAuthenticated, (req, res) => {
     res.render("allUsersList.ejs");
 })
 
-app.get("/user", (req, res) => {
+app.get("/user", auth.isAuthenticated, (req, res) => {
     res.render("user.ejs", dummyData.user);
 })
 
-app.get("/profile", (req, res) => {
+app.get("/profile", auth.isAuthenticated, (req, res) => {
     res.render("profile.ejs", dummyData.user);
 })
 
-app.get("/resumeContact", (req, res) => {
+app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
     res.render("resumeContactForm.ejs");
 })
 
-app.get("/submitPreferences", (req, res) => {
+app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
     res.render("submitPreferences.ejs");
 })
 
-app.get("/teams", (req, res) => {
+app.get("/teams", auth.isAuthenticated, (req, res) => {
     res.render("team-list.ejs", dummyData.teamList);
 })
 
-app.get("/projects", (req, res) => {
+app.get("/projects", auth.isAuthenticated, (req, res) => {
     res.render("project-list.ejs", dummyData.teamList);
 })
 
-app.get("/invites", (req, res) => {
+app.get("/invites", auth.isAuthenticated, (req, res) => {
     res.render("invite-inbox.ejs", dummyData.invites);
 })
 
-app.get("/adminHomepage", (req, res) => {
+app.get("/adminHomepage", auth.isAdmin, (req, res) => {
     res.render("adminHomePage.ejs");
 })
 
-app.get("/adminClearProfile", (req, res) => {
+app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
+app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/'}));
+
+app.post("/register", urlencodedParser, (req, res) => {
+
+    database.getUserByEmail(req.body.email).then((user) => {
+        if (!user)
+            return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
+
+        database.getLoginByEmail(req.body.email).then(login => {
+            if (login)
+                return res.status(httpStatus.BAD_REQUEST).send("That user is already registered.");
+
+            const {salt, hash} = password.genPassword(req.body.password);
+            database.addLogin(user.userID, hash, salt);
+            res.redirect("/login");
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(httpStatus.BAD_REQUEST).send(err);
+    });
+});
+
 //resumeContactInfo
 //not sure how to get res.redirect to work properly
-app.post('/api/profile',urlencodedParser, (req, res) => {
+app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     // Extract form data from the request body
 
     const result = schemas.resumeContact.validate(req.body);
@@ -90,7 +159,7 @@ app.post('/api/profile',urlencodedParser, (req, res) => {
     res.redirect("/user");
 });
 
-app.post("/submitPreferences", urlencodedParser, (req, res) => {
+app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
     console.log("Submit preferences request:", req.body);
     // TODO: Authenticate and determine user to update
 
@@ -113,10 +182,7 @@ app.post("/submitPreferences", urlencodedParser, (req, res) => {
     res.redirect("/user");
 });
 
-app.post("/invites/:teamid/respond", urlencodedParser, (req, res) => {
-    console.log("Invite response request:", req.params.teamid, req.body);
-    // TODO: Authenticate and determine user to update
-
+app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {
     const result = schemas.inviteResponse.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
