@@ -73,12 +73,12 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
     res.render("allUsersList.ejs");
 })
 
-app.get("/user", auth.isAuthenticated, (req, res) => {
-    res.render("user.ejs", dummyData.user);
+app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
+    res.render("profile.ejs", dummyData.user);
 })
 
 app.get("/profile", auth.isAuthenticated, (req, res) => {
-    res.render("profile.ejs", dummyData.user);
+    res.redirect(`/users/${req.user.userID}`)
 })
 
 app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
