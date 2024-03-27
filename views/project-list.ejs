@@ -25,14 +25,13 @@
             <option value="all">All</option>
         </select>
     </div>
+    <div class = "your-project">
+        <%- include('partials/current-project.ejs'); %>
+    </div>
 </div>
 
     <main>
         <article>
-            <h1>Project List</h1>
-
-            <%- include('partials/current-project.ejs'); %>
-
             <ul class="profile-list" id="projectList">
                 <% projects.forEach(project => { %> 
                     <li class="project-item" style="display: block;">
