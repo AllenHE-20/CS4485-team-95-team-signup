@@ -133,7 +133,7 @@ app.post("/register", urlencodedParser, (req, res) => {
 
 //resumeContactInfo
 //not sure how to get res.redirect to work properly
-app.post('/api/profile', urlencodedParser, (req, res) => {
+app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     // Extract form data from the request body
 
     const result = schemas.resumeContact.validate(req.body);
@@ -183,9 +183,6 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
 });
 
 app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {
-    console.log("Invite response request:", req.params.teamid, req.body);
-    // TODO: Authenticate and determine user to update
-
     const result = schemas.inviteResponse.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);

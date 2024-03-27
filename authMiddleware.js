@@ -1,6 +1,6 @@
 const httpStatus = require("./http_status");
 
-module.exports.isAuthenticated = (req, res, next) => {
+function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         next();
     } else {
@@ -8,10 +8,13 @@ module.exports.isAuthenticated = (req, res, next) => {
     }
 }
 
-module.exports.isAdmin = (req, res, next) => {
+function isAdmin(req, res, next) {
     if (req.isAuthenticated() && req.user.admin) {
         next();
     } else {
         res.status(httpStatus.UNAUTHORIZED).send('You are not authorized to view this resource because you are not an admin.');
     }
 }
+
+module.exports.isAuthenticated = isAuthenticated;
+module.exports.isAdmin = isAdmin;

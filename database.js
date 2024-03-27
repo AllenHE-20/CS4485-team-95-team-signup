@@ -36,11 +36,11 @@ async function addLogin(userID, hash, salt) {
     return result;
 }
 
-async function getLoginByEmail(netid) {
+async function getLoginByEmail(email) {
     const [rows] = await pool.query(`
         SELECT *
         FROM user U, login L
-        WHERE U.email = ? AND U.userID = L.userID`, [netid]);
+        WHERE U.email = ? AND U.userID = L.userID`, [email]);
     return rows[0];
 }
 
@@ -49,10 +49,6 @@ async function createUser(firstName, middleName, lastName) {
     INSERT INTO user(firstName, middleName, lastName)
     VALUES (?, ?, ?)`, [firstName, middleName, lastName]);
     return result;
-}
-
-async function createStudent(firstName, middleName, lastName, netid) {
-    let result = createUser(firstName, middleName, lastName);
 }
 
 /*
@@ -69,6 +65,3 @@ module.exports.getLoginByEmail = getLoginByEmail;
 module.exports.getUserByEmail = getUserByEmail;
 module.exports.addLogin = addLogin;
 module.exports.createUser = createUser;
-module.exports.createStudent = createStudent;
-
-//getStudent("jfd00000").then(console.log);
