@@ -5,7 +5,7 @@
 <%- include('partials/header.ejs'); %>
 
 <main class="profile-page">
-    <div class = "card">
+    <div class = "profile-card">
         <img src ="<%= avatar %>" id = "profile-pic">
         <h1><%= name %></h1>
         <div class="image-link">
@@ -29,23 +29,28 @@
         }
     </script>
 
-    <div class="setting-links">
-        <a href="/resumeContact">Upload Resume & Contact Information</a>       
-        <a href="/submitPreferences">Set Project Preferences</a>    
+    <div class="resume-card">
+        <h1>Resume</h1>
+        <div class="setting-links">     
+            <a href="/resumeContact">Upload Resume & Contact Information</a>   
+        </div>
+        <% if (resume==null) {%>                
+            <h4>&times; Resume not found!</h4>
+        <% } else{ %>
+            <a href="#" class="resume-link">
+                <img src="/images/resume.svg"
+                width="50" height="auto">
+            </a>
+            <p>Resume</p>
+        <% } %>     
     </div>
 
     <section>
-        <div class="user-info">              
-            <% if (resume==null) {%>                
-                <h4>&times; Resume not found!</h4>
-            <% } else{ %>
-                <a href="#" class="resume-link">
-                    <img src="/images/resume.svg"
-                    width="50" height="auto">
-                </a>
-                <p>Resume</p>
-            <% } %>            
-    
+        <div class="project-card"> 
+            <h1>Project Preferences</h1>
+            <div class="setting-links">     
+                <a href="/submitPreferences">Set Project Preferences</a>    
+            </div>                    
             <div class="projects">
                 <h3>Project Preferences</h3>
                 <ul>

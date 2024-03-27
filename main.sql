@@ -55,6 +55,15 @@ CREATE TABLE student(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL
 );
+CREATE TRIGGER fullTeam BEFORE
+INSERT ON student FOR EACH ROW BEGIN IF (
+        SELECT COUNT(*)
+        FROM student
+        WHERE teamID = NEW.teamID
+    ) >= 6 THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'This team is already full.';
+END IF;
+END;
 CREATE TRIGGER maxTeamsPerProject BEFORE
 INSERT ON Team FOR EACH ROW BEGIN IF (
         SELECT COUNT(*)

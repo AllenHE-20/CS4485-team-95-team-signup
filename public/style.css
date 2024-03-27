@@ -26,6 +26,12 @@ nav{
     text-align: right;
     align-items: center;
 }
+
+.nav-links.active {
+    text-decoration: underline;
+    color: #247730;
+}
+
 .nav-links ul li{
     list-style: none;
     display: inline-block;
@@ -73,7 +79,7 @@ nav{
 }
 
 body{
-    background-color:#f6f6f8;
+    background-color: #ebebeb;
 }
 
 main {
@@ -84,11 +90,59 @@ main {
     text-align: center;
     position: relative;
     border-radius: 10px;
-    top: 20px;
+    top: 10px;
+}
+
+/* Profile.ejs */
+
+.profile-page {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
 }
 
 .profile-page h1{
     padding: 10px;
+}
+
+.profile-card{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #333;
+    padding-left: 20px;
+    margin-left: 20px;
+  }
+
+  .profile-card h1{
+    font-weight: 500;
+    color: #000;
+  }
+
+  .profile-card img{
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+
+.image-link{
+    display: block;
+    width: 200px;
+    background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);
+    color: #fff;
+    padding: 12px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-picture{
+    display: none;
 }
 
 .setting-links a{
@@ -104,6 +158,29 @@ main {
     font-weight: bold;
     text-decoration: none;    
     margin-block: 5px;
+}
+
+.resume-card{
+    display: inline-block;
+    vertical-align: top;
+    width: 1100px;
+    height: 500px;
+    border-radius: 10px;
+    background: #fff;
+    margin: 10px;
+    text-align: center;
+    margin-left: 50px;
+}
+
+.project-card{
+    display: inline-block;
+    vertical-align: top;
+    width: 1100px;
+    height: 500px;
+    border-radius: 10px;
+    background: #fff;
+    margin: 10px;
+    text-align: center;
 }
 
 .setting-links a:hover{
@@ -173,6 +250,15 @@ main {
     text-transform: uppercase;
 }
 
+.your-project-indicator {
+    font-size: 0.5em;
+}
+
+.project-sponsor {
+    font-weight: bold;
+    line-height: 1.8em;
+}
+
 .your-team-indicator {
     font-size: 0.5em;
 }
@@ -191,6 +277,15 @@ main {
 }
 
 .profile-project-interest {
+    font-size: 1.3rem;
+    margin-bottom: 0.5em;
+}
+
+.project-description {
+    margin-top: 0.2em;
+}
+
+.project-sponsor {
     font-size: 1.3rem;
     margin-bottom: 0.5em;
 }
@@ -228,6 +323,12 @@ main {
     flex-grow: 1;
 }
 
+.project-status-box {
+    display: flex;
+    align-items: flex-end;
+    flex-grow: 1;
+}
+
 .profile-list > li > a {
     color: inherit;
     text-decoration: none;
@@ -254,13 +355,103 @@ main {
     color: green;
 }
 
+.project-status-open {
+    color: green;
+}
+
 .team-status-closed {
+    color: red;
+}
+
+.project-status-closed {
     color: red;
 }
 
 .invite-message {
     margin-top: 1em;
     margin-bottom: 0.5em;
+}
+
+.function-container {
+    background-color: #ffffff;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px; 
+    display: flex;
+}
+
+.function-item {
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.your-project {
+    color: #333;
+    margin-top: 5px;
+    margin-left: 8px;
+    justify-content: right;
+    font-size: 1.1em;
+}
+
+.your-project a {
+    color: #007bff;
+}
+
+#searchInput {
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+#searchInput:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#skills {
+    width: 170px;
+    height: 30px;
+    background-image: url(/images/skills_icon.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: scale(1.1);
+    padding-left: 40px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+    color: transparent;
+    transition: transform 0.3s ease;
+}
+
+#skills:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+#sponsor {
+    width: 150px;
+    height: 30px;
+    background-image: url(/images/sponsor_icon.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    padding-left: 40px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+    color: transparent;
+    transition: transform 0.3s ease;
+}
+
+#sponsor:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .invite-actions {
@@ -306,42 +497,3 @@ input[type="email"] {
     width: 100px;
     cursor: pointer;
   }
-
-  .card{
-    width: 400px;
-    position: relative;
-    background: #fff;
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    color: #333;
-    left: 20px;
-  }
-
-  .card h1{
-    font-weight: 500;
-    color: #000;
-  }
-
-  .card img{
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    margin-top: 40px;
-    margin-bottom: 30px;
-  }
-
-.image-link{
-    display: block;
-    width: 200px;
-    background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);
-    color: #fff;
-    padding: 12px;
-    margin: 10px auto;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.upload-picture{
-    display: none;
-}
