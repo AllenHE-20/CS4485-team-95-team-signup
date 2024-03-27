@@ -9,7 +9,8 @@ CREATE TABLE user (
     firstName VARCHAR(20),
     middleName VARCHAR(20),
     lastName VARCHAR(20),
-    email VARCHAR(255) UNIQUE NOT NULL
+    email VARCHAR(255) UNIQUE NOT NULL,
+    admin BOOLEAN NOT NULL
 );
 CREATE TABLE login (
     userID INT PRIMARY KEY UNIQUE NOT NULL,
