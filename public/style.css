@@ -366,6 +366,21 @@ main {
     margin-bottom: 0.5em;
 }
 
+.search-bar-container {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 100%; 
+    border: none;
+    font-size: 16px; 
+    box-sizing: border-box; 
+}
+
 .invite-actions {
     display: flex;
 }

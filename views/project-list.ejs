@@ -10,29 +10,33 @@
         <article>
             <h1>Project List</h1>
             
+            <div class = "search-container">
+                <input type="text" id="searchInput" placeholder="Search projects" onkeyup="searchProjects()">
+            </div>
+
             <%- include('partials/current-project.ejs'); %>
 
-            <ul class="profile-list">
+            <ul class="profile-list" id="projectList">
                 <% projects.forEach(project => { %> 
-                    <li>
+                    <li class="project-item" style="display: block;">
                         <a href="/projects/<%= project.id %>">
                             <div class="profile-image-box">
-                                <img class = "profile-image" src="<%= project.avatar %>" />
+                                <img class="profile-image" src="<%= project.avatar %>" />
                             </div>
                             <div class="profile-box">
                                 <h2 class="project-name">
-                                        <%= project.title %>
+                                    <%= project.title %>
                                     <% if (project.id == yourProject) { %>
                                         <span class="your-project-indicator">Your Project</span>
                                     <% } %>
                                 </h2>
                                 <div class="project-sponsor">
-                                    <%= project.sponsor%> 
+                                    <%= project.sponsor %> 
                                 </div>
                                 <div class="project-description">
-                                    <%= project.description%>
+                                    <%= project.description %>
                                 </div>
-                                <div class =project-skills>
+                                <div class="project-skills inline-list">
                                     <%- include("partials/labeled-list.ejs", { label: "Skills needed", list: project.skills || []}); %>
                                 </div>
                                 <div class="project-status-box">
@@ -41,7 +45,7 @@
                                         <% if (project.team_assigned == "Open") { %>
                                             <span class="project-status-open">Open</span>
                                         <% } else { %>
-                                            <span class ="project-status-closed">Assinged to <%=project.team_assigned%></span>
+                                            <span class="project-status-closed">Assigned to <%= project.team_assigned %></span>
                                         <% } %>
                                     </p>
                                 </div>
@@ -52,6 +56,27 @@
             </ul>
         </article>
     </main>
+
+    <script>
+        function searchProjects() {
+            var input, filter, ul, li, a, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("projectList");
+            li = ul.getElementsByClassName('project-item');
+
+            for (var i = 0; i < li.length; i++) {
+                a = li[i].getElementsByClassName("project-name")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "block";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
 </body>
 
 </html>
