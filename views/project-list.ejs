@@ -6,13 +6,30 @@
 <body>
     <%- include('partials/header.ejs'); %>
 
+   <!-- Navigation Bar -->
+   <div class="function-container">
+    <div class="function-item">
+        <input type="text" id="searchInput" placeholder="Search projects" onkeyup="searchProjects()">
+    </div>
+    <div class="function-item">
+        <label for="skills"></label>
+        <select id="skills">
+            <option value="all">All</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+        </select>
+    </div>
+    <div class="function-item">
+        <label for="sponsor"></label>
+        <select id="sponsor">
+            <option value="all">All</option>
+        </select>
+    </div>
+</div>
+
     <main>
         <article>
             <h1>Project List</h1>
-            
-            <div class = "search-container">
-                <input type="text" id="searchInput" placeholder="Search projects" onkeyup="searchProjects()">
-            </div>
 
             <%- include('partials/current-project.ejs'); %>
 

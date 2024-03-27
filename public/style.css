@@ -26,6 +26,12 @@ nav{
     text-align: right;
     align-items: center;
 }
+
+.nav-links.active {
+    text-decoration: underline;
+    color: #247730;
+}
+
 .nav-links ul li{
     list-style: none;
     display: inline-block;
@@ -73,7 +79,7 @@ nav{
 }
 
 body{
-    background-color:#f6f6f8;
+    background-color: #ebebeb;
 }
 
 main {
@@ -84,7 +90,7 @@ main {
     text-align: center;
     position: relative;
     border-radius: 10px;
-    top: 20px;
+    top: 10px;
 }
 
 /* Profile.ejs */
@@ -366,19 +372,74 @@ main {
     margin-bottom: 0.5em;
 }
 
-.search-bar-container {
+.function-container {
     background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 20px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px; 
+    display: flex;
+}
+
+.function-item {
+    margin-left: 20px;
+    margin-right: 10px;
 }
 
 #searchInput {
-    width: 100%; 
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+#searchInput:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#skills {
+    width: 170px;
+    height: 30px;
+    background-image: url(/images/skills_icon.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: scale(1.1);
+    padding-left: 40px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     border: none;
-    font-size: 16px; 
-    box-sizing: border-box; 
+    outline: none;
+    color: transparent;
+    transition: transform 0.3s ease;
+}
+
+#skills:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+#sponsor {
+    width: 150px;
+    height: 30px;
+    background-image: url(/images/sponsor_icon.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    padding-left: 40px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+    color: transparent;
+    transition: transform 0.3s ease;
+}
+
+#sponsor:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .invite-actions {

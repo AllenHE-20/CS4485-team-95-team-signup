@@ -5,11 +5,11 @@
         </div>
         <div class="nav-links">
             <ul>
-                <li><a href="/">HOME</a></li>
-                <li><a href="/projects">PROJECT LIST</a></li>
-                <li><a href="/teams">TEAM LIST</a></li>
-                <li><a href="/users">STUDENT LIST</a></li>
-                <li><a href="/profile">PROFILE</a></li>
+                <li><a href="/" class="<%= currentPage === '/' ? 'active' : '' %>">HOME</a></li>
+                <li><a href="/projects" class="<%= currentPage === '/projects' ? 'active' : '' %>">PROJECT LIST</a></li>
+                <li><a href="/teams" class="<%= currentPage === '/teams' ? 'active' : '' %>">TEAM LIST</a></li>
+                <li><a href="/users" class="<%= currentPage === '/users' ? 'active' : '' %>">STUDENT LIST</a></li>
+                <li><a href="/profile" class="<%= currentPage === '/profile' ? 'active' : '' %>">PROFILE</a></li>
             </ul>
     </nav>
 </section>
