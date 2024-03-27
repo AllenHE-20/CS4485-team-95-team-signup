@@ -275,6 +275,10 @@ main {
     margin-bottom: 0.5em;
 }
 
+.project-description {
+    margin-top: 0.2em;
+}
+
 .project-sponsor {
     font-size: 1.3rem;
     margin-bottom: 0.5em;
