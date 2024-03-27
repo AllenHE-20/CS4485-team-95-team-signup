@@ -15,7 +15,7 @@
             <ul class="profile-list">
                 <% projects.forEach(project => { %> 
                     <li>
-                        <a href="/team/<%= team.id %>">
+                        <a href="/projects/<%= project.id %>">
                             <div class="profile-image-box">
                                 <img class = "profile-image" src="<%= project.avatar %>" />
                             </div>
@@ -33,11 +33,11 @@
                                     <%= project.description%>
                                 </div>
                                 <div class =project-skills>
-                                    <%- include("partials/labeled-list.ejs", { label: Skills needed", list: project.skills, emptymsg: "None set" }); %>
+                                    <%- include("partials/labeled-list.ejs", { label: "Skills needed", list: project.skills || []}); %>
                                 </div>
                                 <div class="project-status-box">
                                     <p>
-                                        Team Status:
+                                        Project Status:
                                         <% if (project.team_assigned == "Open") { %>
                                             <span class="project-status-open">Open</span>
                                         <% } else { %>
@@ -46,6 +46,7 @@
                                     </p>
                                 </div>
                             </div>
+                        </a>
                     </li>
                 <% }) %>
             </ul>

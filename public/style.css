@@ -244,12 +244,13 @@ main {
     text-transform: uppercase;
 }
 
-.project-name {
-    text-transform: uppercase;
-}
-
 .your-project-indicator {
     font-size: 0.5em;
+}
+
+.project-sponsor {
+    font-weight: bold;
+    line-height: 1.8em;
 }
 
 .your-team-indicator {
@@ -352,7 +353,7 @@ main {
     color: red;
 }
 
-.team-status-closed {
+.project-status-closed {
     color: red;
 }
 
