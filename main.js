@@ -24,6 +24,7 @@ const sessionStore = new MySqlStore({}, database.pool);
 
 const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
 
+app.use(passport.initialize());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -36,19 +37,35 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => {
+    console.debug(req.session);
+    if (!req.isAuthenticated())
+        return res.render("landing.ejs");
+
     res.render("index.ejs");
 })
 
-app.get("/landing", (req, res) => {
-    res.render("landing.ejs");
-})
-
 app.get("/register", (req, res) => {
+    if (req.isAuthenticated())
+        return res.redirect("/");
+
     res.render("register.ejs");
 })
 
 app.get("/login", (req, res) => {
+    if (req.isAuthenticated())
+        return res.redirect("/");
+
     res.render("login.ejs");
+})
+
+app.get("/logout", (req, res) => {
+    req.logout(function (err) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        res.redirect('/');
+    });
 })
 
 app.get("/users", (req, res) => {
