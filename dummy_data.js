@@ -102,7 +102,7 @@ const projects = [
         description: [
             "Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals",
         ],
-        skills_needed: [
+        skills: [
            "Basic understanding of AI/ML proramming",
            "Solid understanding of imaginary numbers, sequences, and series",
         ],
@@ -120,14 +120,14 @@ const projects = [
         description: [
             "Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!",
         ],
-        skills_needed: [
+        skills: [
            "Understanding of HTML/CSS",
            "Work with databases, and EJS",
            "ML algorithms",
         ],
         team_assigned: "Team 12",
       },
-]
+];
 
 const teamList = {
     yourTeam: 12,

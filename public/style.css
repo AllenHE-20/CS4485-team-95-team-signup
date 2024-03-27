@@ -423,7 +423,7 @@ main {
     appearance: none;
     border: none;
     outline: none;
-    color: transparent;
+    color: black;
     transition: transform 0.3s ease;
 }
 
@@ -445,7 +445,7 @@ main {
     appearance: none;
     border: none;
     outline: none;
-    color: transparent;
+    color: #000;
     transition: transform 0.3s ease;
 }
 
