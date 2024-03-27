@@ -74,7 +74,9 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
-    res.render("profile.ejs", dummyData.user);
+    database.getUser(req.params.userid).then((user) =>
+        res.render("profile.ejs", user)
+    );
 })
 
 app.get("/profile", auth.isAuthenticated, (req, res) => {
