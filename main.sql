@@ -10,7 +10,7 @@ CREATE TABLE user (
     middleName VARCHAR(20),
     lastName VARCHAR(20),
     email VARCHAR(255) UNIQUE NOT NULL,
-    admin BOOLEAN NOT NULL
+    admin BOOLEAN NOT NULL DEFAULT 0
 );
 CREATE TABLE login (
     userID INT PRIMARY KEY UNIQUE NOT NULL,
