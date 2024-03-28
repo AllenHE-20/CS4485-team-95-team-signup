@@ -38,6 +38,10 @@ app.use(session({
 }));
 app.use(passport.session());
 
+app.get("/teamTest", (req, res) => {
+    res.render("teamPage.ejs");
+})
+
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
