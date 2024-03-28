@@ -92,7 +92,11 @@ app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
-    res.render("team-list.ejs", dummyData.teamList);
+    database.getUser(req.user.userID).then((user) => {
+        database.getAllTeams().then((teams) => {
+            res.render("team-list.ejs", {yourTeam: user.team, teams});
+        });
+    });
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {

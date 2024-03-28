@@ -82,6 +82,45 @@ async function getUser(userID) {
     return user;
 }
 
+async function getAllTeams() {
+    const [usersByTeam] = await pool.query(`
+        SELECT U.userID, U.firstName, U.lastName, S.teamID
+        FROM user U, UTD D, student S
+        WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID IS NOT NULL`);
+    const teams = usersByTeam.reduce((accumulator, dbUser) => {
+        const user = `${dbUser.firstName} ${dbUser.lastName}`;
+        if (dbUser.teamID in accumulator) {
+            const team = accumulator[dbUser.teamID];
+            team.members.push(user);
+            team.open = team.members.length < 6;
+        } else {
+            accumulator[dbUser.teamID] = {
+                id: dbUser.teamID,
+                avatar: "/profile.png",
+                interests: [],
+                skills: [],
+                members: [user],
+                open: true,
+            }
+        }
+        return accumulator;
+    }, {});
+    const [prefs] = await pool.query(`
+        SELECT T.teamID, P.projectName
+        FROM TeamPreferences T, Project P
+        WHERE P.projectID = T.teamID`);
+    prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
+    const [skills] = await pool.query(`
+        SELECT S.skillName, T.teamID
+        FROM StudentSkillset C, Skills S, Student T
+        WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
+    skills.forEach((skill) => {
+        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
+            teams[skill.teamID].skills.push(skill.skillName);
+    });
+    return Object.values(teams);
+}
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
@@ -97,3 +136,4 @@ module.exports.getUserByEmail = getUserByEmail;
 module.exports.addLogin = addLogin;
 module.exports.createUser = createUser;
 module.exports.getUser = getUser;
+module.exports.getAllTeams = getAllTeams;
