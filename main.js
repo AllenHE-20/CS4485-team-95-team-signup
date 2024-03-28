@@ -104,7 +104,11 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
-    res.render("invite-inbox.ejs", dummyData.invites);
+    database.getUser(req.user.userID).then((user) => {
+        database.getInvites(req.user.userID).then((invites) => {
+            res.render("invite-inbox.ejs", {yourTeam: user.team, invites: invites})
+        });
+    });
 })
 
 app.get("/adminHomepage", auth.isAdmin, (req, res) => {
