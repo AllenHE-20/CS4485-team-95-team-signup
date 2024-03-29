@@ -38,7 +38,7 @@ app.use(session({
 app.use(passport.session());
 
 app.get("/teamTest", (req, res) => {
-    res.render("teamPage.ejs");
+    res.render("teamPage.ejs", dummyData.teams[1]);
 })
 
 app.get("/", (req, res) => {

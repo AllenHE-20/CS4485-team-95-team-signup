@@ -6,25 +6,21 @@
 
 <main class="teamPageContents">
     <div class="teamNumheader">
-        <h1>Team #</h1>
+        <h1>Team <%= id %></h1>
     </div>
 
     <div class="teamMembersList">
         <h2>Team Members</h2>
-        <p>Member</p>
-        <p>Member</p>
-        <p>Member</p>
-        <p>Member</p>
-        <p>Member</p>
+        <% (members).forEach(member => { %>
+            <p><%= member %></p>
+            <% }) %>
     </div>
 
     <div class="teamProjectPrefsList">
         <h2>Interested Projects</h2>
-        <p>Project</p>
-        <p>Project</p>
-        <p>Project</p>
-        <p>Project</p>
-        <p>Project</p>
+        <% interests.forEach(proj => { %>
+            <p><%= proj %></p>
+            <% }) %>
     </div>
 
     <div class="leaveTeamButtonContainer">
