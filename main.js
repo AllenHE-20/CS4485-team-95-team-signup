@@ -150,34 +150,36 @@ app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {
-        resumeUploadButton,
-        contactByEmail,
-        contactByPhone,
-        contactByDiscord,
-        contactByGroupme,
-        contactByInstagram
-    } = Object.fromEntries(
-        Object.entries(result.value).filter(([_, val]) => val)
+    const contact = Object.fromEntries(
+        Object.entries(result.value)
+            .filter(([_, val]) => val)
+            .map(([key, val]) => {
+                if (key === "resumeUploadButton")
+                    return [key, null];
+                return [key.substring("contactBy".length), val]
+            })
     );
 
-    // TODO: Update data storage for preferences
-
-    // Send the browser to the user's own page to view new preferences
-    // TODO: Update this URL when that gets set up
-    console.log(req.body);
-    res.redirect("/user");
+    database.pool.query(`
+        UPDATE Student
+        SET ?
+        WHERE netID IN (
+            SELECT D.netID
+            FROM user U, UTD D
+            WHERE D.userID = U.userID AND U.userID = ?
+        )
+    `, [contact, req.user.userID]).then(() => {
+        // Send the browser to the user's own page to view new preferences
+        res.redirect("/profile");
+    });
 });
 
 app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
-    console.log("Submit preferences request:", req.body);
-    // TODO: Authenticate and determine user to update
-
     const result = schemas.preferences.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    // Ensure no preferences are repeated among external and CS projects
+    // Ensure no preferences are repeated
     const prefs = Object.values(result.value);
     prefs.sort();
     for (var i = 1; i < prefs.length; i++) {
@@ -185,11 +187,38 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
             return res.status(httpStatus.BAD_REQUEST).send("Preferences must be different projects");
     }
 
-    // TODO: Update data storage for preferences
+    database.pool.query(`
+        SELECT projectID
+        FROM Project;
+    `).then(([projects]) => {
+        projectIDs = projects.map(Object.values).flat();
 
-    // Send the browser to the user's own page to view new preferences
-    // TODO: Update this URL when that gets set up
-    res.redirect("/user");
+        for (var pref of prefs) {
+            if (projectIDs.indexOf(pref) === -1)
+                return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
+        }
+
+        database.getNetID(req.user.userID).then((netID) => {
+            const preferences = Object.entries(result.value).map(([field, projectID]) => {
+                return [
+                    netID,
+                    projectID,
+                    parseInt(field.charAt(field.length - 1)),
+                ];
+            });
+            database.pool.query(`
+                DELETE FROM StudentPreferences
+                WHERE netID = ?`, [netID])
+            .then(() => {
+                database.pool.query(`
+                INSERT INTO StudentPreferences(netID, projectID, preference_number)
+                VALUES ?`, [preferences]).then(() => {
+                    // Send the browser to the user's own page to view new preferences
+                    res.redirect("/profile");
+                });
+            });
+        });
+    });
 });
 
 app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {

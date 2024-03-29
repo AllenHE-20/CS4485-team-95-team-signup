@@ -51,6 +51,14 @@ async function createUser(firstName, middleName, lastName) {
     return result;
 }
 
+async function getNetID(userID) {
+    const [netIDs] = await pool.query(`
+        SELECT D.netID
+        FROM user U, UTD D
+        WHERE U.userID = ? AND D.userID = U.userID`, [userID]);
+    return netIDs[0].netID;
+}
+
 async function getUser(userID) {
     const [users] = await pool.query(`
         SELECT *
@@ -64,7 +72,8 @@ async function getUser(userID) {
     const [preferences] = await pool.query(`
         SELECT P.projectName
         FROM Project P, StudentPreferences W
-        WHERE W.netID = ? AND P.projectID = W.projectID`, [dbUser.netID]);
+        WHERE W.netID = ? AND P.projectID = W.projectID
+        ORDER BY W.preference_number`, [dbUser.netID]);
     const user = {
         userID: dbUser.userID,
         name: `${dbUser.firstName} ${dbUser.lastName}`,
@@ -129,7 +138,8 @@ async function getTeam(teamID) {
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
-        WHERE P.projectID = ?`, teamID);
+        WHERE P.projectID = ?
+        ORDER BY T.preference_number`, teamID);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT S.skillName
@@ -198,3 +208,4 @@ module.exports.getUser = getUser;
 module.exports.getAllTeams = getAllTeams;
 module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;
+module.exports.getNetID = getNetID;

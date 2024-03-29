@@ -127,7 +127,9 @@ CREATE TABLE StudentPreferences(
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
     preference_number INT CHECK (
         preference_number BETWEEN 1 AND 5
-    )
+    ),
+    UNIQUE (netID, preference_number),
+    UNIQUE (netID, projectID)
 );
 CREATE TABLE Skills(
     skillID INT PRIMARY KEY AUTO_INCREMENT,
