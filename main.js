@@ -77,12 +77,14 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
     res.render("allUsersList.ejs");
 })
 
-app.get("/user", auth.isAuthenticated, (req, res) => {
-    res.render("user.ejs", dummyData.user);
+app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
+    database.getUser(req.params.userid).then((user) =>
+        res.render("profile.ejs", user)
+    );
 })
 
 app.get("/profile", auth.isAuthenticated, (req, res) => {
-    res.render("profile.ejs", dummyData.user);
+    res.redirect(`/users/${req.user.userID}`)
 })
 
 app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
@@ -94,7 +96,11 @@ app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
-    res.render("team-list.ejs", dummyData.teamList);
+    database.getUser(req.user.userID).then((user) => {
+        database.getAllTeams().then((teams) => {
+            res.render("team-list.ejs", {yourTeam: user.team, teams});
+        });
+    });
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
@@ -102,7 +108,11 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
-    res.render("invite-inbox.ejs", dummyData.invites);
+    database.getUser(req.user.userID).then((user) => {
+        database.getInvites(req.user.userID).then((invites) => {
+            res.render("invite-inbox.ejs", {yourTeam: user.team, invites: invites})
+        });
+    });
 })
 
 app.get("/adminHomepage", auth.isAdmin, (req, res) => {
