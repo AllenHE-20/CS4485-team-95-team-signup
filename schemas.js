@@ -1,10 +1,6 @@
 const Joi = require('joi');
 
 const preferences = Joi.object({
-    //netid: Joi.string()
-    //    .regex(/^[a-z]{3}[0-9]{5}/)
-    //    .required(),
-
     preference1: Joi.number()
         .integer()
         .required(),
@@ -23,10 +19,6 @@ const preferences = Joi.object({
 });
 
 const inviteResponse = Joi.object({
-    //netid: Joi.string()
-    //    .regex(/^[a-z]{3}[0-9]{5}/)
-    //    .required(),
-
     action: Joi.string()
         .valid("accept", "decline")
         .required(),

@@ -72,16 +72,22 @@ app.get("/logout", (req, res) => {
     });
 })
 
+//sends list with firstName, lastName, and userID.
 app.get("/users", auth.isAuthenticated, (req, res) => {
-    res.render("allUsersList.ejs");
-})
+    database.allStudents().then((list) => {
+        res.render("allUsersList.ejs", { studentlist: list });
+    });
+});
 
-app.get("/user", auth.isAuthenticated, (req, res) => {
-    res.render("user.ejs", dummyData.user);
+
+app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
+    database.getUser(req.params.userid).then((user) =>
+        res.render("profile.ejs", user)
+    );
 })
 
 app.get("/profile", auth.isAuthenticated, (req, res) => {
-    res.render("profile.ejs", dummyData.user);
+    res.redirect(`/users/${req.user.userID}`)
 })
 
 app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
@@ -93,7 +99,11 @@ app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
-    res.render("team-list.ejs", dummyData.teamList);
+    database.getUser(req.user.userID).then((user) => {
+        database.getAllTeams().then((teams) => {
+            res.render("team-list.ejs", { yourTeam: user.team, teams });
+        });
+    });
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
@@ -101,7 +111,11 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
-    res.render("invite-inbox.ejs", dummyData.invites);
+    database.getUser(req.user.userID).then((user) => {
+        database.getInvites(req.user.userID).then((invites) => {
+            res.render("invite-inbox.ejs", { yourTeam: user.team, invites: invites })
+        });
+    });
 })
 
 app.get("/adminHomepage", auth.isAdmin, (req, res) => {
@@ -112,7 +126,7 @@ app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
-app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/'}));
+app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
 
@@ -124,7 +138,7 @@ app.post("/register", urlencodedParser, (req, res) => {
             if (login)
                 return res.status(httpStatus.BAD_REQUEST).send("That user is already registered.");
 
-            const {salt, hash} = password.genPassword(req.body.password);
+            const { salt, hash } = password.genPassword(req.body.password);
             database.addLogin(user.userID, hash, salt);
             res.redirect("/login");
         });
@@ -135,7 +149,6 @@ app.post("/register", urlencodedParser, (req, res) => {
 });
 
 //resumeContactInfo
-//not sure how to get res.redirect to work properly
 app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     // Extract form data from the request body
 
@@ -143,34 +156,36 @@ app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {
-        resumeUploadButton,
-        contactByEmail,
-        contactByPhone,
-        contactByDiscord,
-        contactByGroupme,
-        contactByInstagram
-    } = Object.fromEntries(
-        Object.entries(result.value).filter(([_, val]) => val)
+    const contact = Object.fromEntries(
+        Object.entries(result.value)
+            .filter(([_, val]) => val)
+            .map(([key, val]) => {
+                if (key === "resumeUploadButton")
+                    return [key, null];
+                return [key.substring("contactBy".length), val]
+            })
     );
 
-    // TODO: Update data storage for preferences
-
-    // Send the browser to the user's own page to view new preferences
-    // TODO: Update this URL when that gets set up
-    console.log(req.body);
-    res.redirect("/user");
+    database.pool.query(`
+        UPDATE Student
+        SET ?
+        WHERE netID IN (
+            SELECT D.netID
+            FROM user U, UTD D
+            WHERE D.userID = U.userID AND U.userID = ?
+        )
+    `, [contact, req.user.userID]).then(() => {
+        // Send the browser to the user's own page to view new preferences
+        res.redirect("/profile");
+    });
 });
 
 app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
-    console.log("Submit preferences request:", req.body);
-    // TODO: Authenticate and determine user to update
-
     const result = schemas.preferences.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    // Ensure no preferences are repeated among external and CS projects
+    // Ensure no preferences are repeated
     const prefs = Object.values(result.value);
     prefs.sort();
     for (var i = 1; i < prefs.length; i++) {
@@ -178,11 +193,38 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
             return res.status(httpStatus.BAD_REQUEST).send("Preferences must be different projects");
     }
 
-    // TODO: Update data storage for preferences
+    database.pool.query(`
+        SELECT projectID
+        FROM Project;
+    `).then(([projects]) => {
+        projectIDs = projects.map(Object.values).flat();
 
-    // Send the browser to the user's own page to view new preferences
-    // TODO: Update this URL when that gets set up
-    res.redirect("/user");
+        for (var pref of prefs) {
+            if (projectIDs.indexOf(pref) === -1)
+                return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
+        }
+
+        database.getNetID(req.user.userID).then((netID) => {
+            const preferences = Object.entries(result.value).map(([field, projectID]) => {
+                return [
+                    netID,
+                    projectID,
+                    parseInt(field.charAt(field.length - 1)),
+                ];
+            });
+            database.pool.query(`
+                DELETE FROM StudentPreferences
+                WHERE netID = ?`, [netID])
+                .then(() => {
+                    database.pool.query(`
+                INSERT INTO StudentPreferences(netID, projectID, preference_number)
+                VALUES ?`, [preferences]).then(() => {
+                        // Send the browser to the user's own page to view new preferences
+                        res.redirect("/profile");
+                    });
+                });
+        });
+    });
 });
 
 app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {
