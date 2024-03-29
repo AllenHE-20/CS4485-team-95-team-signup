@@ -468,7 +468,7 @@ main {
 }
 
 .resumeUploadSection,
-.contactSubmitButton{
+.submitButton{
     padding: 10px;
 }
 
@@ -497,3 +497,8 @@ input[type="email"] {
     width: 100px;
     cursor: pointer;
   }
+
+  .adminLinksList,
+  .adminPage p{
+    padding: 10px;
+  } 

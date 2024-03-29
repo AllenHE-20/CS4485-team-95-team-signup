@@ -6,16 +6,15 @@
 <%- include('partials/admin-header.ejs'); %>
     
 <main>
-    <h1>Administrator Controls:</h1>
+    <h1>Administrator Controls</h1>
     <div class="adminLinksList">
-        <ul>
-            <li><a href="">Manage Which Students Have Access</a></li>
-            <li><a href="">Clear a User's Profile Information</a></li>
-            <li><a href="">Manage Database</a></li>
+        <ul class="listBody">
+            <li class=setting-links><a href="/adminAccess">Manage Which Students Have Access</a></li>
+            <li class=setting-links><a href="/adminClearProfile">Clear a User's Profile Information</a></li>
+            <li class=setting-links><a href="/adminDatabase">Manage Database</a></li>
         </ul>
     </div>
 </main>
-
 
 </body>
 </html>
