@@ -21,7 +21,7 @@ dotenv.config();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-const sessionStore = new MySqlStore({}, database.pool);
+const sessionStore = new MySqlStore({createDatabaseTable: true}, database.pool);
 
 const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
 
@@ -30,7 +30,6 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    createDatabaseTable: true,
     store: sessionStore,
     cookie: {
         maxAge: SESSION_MAX_AGE,
