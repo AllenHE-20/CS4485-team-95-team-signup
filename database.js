@@ -21,6 +21,15 @@ async function getUser(id) {
 }
 */
 
+//currently not displaying on student list. But it does send the data over in the format [{firstName: 'x', lastName: 'y', userID: 0}]
+async function allStudents() {
+    const [rows] = await pool.query(`
+        SELECT u.firstName, u.lastName, u.userID FROM user u JOIN UTD on u.userID = UTD.userID
+        JOIN student s on utd.netID = s.netID`);
+    console.log(rows);
+    return rows;
+}
+
 async function getUserByEmail(email) {
     const [rows] = await pool.query(`
         SELECT * FROM
@@ -85,8 +94,8 @@ async function getUser(userID) {
         groupme: dbUser.groupme,
         instagram: dbUser.instagram,
         team: dbUser.teamID,
-        interests: preferences.map(({projectName}) => projectName),
-        skills: skills.map(({skillName}) => skillName),
+        interests: preferences.map(({ projectName }) => projectName),
+        skills: skills.map(({ skillName }) => skillName),
     }
     return user;
 }
@@ -161,7 +170,7 @@ async function getTeam(teamID) {
 }
 
 async function getInvites(userID) {
-    const [[{netID, teamID}]] = await pool.query(`
+    const [[{ netID, teamID }]] = await pool.query(`
         SELECT S.teamID, S.netID
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND U.userID = ?`, [userID]);
@@ -183,10 +192,12 @@ async function getInvites(userID) {
     // TODO: Let database handle team data grabs
     const teams = (await getAllTeams())
         .filter((team) => invites.some((invite) => team.id == invite.teamID))
-        .map((team) => { return {
-            team: team,
-            message: invites.find((invite) => invite.teamID == team.id).message
-        }});
+        .map((team) => {
+            return {
+                team: team,
+                message: invites.find((invite) => invite.teamID == team.id).message
+            }
+        });
     return teams;
 }
 
@@ -209,3 +220,4 @@ module.exports.getAllTeams = getAllTeams;
 module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
+module.exports.allStudents = allStudents;

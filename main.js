@@ -69,9 +69,13 @@ app.get("/logout", (req, res) => {
     });
 })
 
+//sends list with firstName, lastName, and userID.
 app.get("/users", auth.isAuthenticated, (req, res) => {
-    res.render("allUsersList.ejs");
-})
+    database.allStudents().then((list) => {
+        res.render("allUsersList.ejs", { studentlist: list });
+    });
+});
+
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getUser(req.params.userid).then((user) =>
@@ -142,7 +146,6 @@ app.post("/register", urlencodedParser, (req, res) => {
 });
 
 //resumeContactInfo
-//not sure how to get res.redirect to work properly
 app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
     // Extract form data from the request body
 

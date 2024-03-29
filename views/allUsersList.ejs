@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "View Participating Students"}); %>
-<body>
+<%- include("partials/doc-head.ejs", {title: "View Participating Students" }); %>
 
-<%- include('partials/header.ejs'); %>
-    
-<main>
-    <div class="listHeading">
-        <p class="pageIndicator">Currently viewing page x of y.</p>
-        <input class="prevButton" type="button" value="Previous Page" onclick="decrementPageNo();"/>
-        <input class="nextButton" type="button" value="Next Page" onclick="incrementPageNo()"/>
-    </div>
-    
-    <section class="listContainer">
-        <ol class="listBody" id="listBody"></ol>
-    </section>
-</main>
+    <body>
 
-<script src="/main.js"></script>
-    
-<script>
-    var curPageNo = 1;
-    //TODO: Replace this with an API call to fetch the info on page load
-    const maxPageNo = Math.ceil(50/25); //Number of participants divided by # of participants per page
-    
-    function incrementPageNo() {
-        const tempNewVal = curPageNo + 1;
-        if(tempNewVal <= maxPageNo) {
-            curPageNo++;
-            //TODO: Invocation of populateUserList with new page # goes here
-            populateUserList(curPageNo);
-        }
-        console.log(curPageNo);
-    }
-    
-    function decrementPageNo() {
-        if(curPageNo > 1) {
-            curPageNo--;
-            //TODO: Invocation of populateUserList with new page # goes here
-            populateUserList(curPageNo);
-        }
-        
-        
-        console.log(curPageNo);
-    }
-    
-    document.addEventListener("DOMContentLoaded", function() { 
-        // this function runs when the DOM is ready, i.e. when the document has been parsed
-        populateUserList(1);
-    
-   
-});
-</script>
-</body>
+        <%- include('partials/header.ejs'); %>
+
+            <main>
+                <div class="listHeading">
+                    <p class="pageIndicator">Currently viewing page x of y.</p>
+                    <input class="prevButton" type="button" value="Previous Page" onclick="decrementPageNo();" />
+                    <input class="nextButton" type="button" value="Next Page" onclick="incrementPageNo()" />
+                </div>
+
+                <section class="listContainer">
+                    <ol class="listBody" id="listBody"></ol>
+                </section>
+            </main>
+
+            <script src="/main.js"></script>
+
+            <script>
+                var curPageNo = 1;
+                //TODO: Replace this with an API call to fetch the info on page load
+                const maxPageNo = Math.ceil(50 / 25); //Number of participants divided by # of participants per page
+
+                function incrementPageNo() {
+                    const tempNewVal = curPageNo + 1;
+                    if (tempNewVal <= maxPageNo) {
+                        curPageNo++;
+                        //TODO: Invocation of populateUserList with new page # goes here
+                        populateUserList(curPageNo);
+                    }
+                    console.log(curPageNo);
+                }
+
+                function decrementPageNo() {
+                    if (curPageNo > 1) {
+                        curPageNo--;
+                        //TODO: Invocation of populateUserList with new page # goes here
+                        populateUserList(curPageNo);
+                    }
+
+
+                    console.log(curPageNo);
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    // this function runs when the DOM is ready, i.e. when the document has been parsed
+                    populateUserList(1);
+
+
+                });
+            </script>
+    </body>
+
 </html>

@@ -182,6 +182,7 @@ INSERT ON PendingInvites FOR EACH ROW BEGIN IF EXISTS (
                 FROM student
                 WHERE netID = NEW.netID
             )
-    ) THEN SIGNAL SQLSTATE '45000';
+    ) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Member is on that team.';
 END IF;
 END;
