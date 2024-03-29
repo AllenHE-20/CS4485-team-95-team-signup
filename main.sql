@@ -10,7 +10,7 @@ CREATE TABLE user (
     middleName VARCHAR(20),
     lastName VARCHAR(20),
     email VARCHAR(255) UNIQUE NOT NULL,
-    admin BOOLEAN NOT NULL
+    admin BOOLEAN NOT NULL DEFAULT 0
 );
 CREATE TABLE login (
     userID INT PRIMARY KEY UNIQUE NOT NULL,
@@ -43,6 +43,7 @@ CREATE TABLE Project (
     ),
     maxTeams INT
 );
+-- at some point a trigger should be made for when a team is empty it will be deleted.
 CREATE TABLE Team(
     teamID INT PRIMARY KEY AUTO_INCREMENT,
     projectID INT,
@@ -131,6 +132,7 @@ CREATE TABLE StudentPreferences(
     UNIQUE (netID, preference_number),
     UNIQUE (netID, projectID)
 );
+-- Skillcategory should be an enumrated list at some point.
 CREATE TABLE Skills(
     skillID INT PRIMARY KEY AUTO_INCREMENT,
     skillName VARCHAR(20),
@@ -141,7 +143,8 @@ CREATE TABLE StudentSkillset(
     FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
     skillID INT,
     FOREIGN KEY (skillID) REFERENCES Skills(skillID) ON DELETE CASCADE,
-    PRIMARY KEY (netID, skillID)
+    PRIMARY KEY (netID, skillID),
+    UNIQUE(netID, skillID)
 );
 CREATE TABLE ProjectSkillset(
     projectID INT,
@@ -149,7 +152,8 @@ CREATE TABLE ProjectSkillset(
     skillID INT,
     FOREIGN KEY (skillID) REFERENCES Skills(skillID) ON DELETE CASCADE,
     required BOOLEAN,
-    PRIMARY KEY (projectID, skillID)
+    PRIMARY KEY (projectID, skillID),
+    UNIQUE (projectID, skillID)
 );
 CREATE TABLE TeamPreferences(
     teamID INT,
@@ -167,4 +171,17 @@ CREATE TABLE PendingInvites(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE CASCADE,
     message VARCHAR(255),
     PRIMARY KEY (netID, teamID)
-)
+);
+CREATE TRIGGER inviteExistingMember BEFORE
+INSERT ON PendingInvites FOR EACH ROW BEGIN IF EXISTS (
+        SELECT 1
+        FROM Team
+        WHERE NEW.teamID = teamID
+            AND EXISTS(
+                SELECT 1
+                FROM student
+                WHERE netID = NEW.netID
+            )
+    ) THEN SIGNAL SQLSTATE '45000';
+END IF;
+END;

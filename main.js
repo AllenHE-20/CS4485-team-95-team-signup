@@ -94,7 +94,7 @@ app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
 app.get("/teams", auth.isAuthenticated, (req, res) => {
     database.getUser(req.user.userID).then((user) => {
         database.getAllTeams().then((teams) => {
-            res.render("team-list.ejs", {yourTeam: user.team, teams});
+            res.render("team-list.ejs", { yourTeam: user.team, teams });
         });
     });
 })
@@ -106,7 +106,7 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
 app.get("/invites", auth.isAuthenticated, (req, res) => {
     database.getUser(req.user.userID).then((user) => {
         database.getInvites(req.user.userID).then((invites) => {
-            res.render("invite-inbox.ejs", {yourTeam: user.team, invites: invites})
+            res.render("invite-inbox.ejs", { yourTeam: user.team, invites: invites })
         });
     });
 })
@@ -119,7 +119,7 @@ app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
-app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/'}));
+app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
 
@@ -131,7 +131,7 @@ app.post("/register", urlencodedParser, (req, res) => {
             if (login)
                 return res.status(httpStatus.BAD_REQUEST).send("That user is already registered.");
 
-            const {salt, hash} = password.genPassword(req.body.password);
+            const { salt, hash } = password.genPassword(req.body.password);
             database.addLogin(user.userID, hash, salt);
             res.redirect("/login");
         });
@@ -209,14 +209,14 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
             database.pool.query(`
                 DELETE FROM StudentPreferences
                 WHERE netID = ?`, [netID])
-            .then(() => {
-                database.pool.query(`
+                .then(() => {
+                    database.pool.query(`
                 INSERT INTO StudentPreferences(netID, projectID, preference_number)
                 VALUES ?`, [preferences]).then(() => {
-                    // Send the browser to the user's own page to view new preferences
-                    res.redirect("/profile");
+                        // Send the browser to the user's own page to view new preferences
+                        res.redirect("/profile");
+                    });
                 });
-            });
         });
     });
 });
