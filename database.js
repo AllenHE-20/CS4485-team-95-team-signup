@@ -65,15 +65,22 @@ async function getNetID(userID) {
         SELECT D.netID
         FROM user U, UTD D
         WHERE U.userID = ? AND D.userID = U.userID`, [userID]);
-    return netIDs[0].netID;
+    if (netIDs) {
+        return netIDs[0].netID;
+    } else {
+        return null;
+    }
 }
 
-async function getUser(userID) {
+async function getStudentByUserID(userID) {
     const [users] = await pool.query(`
         SELECT *
         FROM user U, UTD D, student S
         WHERE U.userID = ? AND D.userID = U.userID AND D.netID = S.netID`, [userID]);
     const dbUser = users[0];
+    if (!dbUser) {
+        return null;
+    }
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM Skills S, StudentSkillset A
@@ -215,7 +222,7 @@ module.exports.getLoginByEmail = getLoginByEmail;
 module.exports.getUserByEmail = getUserByEmail;
 module.exports.addLogin = addLogin;
 module.exports.createUser = createUser;
-module.exports.getUser = getUser;
+module.exports.getStudentByUserID = getStudentByUserID;
 module.exports.getAllTeams = getAllTeams;
 module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;

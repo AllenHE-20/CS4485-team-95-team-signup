@@ -81,9 +81,12 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
-    database.getUser(req.params.userid).then((user) =>
-        res.render("profile.ejs", user)
-    );
+    database.getStudentByUserID(req.params.userid).then((student) => {
+        if (!student) {
+            return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
+        }
+        res.render("profile.ejs", student);
+    });
 })
 
 app.get("/profile", auth.isAuthenticated, (req, res) => {
@@ -99,9 +102,15 @@ app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
-    database.getUser(req.user.userID).then((user) => {
+    database.getStudentByUserID(req.user.userID).then((student) => {
+        var team;
+        if (!student) {
+            team = null;
+        } else {
+            team = student.team;
+        }
         database.getAllTeams().then((teams) => {
-            res.render("team-list.ejs", { yourTeam: user.team, teams });
+            res.render("team-list.ejs", { yourTeam: team, teams });
         });
     });
 })
@@ -111,9 +120,12 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
-    database.getUser(req.user.userID).then((user) => {
+    database.getStudentByUserID(req.user.userID).then((student) => {
+        if (!student) {
+            return res.status(httpStatus.NOT_FOUND).send("That user is not a Student");
+        }
         database.getInvites(req.user.userID).then((invites) => {
-            res.render("invite-inbox.ejs", { yourTeam: user.team, invites: invites })
+            res.render("invite-inbox.ejs", { yourTeam: student.team, invites: invites })
         });
     });
 })
