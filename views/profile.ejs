@@ -7,21 +7,24 @@
 
             <main class="profile-page">
                 <div class="profile-card">
-                    <img src="<%= avatar %>" id="profile-pic">
+                    <img src="<%= student.avatar %>" id="profile-pic">
                     <h1>
-                        <%= name %>
+                        <%= student.name %>
                     </h1>
-                    <div class="image-link">
-                        <label for="input-file"> Upload Image</label>
-                    </div>
-                    <div class="upload-picture">
-                        <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file">
-                    </div>
-                    <div class="add-info">
-                        <h3>Contact Information</h3>
-                        <p>Email: <%= email %> | Phone: <%= phone %> | Discord: <%= discord %>
-                        </p>
-                    </div>
+                    <% if (curr===student.userID) { %>
+                        <div class="image-link">
+                            <label for="input-file">Upload Image</label>
+                        </div>
+                        <% } %>
+                            <div class="upload-picture">
+                                <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file">
+                            </div>
+                            <div class="add-info">
+                                <h3>Contact Information</h3>
+                                <p>Email: <%= student.email %> | Phone: <%= student.phone %> | Discord: <%=
+                                                student.discord %>
+                                </p>
+                            </div>
                 </div>
 
                 <script>
@@ -38,7 +41,7 @@
                     <div class="setting-links">
                         <a href="/resumeContact">Upload Resume & Contact Information</a>
                     </div>
-                    <% if (resume==null) {%>
+                    <% if (student.resume==null) {%>
                         <h4>&times; Resume not found!</h4>
                         <% } else{ %>
                             <a href="#" class="resume-link">
@@ -57,9 +60,9 @@
                         <div class="projects">
                             <h3>Project Preferences</h3>
                             <ul>
-                                <% interests.forEach(project=> { %>
+                                <% student.interests.forEach(project=> { %>
                                     <li>
-                                        <%= project %>
+                                        <%= student.project %>
                                     </li>
                                     <% }) %>
                             </ul>
@@ -67,6 +70,18 @@
                     </div>
             </main>
 
+            <script>
+
+                let settingLinks = document.querySelectorAll(".setting-links");
+                function hideSettingLinks() {
+                    settingLinks.forEach(link => {
+                        link.style.display = "none";
+                    });
+                }
+                if ("<%= curr %>" !== "<%= student.userID %>") {
+                    hideSettingLinks();
+                }
+            </script>
     </body>
 
 </html>

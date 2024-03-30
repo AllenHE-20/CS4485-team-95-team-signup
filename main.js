@@ -21,7 +21,7 @@ dotenv.config();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-const sessionStore = new MySqlStore({createDatabaseTable: true}, database.pool);
+const sessionStore = new MySqlStore({ createDatabaseTable: true }, database.pool);
 
 const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
 
@@ -85,7 +85,7 @@ app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
         if (!student) {
             return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
         }
-        res.render("profile.ejs", student);
+        res.render("profile.ejs", { student: student, curr: req.user.userID });
     });
 })
 
