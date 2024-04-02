@@ -8,7 +8,7 @@
 <main>
     <h1>Clear User Profile:</h1>
     <p>Enter the NetID of the user who's profile you want to clear. Please note that this action is not reversible, and will clear all information associated with a user's publicly displayed profile.</p>
-    <form onsubmit="return confirm('Are you sure you want to clear this user\'s profile? This action cannot be undone.');">
+    <form onsubmit="return confirm('Are you sure you want to clear this user\'s profile? This action cannot be undone.');" action="/admin/clear-profile" method="post">
         <label for="netidInput">Enter NetID</label>
         <input type="text" name="netidInput" id="netidInput" />
 

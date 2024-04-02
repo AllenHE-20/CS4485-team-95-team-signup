@@ -17,6 +17,7 @@ const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
 const auth = require("./authMiddleware");
+const { url } = require('inspector');
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -176,7 +177,7 @@ app.post("/register", urlencodedParser, (req, res) => {
 });
 
 //resumeContactInfo
-app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
+app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
     const result = schemas.resumeContact.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -227,7 +228,7 @@ app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton
     });
 });
 
-app.post("/api/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, res) => {
+app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, res) => {
     if (!req.file)
         res.status(httpStatus.BAD_REQUEST).send("Must upload a new avatar");
 
@@ -320,6 +321,30 @@ app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (re
     // TODO: Update this URL when that gets set up
     res.redirect("/team");
 });
+
+app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {
+    const result = schemas.clearProfile.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+    database.pool.query(`
+        UPDATE Student
+        SET ?
+        WHERE netID = ?`, [
+            {
+                resumeFile: null,
+                phoneNumber: null,
+                email: null,
+                discord: null,
+                groupme: null,
+                instagram: null,
+                avatar: null,
+            },
+            result.value.netidInput,
+        ]
+    ).then(() => {
+        res.redirect("/adminClearProfile", { clearedUser: result.value.netidInput });
+    });
+})
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
