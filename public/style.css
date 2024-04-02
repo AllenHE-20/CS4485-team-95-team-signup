@@ -130,7 +130,7 @@ main {
     margin-bottom: 30px;
   }
 
-.image-link{
+.image-link>label{
     display: block;
     width: 200px;
     background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);

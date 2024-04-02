@@ -1,66 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Profile Page"}); %>
-<body>
-<%- include('partials/header.ejs'); %>
+<%- include("partials/doc-head.ejs", {title: "Profile Page" }); %>
 
-<main class="profile-page">
-    <div class = "profile-card">
-        <img src ="<%= avatar %>" id = "profile-pic">
-        <h1><%= name %></h1>
-        <div class="image-link">
-            <label for="input-file"> Upload Image</label>
-        </div>
-        <div class = "upload-picture">
-            <input type ="file" accept="image/jpeg, image/png, image/jpg" id = "input-file">
-        </div>
-        <div class="add-info">
-            <h3>Contact Information</h3>
-            <p>Email: <%= email %> | Phone: <%= phone %> | Discord: <%= discord %></p>
-        </div>
-    </div>
-    
-    <script>
-        let profilePic = document.getElementById("profile-pic");
-        let inputFile = document.getElementById("input-file");
-    
-        inputFile.onchange = function(){
-            profilePic.src = URL.createObjectURL(inputFile.files[0]);
-        }
-    </script>
+    <body>
+        <%- include('partials/header.ejs'); %>
 
-    <div class="resume-card">
-        <h1>Resume</h1>
-        <div class="setting-links">     
-            <a href="/resumeContact">Upload Resume & Contact Information</a>   
-        </div>
-        <% if (resume==null) {%>                
-            <h4>&times; Resume not found!</h4>
-        <% } else{ %>
-            <a href="#" class="resume-link">
-                <img src="/images/resume.svg"
-                width="50" height="auto">
-            </a>
-            <p>Resume</p>
-        <% } %>     
-    </div>
+            <main class="profile-page">
+                <div class="profile-card">
+                    <img src="<%= student.avatar %>" id="profile-pic">
+                    <h1>
+                        <%= student.name %>
+                    </h1>
+                    <% if (curr===student.userID) { %>
+                        <div class="image-link">
+                            <label for="input-file">Upload Image</label>
+                            <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
+                        </div>
+                        <form class="upload-picture" action="/api/upload-avatar" method="post" enctype="multipart/form-data">
+                            <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar" />
+                            <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
+                        </form>
+                        <% } %>
+                            <div class="add-info">
+                                <h3>Contact Information</h3>
+                                <p>Email: <%= student.email %> | Phone: <%= student.phone %> | Discord: <%=
+                                                student.discord %>
+                                </p>
+                            </div>
+                </div>
 
-    <section>
-        <div class="project-card"> 
-            <h1>Project Preferences</h1>
-            <div class="setting-links">     
-                <a href="/submitPreferences">Set Project Preferences</a>    
-            </div>                    
-            <div class="projects">
-                <h3>Project Preferences</h3>
-                <ul>
-                <% interests.forEach(project => { %>
-                    <li><%= project %></li>
-                <% }) %>
-                </ul>
-            </div>
-        </div>
-</main>
+                <script>
+                    let profilePic = document.getElementById("profile-pic");
+                    let inputFile = document.getElementById("input-file");
+                    let avatarSubmit = document.getElementById("avatar-submit-link");
+                    avatarSubmit.style.display = "none";
 
-</body>
+                    inputFile.onchange = function () {
+                        profilePic.src = URL.createObjectURL(inputFile.files[0]);
+                        avatarSubmit.style.display = "block";
+                    }
+                </script>
+
+                <div class="resume-card">
+                    <h1>Resume</h1>
+                    <div class="setting-links">
+                        <a href="/resumeContact">Upload Resume & Contact Information</a>
+                    </div>
+                    <% if (student.resume==null) {%>
+                        <h4>&times; Resume not found!</h4>
+                        <% } else{ %>
+                            <a href="#" class="resume-link">
+                                <img src="/images/resume.svg" width="50" height="auto">
+                            </a>
+                            <p>Resume</p>
+                            <% } %>
+                </div>
+
+                <section>
+                    <div class="project-card">
+                        <h1>Project Preferences</h1>
+                        <div class="setting-links">
+                            <a href="/submitPreferences">Set Project Preferences</a>
+                        </div>
+                        <div class="projects">
+                            <h3>Project Preferences</h3>
+                            <ul>
+                                <% student.interests.forEach(project=> { %>
+                                    <li>
+                                        <%= student.project %>
+                                    </li>
+                                    <% }) %>
+                            </ul>
+                        </div>
+                    </div>
+            </main>
+
+            <script>
+
+                let settingLinks = document.querySelectorAll(".setting-links");
+                function hideSettingLinks() {
+                    settingLinks.forEach(link => {
+                        link.style.display = "none";
+                    });
+                }
+                if ("<%= curr %>" !== "<%= student.userID %>") {
+                    hideSettingLinks();
+                }
+            </script>
+    </body>
+
 </html>
