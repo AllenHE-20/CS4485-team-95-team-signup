@@ -177,8 +177,6 @@ app.post("/register", urlencodedParser, (req, res) => {
 
 //resumeContactInfo
 app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
-    // Extract form data from the request body
-
     const result = schemas.resumeContact.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -228,6 +226,40 @@ app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton
         res.redirect("/profile");
     });
 });
+
+app.post("/api/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, res) => {
+    if (!req.file)
+        res.status(httpStatus.BAD_REQUEST).send("Must upload a new avatar");
+
+    try {
+        database.getStudentByUserID(req.user.userID)
+            .then((user) => {
+                if (user.avatar && user.avatar !== "/images/profile.png")
+                    fs.unlink(path.join("./public", user.avatar), (err) => {
+                        if (err)
+                            console.log(`Could not delete file: ${err}`);
+                    });
+            })
+    } catch (e) {
+        fs.unlink(req.file.path, (err) => {
+            if (err)
+                console.log(`Could not delete file: ${err}`);
+        });
+    }
+
+    database.pool.query(`
+        UPDATE Student
+        SET ?
+        WHERE netID IN (
+            SELECT D.netID
+            FROM user U, UTD D
+            WHERE D.userID = U.userID AND U.userID = ?
+        )
+    `, [{avatar: req.file.filename}, req.user.userID]).then(() => {
+        // Send the browser to the user's own page to view new preferences
+        res.redirect("/profile");
+    });
+})
 
 app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
     const result = schemas.preferences.validate(req.body);
