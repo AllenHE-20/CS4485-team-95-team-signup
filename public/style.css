@@ -344,11 +344,15 @@ main {
 }
 
 .inline-list > ul > li:after {
-    content: ", "
+    content: ", ";
+}
+
+.inline-list.bar-sep > ul > li:after {
+    content: " | ";
 }
 
 .inline-list > ul > li:last-child:after {
-    content: ""
+    content: "";
 }
 
 .team-status-open {
