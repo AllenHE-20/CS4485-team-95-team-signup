@@ -53,12 +53,13 @@ CREATE TABLE Team(
 CREATE TABLE student(
     netID CHAR(9) PRIMARY KEY UNIQUE,
     FOREIGN KEY(netID) REFERENCES UTD(netID) ON DELETE CASCADE,
-    resumeFile BLOB,
+    resumeFile VARCHAR(255),
     phoneNumber VARCHAR(12),
     email VARCHAR(255),
     discord VARCHAR(255),
     groupme VARCHAR(255),
     instagram VARCHAR(255),
+    avatar VARCHAR(255),
     teamID INT,
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL

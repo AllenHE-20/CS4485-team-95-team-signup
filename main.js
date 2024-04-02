@@ -1,7 +1,11 @@
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const express = require("express");
+const fs = require("fs");
+const mime = require("mime");
+const multer = require("multer");
 const session = require("express-session");
+const path = require("path");
 const passport = require("passport");
 const MySqlStore = require("express-mysql-session")(session);
 
@@ -36,6 +40,17 @@ app.use(session({
     },
 }));
 app.use(passport.session());
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, "./public/user-files")
+    },
+    filename: function(req, file, cb) {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
+        cb(null, `${file.fieldname}-${uniqueSuffix}.${mime.getExtension(file.mimetype)}`);
+    }
+});
+const upload = multer({storage: storage});
 
 app.get("/teamTest", (req, res) => {
     res.render("teamPage.ejs", dummyData.teams[1]);
@@ -161,7 +176,7 @@ app.post("/register", urlencodedParser, (req, res) => {
 });
 
 //resumeContactInfo
-app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
+app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
     // Extract form data from the request body
 
     const result = schemas.resumeContact.validate(req.body);
@@ -170,13 +185,35 @@ app.post('/api/profile', auth.isAuthenticated, urlencodedParser, (req, res) => {
 
     const contact = Object.fromEntries(
         Object.entries(result.value)
-            .filter(([_, val]) => val)
             .map(([key, val]) => {
-                if (key === "resumeUploadButton")
-                    return [key, null];
+                if (key === "contactByPhone")
+                    return ["phoneNumber", val];
                 return [key.substring("contactBy".length), val]
             })
+            .filter(([_, val]) => val)
     );
+    if (req.file) {
+        try {
+            database.getStudentByUserID(req.user.userID)
+                .then((user) => {
+                    if (user.resume)
+                        fs.unlink(path.join("./public", user.resume), (err) => {
+                            if (err)
+                                console.log(`Could not delete file: ${err}`);
+                        });
+                })
+            contact['resumeFile'] = req.file.filename;
+        } catch (e) {
+            fs.unlink(req.file.path, (err) => {
+                if (err)
+                    console.log(`Could not delete file: ${err}`);
+            });
+        }
+    }
+
+    if (Object.keys(contact).length === 0) {
+        return res.redirect("/profile");
+    }
 
     database.pool.query(`
         UPDATE Student

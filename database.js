@@ -1,5 +1,6 @@
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
+const path = require("path");
 dotenv.config();
 
 const pool = mysql.createPool({
@@ -93,8 +94,8 @@ async function getStudentByUserID(userID) {
     const user = {
         userID: dbUser.userID,
         name: `${dbUser.firstName} ${dbUser.lastName}`,
-        avatar: "images/profile.png",
-        resume: dbUser.resumeFile,
+        avatar: dbUser.avatar ? `/user-files/${dbUser.avatar}` : "/images/profile.png",
+        resume: dbUser.resumeFile ? `/user-files/${dbUser.resumeFile}` : null,
         email: dbUser.email,
         phone: dbUser.phoneNumber,
         discord: dbUser.discord,
