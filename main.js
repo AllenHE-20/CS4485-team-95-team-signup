@@ -342,7 +342,7 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {
             result.value.netidInput,
         ]
     ).then(() => {
-        res.redirect("/adminClearProfile", { clearedUser: result.value.netidInput });
+        res.redirect("/adminClearProfile");
     });
 })
 
