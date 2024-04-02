@@ -1681,7 +1681,7 @@ insert into Team (teamID, projectID)
 values (10, null);
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1701,7 +1701,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1721,7 +1721,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1741,7 +1741,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1761,7 +1761,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1781,7 +1781,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1801,7 +1801,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1821,7 +1821,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1841,7 +1841,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1861,7 +1861,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1881,7 +1881,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1901,7 +1901,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1921,7 +1921,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1941,7 +1941,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1961,7 +1961,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -1981,7 +1981,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -2001,7 +2001,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -2021,7 +2021,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -2041,7 +2041,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
@@ -2061,7 +2061,7 @@ values (
     );
 insert into student (
         netID,
-        resumeFile,
+        resumeUploadButton,
         phoneNumber,
         email,
         discord,
