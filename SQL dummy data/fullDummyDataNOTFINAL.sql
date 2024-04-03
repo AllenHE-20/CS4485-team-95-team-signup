@@ -1,11 +1,12 @@
 -- tables that are not made: ProjectFiles, Faculty, pendingInvites.
-insert into user (userID, firstName, middleName, lastName, email)
+insert into user (userID, firstName, middleName, lastName, email, admin)
 values (
         1,
         'Flossy',
         'Tassaker',
         'Chattelaine',
-        'fchattelaine0@desdev.cn'
+        'fchattelaine0@desdev.cn',
+        1
     );
 insert into user (userID, firstName, middleName, lastName, email)
 values (
