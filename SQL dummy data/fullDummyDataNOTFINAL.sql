@@ -1511,11 +1511,12 @@ insert into Project (
         team_assigned
     )
 values (
-        9,
+        1,
         141,
         '/profile.png',
         'Texas Instruments',
         'Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx',
+        'Smart City Host Application over Wi-SUN',
         5,
         5,
         'Open'
@@ -1532,11 +1533,12 @@ insert into Project (
         team_assigned
     )
 values (
-        11,
+        2,
         142,
         '/profile.png',
         'Professor Sridhar Alagar',
         'Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!',
+        'Team-Sign-Up!',
         5,
         5,
         'Team 12'
@@ -1553,11 +1555,12 @@ insert into Project (
         team_assigned
     )
 values (
-        10,
+        3,
         143,
         '/profile.png',
         'L3Harris',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'AI-ML-Driven RF Pulse Detection',
         4,
         6,
         'Open'
@@ -1579,6 +1582,7 @@ values (
         '/profile.png',
         'Apple',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Apple Project',
         4,
         6,
         'Open'
@@ -1600,6 +1604,7 @@ values (
         '/profile.png',
         'UT Dallas',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
@@ -1621,6 +1626,7 @@ values (
         '/profile.png',
         'CVS Pharmacy',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
@@ -1642,6 +1648,7 @@ values (
         '/profile.png',
         'Walgreens',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+                'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
@@ -1663,6 +1670,7 @@ values (
         '/profile.png',
         'Tesla',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
@@ -1684,6 +1692,7 @@ values (
         '/profile.png',
         'Jonson Controls',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
@@ -1705,6 +1714,7 @@ values (
         '/profile.png',
         'Dr. Becker',
         'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Smart City Host Application over Wi-SUN',
         4,
         6,
         'Open'
