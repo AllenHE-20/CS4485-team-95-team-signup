@@ -147,9 +147,10 @@ async function getAllTeams() {
     return Object.values(teams);
 }
 
-async function getProject(projectID) {
-    const [] = await pool.query()
+/* TO:DO Pull projects to display on project list page, individual project page
+async function getAllProjects() {
 }
+*/
 
 async function getTeam(teamID) {
     const [members] = await pool.query(`

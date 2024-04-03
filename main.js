@@ -131,7 +131,17 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
-    res.render("project-list.ejs", dummyData.teamList);
+    database.getStudentByUserID(req.user.userID).then((student) => {
+        var project;
+        if(!student) {
+            project = null;
+        } else {
+            project = student.project;
+        }
+        database.getAllProjects().then((projects) => {
+            res.render("project-list.ejs", {yourProject: project, projects});
+        })
+    })
 })
 
 app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {

@@ -208,7 +208,7 @@ insert into Project (
         team_assigned
     )
 values (
-        13,
+        10,
         150,
         '/profile.png',
         'Dr. Becker',
