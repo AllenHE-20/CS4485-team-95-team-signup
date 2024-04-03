@@ -154,6 +154,14 @@ app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
     res.render("adminClearProfile.ejs");
 })
 
+app.get("/adminAccess", auth.isAdmin, (req, res) => {
+    res.render("adminAccess.ejs");
+})
+
+app.get("/adminDatabase", auth.isAdmin, (req, res) => {
+    res.render("adminDatabase.ejs");
+})
+
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {

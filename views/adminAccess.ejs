@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("partials/doc-head.ejs", {title: "Manage User Access - Administrator"}); %>
+<body>
+
+<%- include('partials/admin-header.ejs'); %>
+
+<main class=adminPage>
+    <h1>Manage User Access</h1>
+    <p>To give access to a new user, please enter their email address: </p>
+    <form onsubmit="return confirmMessage()">
+        <label for="emailInput"></label>
+        <input type="text" name="emailInput" id="emailInput" />
+        
+        <div>
+            <input type="checkbox" id="adminPriv" name="adminPriv">
+            <label for="adminPriv">Admin Privledges</label>            
+        </div>
+
+        <div class="submitButton">
+            <input type="submit" value="Grant Access"/>
+        </div>
+    </form>
+</main>
+
+<script>
+    function confirmMessage() {    
+    var newUser = document.getElementById("emailInput").value;
+    if (newUser.trim() === ""){
+        alert("No email has been entered.");
+        return false;
+    }
+    else {
+        var message = newUser + " has been given access. \nThis email can now be used to register a new account.";
+        return alert(message);
+    }    
+  }
+</script>
+
+</body>
+</html>
