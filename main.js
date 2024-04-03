@@ -134,6 +134,16 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
     res.render("project-list.ejs", dummyData.teamList);
 })
 
+app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.project.projectID).then((project) => {
+        if(!project) {
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID  + " does not exist.");
+        } else {
+            res.render("profile.ejs", { project: project, curr: req.project.userID });
+        }
+    });
+})
+
 app.get("/invites", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.user.userID).then((student) => {
         if (!student) {

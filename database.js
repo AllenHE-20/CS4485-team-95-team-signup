@@ -147,6 +147,10 @@ async function getAllTeams() {
     return Object.values(teams);
 }
 
+async function getProject(projectID) {
+    const [] = await pool.query()
+}
+
 async function getTeam(teamID) {
     const [members] = await pool.query(`
         SELECT U.userID, U.firstName, U.lastName

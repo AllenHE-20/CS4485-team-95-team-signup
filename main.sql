@@ -35,13 +35,16 @@ CREATE TABLE Project (
     projectID INT PRIMARY KEY AUTO_INCREMENT,
     userID INT,
     FOREIGN KEY (userID) REFERENCES user(userID) ON DELETE CASCADE,
+    avatar VARCHAR(255),
+    sponsor VARCHAR(255),
     description VARCHAR(500),
     projectName VARCHAR(50) UNIQUE,
     teamSize INT CHECK (
         teamSize >= 4
         AND teamSize <= 6
     ),
-    maxTeams INT
+    maxTeams INT,
+    team_assigned VARCHAR(255)
 );
 -- at some point a trigger should be made for when a team is empty it will be deleted.
 CREATE TABLE Team(
