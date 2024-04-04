@@ -83,8 +83,8 @@ async function getStudentByNetID(netid) {
 
     const [users] = await pool.query(`
         SELECT *
-        FROM student S
-        WHERE S.netID = ?`, [netid]);
+        FROM student S, UTD D, user U
+        WHERE S.netID = ? AND S.netID = D.netID AND D.userID = U.userID`, [netid]);
     const dbUser = users[0];
     if (!dbUser) {
         return null;
@@ -200,13 +200,13 @@ async function getInvites(userID) {
     if (teamID === null) {
         // Invites toward the user
         [invites] = await pool.query(`
-            SELECT P.sender, S.teamID, P.message
+            SELECT P.sender, P.receiver, S.teamID, P.message
             FROM PendingInvites P, Student S
             WHERE P.receiver = ? AND S.netID = P.sender`, [netID]);
     } else {
         // Invites toward any member of the user's team
         [invites] = await pool.query(`
-            SELECT P.sender, S.teamID, P.message
+            SELECT P.sender, P.receiver, S.teamID, P.message
             FROM PendingInvites P, Student R, Student S
             WHERE P.receiver = R.netID AND S.netID = P.sender AND R.teamID = ?`, [teamID]);
     }
@@ -218,6 +218,8 @@ async function getInvites(userID) {
             listItem = {team: await getTeam(invite.teamID)};
         }
         listItem.message = invite.message;
+        listItem.senderNetID = invite.sender;
+        listItem.receiverNetID = invite.receiver;
         return listItem;
     });
     return await Promise.all(invites);
@@ -243,3 +245,4 @@ module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
 module.exports.allStudents = allStudents;
+module.exports.getStudentByNetID = getStudentByNetID;

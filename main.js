@@ -317,17 +317,75 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
     });
 });
 
-app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {
+app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, async (req, res) => {
     const result = schemas.inviteResponse.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    // TODO: Ensure user is not on a team if accepting
-    // TODO: Apply team change
+    const invites = await database.getInvites(req.user.userID)
+    const invite = invites[req.params.index]
+    const netID = await database.getNetID(req.user.userID);
+    const senderNetID = invite.senderNetID;
 
-    // Send the user to their new team's page
-    // TODO: Update this URL when that gets set up
-    res.redirect("/team");
+    if (result.value.action === "decline") {
+        await database.pool.query(`
+            DELETE FROM PendingInvites
+            WHERE sender = ? AND receiver = ?`, [senderNetID, invite.receiverNetID]);
+        return res.redirect("/invites");
+    }
+
+    if (!invite) {
+        return res.status(httpStatus.BAD_REQUEST).send(`Invite number ${req.params.index} is invalid`)
+    }
+
+    const student = await database.getStudentByNetID(netID);
+    const ourTeam = await database.getTeam(student.team);
+    var newTeam;
+
+    if (invite.team) {
+        // They have team: switch our team
+        if (!invite.team.open)
+            return res.status(httpStatus.BAD_REQUEST).send(`Team ${invite.team.teamID} is closed`);
+        newTeam = invite.team.id;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ?`, [newTeam, netID]);
+    } else if (ourTeam) {
+        // They don't have team but we do: switch their team
+        if (!ourTeam.open)
+            return res.status(httpStatus.BAD_REQUEST).send(`Your team is closed`);
+        newTeam = ourTeam.teamID;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ?`, [newTeam, senderNetID]);
+    } else {
+        // Neither has team: Add both of us to new team
+        const [result] = await database.pool.query(`
+            INSERT INTO team ()
+            VALUES ()`);
+        newTeam = result.insertId;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ? OR netID = ?`, [newTeam, netID, senderNetID]);
+    }
+
+    await Promise.all([
+        database.pool.query(`
+            DELETE FROM PendingInvites
+            WHERE sender = ? AND receiver = ?`, [senderNetID, invite.receiverNetID]),
+        database.pool.query(`
+            DELETE FROM team
+            WHERE teamID NOT IN (
+                SELECT teamID
+                FROM student
+                WHERE teamID IS NOT NULL
+            )`),
+        // Send the user to their new team's page
+        res.redirect(`/team/${newTeam}`),
+    ]);
 });
 
 app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {

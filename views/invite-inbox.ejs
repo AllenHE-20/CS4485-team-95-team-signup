@@ -13,38 +13,70 @@
             <%- include('partials/current-team.ejs'); %>
 
             <ul class="profile-list">
-                <% invites.forEach(invite => { team = invite.team; %>
+                <% invites.forEach((invite, i) => { %>
                 <li>
-                    <a href="/team">
-                        <div class="profile-image-box">
-                            <img class="profile-image" src="<%= team.avatar %>" />
-                        </div>
-                        <div class="profile-box">
-                            <h2 class="team">Team <%= team.id %></h2>
-                            <div class="inline-list">
-                                <%- include("partials/labeled-list.ejs", { label: "Interested Projects", list: team.interests, emptymsg: "None set" }); %>
+                    <% if (invite.team) { %>
+                        <% team = invite.team; %>
+                        <a href="/team/<%= team.id %>">
+                            <div class="profile-image-box">
+                                <img class="profile-image" src="<%= team.avatar %>" />
                             </div>
-                            <div class="profile-skills inline-list">
-                                <%- include("partials/labeled-list.ejs", { label: "Skills", list: team.skills, emptymsg: "None set" }); %>
+                            <div class="profile-box">
+                                <h2 class="team">Team <%= team.id %></h2>
+                                <div class="inline-list">
+                                    <%- include("partials/labeled-list.ejs", { label: "Interested Projects", list: team.interests, emptymsg: "None set" }); %>
+                                </div>
+                                <div class="profile-skills inline-list">
+                                    <%- include("partials/labeled-list.ejs", { label: "Skills", list: team.skills, emptymsg: "None set" }); %>
+                                </div>
+                                <div class="profile-members inline-list">
+                                    <%- include("partials/labeled-list.ejs", { label: "Members", list: team.members }); %>
+                                </div>
+                                <p class="invite-message">
+                                    <%= invite.message %>
+                                </p>
+                                <div class="invite-actions">
+                                    <form action="/invites/<%= i %>/respond" method="post">
+                                        <input type="hidden" name="action" value="accept"/>
+                                        <input type="submit" value="Accept"/>
+                                    </form>
+                                    <form action="/invites/<%= i %>/respond" method="post">
+                                        <input type="hidden" name="action" value="decline"/>
+                                        <input type="submit" value="Decline"/>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="profile-members inline-list">
-                                <%- include("partials/labeled-list.ejs", { label: "Members", list: team.members }); %>
+                        </a>
+                    <% } else { %>
+                        <% student = invite.student; %>
+                        <a href="/users/<%= student.userId %>">
+                            <div class="profile-image-box">
+                                <img class="profile-image" src="<%= student.avatar %>" />
                             </div>
-                            <p class="invite-message">
-                                <%= invite.message %>
-                            </p>
-                            <div class="invite-actions">
-                                <form action="/invites/<%= team.id %>/respond" method="post">
-                                    <input type="hidden" name="action" value="accept"/>
-                                    <input type="submit" value="Accept"/>
-                                </form>
-                                <form action="/invites/<%= team.id %>/respond" method="post">
-                                    <input type="hidden" name="action" value="decline"/>
-                                    <input type="submit" value="Decline"/>
-                                </form>
+                            <div class="profile-box">
+                                <h2 class="team"><%= student.name %></h2>
+                                <div class="inline-list">
+                                    <%- include("partials/labeled-list.ejs", { label: "Interested Projects", list: student.interests, emptymsg: "None set" }); %>
+                                </div>
+                                <div class="profile-skills inline-list">
+                                    <%- include("partials/labeled-list.ejs", { label: "Skills", list: student.skills, emptymsg: "None set" }); %>
+                                </div>
+                                <p class="invite-message">
+                                    <%= invite.message %>
+                                </p>
+                                <div class="invite-actions">
+                                    <form action="/invites/<%= i %>/respond" method="post">
+                                        <input type="hidden" name="action" value="accept"/>
+                                        <input type="submit" value="Accept"/>
+                                    </form>
+                                    <form action="/invites/<%= i %>/respond" method="post">
+                                        <input type="hidden" name="action" value="decline"/>
+                                        <input type="submit" value="Decline"/>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    <% } %>
                 </li>
                 <% }) %>
             </ul>
