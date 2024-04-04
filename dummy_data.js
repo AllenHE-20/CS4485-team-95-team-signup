@@ -73,22 +73,22 @@ const teams = [
 
 const projects = [
     {
-      id: 9,
-      avatar: "/profile.png",
-      title: [
-          "Smart City Host Application over Wi-SUN",
-      ],
-      sponsor: [
-          "Texas Instruments",
-      ],
-      description: [
-          "Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx",
-      ],
-      skills: [
-         "Embedded SW Development",
-         "Basic Understanding of wireless networks",
-      ],
-      team_assigned: "Open",
+        id: 9,
+        avatar: "/profile.png",
+        title: [
+            "Smart City Host Application over Wi-SUN",
+        ],
+        sponsor: [
+            "Texas Instruments",
+        ],
+        description: [
+            "Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx",
+        ],
+        skills: [
+            "Embedded SW Development",
+            "Basic Understanding of wireless networks",
+        ],
+        team_assigned: true,
     },
     {
         id: 10,
@@ -103,12 +103,12 @@ const projects = [
             "Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals",
         ],
         skills: [
-           "Basic understanding of AI/ML proramming",
-           "Solid understanding of imaginary numbers, sequences, and series",
+            "Basic understanding of AI/ML proramming",
+            "Solid understanding of imaginary numbers, sequences, and series",
         ],
-        team_assigned: "Open",
-      },
-      {
+        team_assigned: true,
+    },
+    {
         id: 11,
         avatar: "/profile.png",
         title: [
@@ -121,12 +121,12 @@ const projects = [
             "Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!",
         ],
         skills: [
-           "Understanding of HTML/CSS",
-           "Work with databases, and EJS",
-           "ML algorithms",
+            "Understanding of HTML/CSS",
+            "Work with databases, and EJS",
+            "ML algorithms",
         ],
         team_assigned: "Team 12",
-      },
+    },
 ];
 
 const teamList = {

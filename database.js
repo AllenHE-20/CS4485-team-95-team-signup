@@ -27,7 +27,6 @@ async function allStudents() {
     const [rows] = await pool.query(`
         SELECT u.firstName, u.lastName, u.userID FROM user u JOIN UTD on u.userID = UTD.userID
         JOIN student s on utd.netID = s.netID`);
-    console.log(rows);
     return rows;
 }
 
@@ -73,6 +72,23 @@ async function getNetID(userID) {
     }
 }
 
+//only gets projectID but this could later be modified to grab more if needed.
+async function getProject(netID) {
+    const [project] = await pool.query(`
+    SELECT P.projectID
+    FROM Project P
+    INNER JOIN Team T ON P.projectID = T.projectID
+    INNER JOIN student S ON T.teamID = S.teamID
+    WHERE S.netID = ?
+    `, [netID]);
+    if (project.length > 0) {
+        return project;
+    }
+    else {
+        return null;
+    }
+}
+
 async function getStudentByUserID(userID) {
     const [users] = await pool.query(`
         SELECT *
@@ -107,6 +123,42 @@ async function getStudentByUserID(userID) {
     }
     return user;
 }
+async function getAllProjects() {
+    const [projects] = await pool.query(`
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, O.affiliation
+        FROM Project P, organizer O 
+        WHERE O.userID = P.userID;
+    `);
+    const [skills] = await pool.query(`
+        SELECT PS.projectID, S.skillName
+        FROM ProjectSkillset PS
+        INNER JOIN Skills S ON PS.skillID = S.skillID;
+    `);
+    const skillsByProject = {};
+    skills.forEach((skill) => {
+        if (!skillsByProject[skill.projectID]) {
+            skillsByProject[skill.projectID] = [];
+        }
+        skillsByProject[skill.projectID].push(skill.skillName);
+    });
+    projects.forEach((project) => {
+        const projectId = project.projectID;
+        if (skillsByProject[projectId]) {
+            project.skills = skillsByProject[projectId];
+        } else {
+            project.skills = [];
+        }
+    });
+
+    //TODO: Add team_assigned to check if a project is full.
+    const [teamsPerProject] = await pool.query(`
+        SELECT projectID, COUNT(*) AS teamCount
+        FROM Team GROUP BY projectID`);
+    const projectStatus = {};
+
+    return projects;
+}
+
 
 async function getAllTeams() {
     const [usersByTeam] = await pool.query(`
@@ -214,12 +266,13 @@ async function getInvites(userID) {
     return teams;
 }
 
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
     console.log(users);
 }
-
+ 
 fetchUsers();
 */
 
@@ -234,3 +287,5 @@ module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
 module.exports.allStudents = allStudents;
+module.exports.getAllProjects = getAllProjects;
+module.exports.getProject = getProject;
