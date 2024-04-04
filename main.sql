@@ -166,12 +166,13 @@ CREATE TABLE TeamPreferences(
     PRIMARY KEY (teamID, projectID)
 );
 CREATE TABLE PendingInvites(
-    netID CHAR(8),
-    FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
-    teamID INT,
-    FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE CASCADE,
+    sender CHAR(8),
+    FOREIGN KEY (sender) REFERENCES UTD(netID) ON DELETE CASCADE,
+    receiver CHAR(8),
+    FOREIGN KEY (receiver) REFERENCES UTD(netID) ON DELETE CASCADE,
     message VARCHAR(255),
-    PRIMARY KEY (netID, teamID)
+    PRIMARY KEY (sender, receiver),
+    CONSTRAINT invite_yourself CHECK (sender <> receiver)
 );
 CREATE TRIGGER inviteExistingMember BEFORE
 INSERT ON PendingInvites FOR EACH ROW BEGIN IF EXISTS (

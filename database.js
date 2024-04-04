@@ -74,14 +74,22 @@ async function getNetID(userID) {
 }
 
 async function getStudentByUserID(userID) {
+    return await getStudentByNetID(await getNetID(userID));
+}
+
+async function getStudentByNetID(netid) {
+    if (!netid)
+        return null;
+
     const [users] = await pool.query(`
         SELECT *
-        FROM user U, UTD D, student S
-        WHERE U.userID = ? AND D.userID = U.userID AND D.netID = S.netID`, [userID]);
+        FROM student S
+        WHERE S.netID = ?`, [netid]);
     const dbUser = users[0];
     if (!dbUser) {
         return null;
     }
+
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM Skills S, StudentSkillset A
@@ -122,7 +130,7 @@ async function getAllTeams() {
         } else {
             accumulator[dbUser.teamID] = {
                 id: dbUser.teamID,
-                avatar: "/profile.png",
+                avatar: "/images/profile.png",
                 interests: [],
                 skills: [],
                 members: [user],
@@ -134,7 +142,8 @@ async function getAllTeams() {
     const [prefs] = await pool.query(`
         SELECT T.teamID, P.projectName
         FROM TeamPreferences T, Project P
-        WHERE P.projectID = T.projectID`);
+        WHERE P.projectID = T.projectID
+        ORDER BY T.preference`);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT S.skillName, T.teamID
@@ -148,6 +157,9 @@ async function getAllTeams() {
 }
 
 async function getTeam(teamID) {
+    if (!teamID)
+        return null;
+
     const [members] = await pool.query(`
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
@@ -156,21 +168,23 @@ async function getTeam(teamID) {
         SELECT P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = ?
-        ORDER BY T.preference_number`, teamID);
-    prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
+        ORDER BY T.preference`, teamID);
+    const interests = [];
+    prefs.forEach((pref) => interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
+    const teamSkills = [];
     skills.forEach((skill) => {
-        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
-            teams[skill.teamID].skills.push(skill.skillName);
+        if (teamSkills.indexOf(skill.skillName) == -1)
+            teamSkills.push(skill.skillName);
     });
     const team = {
         id: teamID,
-        avatar: "/profile.png",
-        interests: prefs.map(Object.values),
-        skills: skills.map(Object.values),
+        avatar: "/images/profile.png",
+        interests: interests,
+        skills: teamSkills,
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
@@ -182,31 +196,31 @@ async function getInvites(userID) {
         SELECT S.teamID, S.netID
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND U.userID = ?`, [userID]);
-    // FIXME: There's no way to tell which way an invite was sent, so a user can invite themselves
     var invites;
     if (teamID === null) {
         // Invites toward the user
         [invites] = await pool.query(`
-            SELECT P.teamID, P.message
-            FROM PendingInvites P
-            WHERE P.netID = ?`, [netID]);
+            SELECT P.sender, S.teamID, P.message
+            FROM PendingInvites P, Student S
+            WHERE P.receiver = ? AND S.netID = P.sender`, [netID]);
     } else {
         // Invites toward any member of the user's team
         [invites] = await pool.query(`
-            SELECT P.teamID, P.message
-            FROM PendingInvites P, Student S
-            WHERE P.netID = S.netID AND S.teamID = ?`, [teamID]);
+            SELECT P.sender, S.teamID, P.message
+            FROM PendingInvites P, Student R, Student S
+            WHERE P.receiver = R.netID AND S.netID = P.sender AND R.teamID = ?`, [teamID]);
     }
-    // TODO: Let database handle team data grabs
-    const teams = (await getAllTeams())
-        .filter((team) => invites.some((invite) => team.id == invite.teamID))
-        .map((team) => {
-            return {
-                team: team,
-                message: invites.find((invite) => invite.teamID == team.id).message
-            }
-        });
-    return teams;
+    invites = invites.map(async (invite) => {
+        var listItem;
+        if (invite.teamID === null) {
+            listItem = {student: await getStudentByNetID(invite.sender)};
+        } else {
+            listItem = {team: await getTeam(invite.teamID)};
+        }
+        listItem.message = invite.message;
+        return listItem;
+    });
+    return await Promise.all(invites);
 }
 
 /*
