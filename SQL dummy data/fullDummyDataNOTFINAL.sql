@@ -1724,7 +1724,7 @@ values (1, null);
 insert into Team (teamID, projectID)
 values (2, null);
 insert into Team (teamID, projectID)
-values (3, null);
+values (3, 3);
 insert into Team (teamID, projectID)
 values (4, null);
 insert into Team (teamID, projectID)
@@ -2229,6 +2229,8 @@ insert into ProjectSkillset (projectID, skillID)
 values (1, 1);
 insert into ProjectSkillset (projectID, skillID)
 values (2, 2);
+insert into ProjectSkillset (projectID, skillID)
+values (1, 2);
 insert into ProjectSkillset (projectID, skillID)
 values (3, 2);
 insert into ProjectSkillset (projectID, skillID)
