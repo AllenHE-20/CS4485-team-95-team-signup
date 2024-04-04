@@ -184,7 +184,6 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
-
     database.getUserByEmail(req.body.email).then((user) => {
         if (!user)
             return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
