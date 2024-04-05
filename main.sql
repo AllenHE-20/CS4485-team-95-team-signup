@@ -66,8 +66,8 @@ CREATE TABLE student(
     teamID INT,
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL,
-    projectID INT,
-    FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
+        projectID INT,
+        FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL
 );
 CREATE TRIGGER fullTeam BEFORE
@@ -77,19 +77,6 @@ INSERT ON student FOR EACH ROW BEGIN IF (
         WHERE teamID = NEW.teamID
     ) >= 6 THEN SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = 'This team is already full.';
-END IF;
-END;
-CREATE TRIGGER maxTeamsPerProject BEFORE
-INSERT ON Team FOR EACH ROW BEGIN IF (
-        SELECT COUNT(*)
-        FROM Team
-        WHERE projectID = NEW.projectID
-    ) >= (
-        SELECT maxTeams
-        FROM Project
-        WHERE projectID = NEW.projectID
-    ) THEN SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'Max teams are assigned to this project already.';
 END IF;
 END;
 CREATE TRIGGER emptyTeam
@@ -167,7 +154,10 @@ CREATE TABLE TeamPreferences(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
-    preference INT,
+    preference_number INT CHECK (
+        preference_number BETWEEN 1 AND 5
+    ),
+    UNIQUE(teamID, preference_number),
     -- TODO: Limit? Maybe -5 to +5?
     PRIMARY KEY (teamID, projectID)
 );
@@ -180,17 +170,17 @@ CREATE TABLE PendingInvites(
     PRIMARY KEY (sender, receiver),
     CONSTRAINT invite_yourself CHECK (sender <> receiver)
 );
-CREATE TRIGGER inviteExistingMember BEFORE
-INSERT ON PendingInvites FOR EACH ROW BEGIN IF EXISTS (
-        SELECT 1
-        FROM Team
-        WHERE NEW.teamID = teamID
-            AND EXISTS(
-                SELECT 1
-                FROM student
-                WHERE netID = NEW.netID
-            )
-    ) THEN SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'Member is on that team.';
-END IF;
-END;
+-- CREATE TRIGGER inviteExistingMember BEFORE
+-- INSERT ON PendingInvites FOR EACH ROW BEGIN IF EXISTS (
+--         SELECT 1
+--         FROM Team
+--         WHERE NEW.teamID = teamID
+--             AND EXISTS(
+--                 SELECT 1
+--                 FROM student
+--                 WHERE netID = NEW.netID
+--             )
+--     ) THEN SIGNAL SQLSTATE '45000'
+-- SET MESSAGE_TEXT = 'Member is on that team.';
+-- END IF;
+-- END;

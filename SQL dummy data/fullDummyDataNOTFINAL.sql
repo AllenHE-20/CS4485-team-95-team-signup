@@ -1,5 +1,12 @@
 -- tables that are not made: ProjectFiles, Faculty, pendingInvites.
-insert into user (userID, firstName, middleName, lastName, email, admin)
+insert into user (
+        userID,
+        firstName,
+        middleName,
+        lastName,
+        email,
+        admin
+    )
 values (
         1,
         'Flossy',
@@ -2248,3 +2255,63 @@ insert into ProjectSkillset (projectID, skillID)
 values (9, 3);
 insert into ProjectSkillset (projectID, skillID)
 values (10, 1);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (1, 1, 1);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (1, 2, 2);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (1, 3, 3);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (1, 4, 4);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (1, 5, 5);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (2, 6, 1);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (2, 7, 2);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (2, 8, 3);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (2, 9, 4);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (2, 10, 5);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (3, 3, 1);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (3, 4, 2);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (3, 8, 3);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (3, 9, 4);
+insert into TeamPreferences (teamID, projectID, preference_number)
+values (3, 10, 5);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('BGO77836', 1, 1);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('BGO77836', 2, 2);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('BGO77836', 3, 3);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('BGO77836', 4, 4);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('BGO77836', 5, 5);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('SJD74025', 6, 1);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('SJD74025', 7, 2);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('SJD74025', 8, 3);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('SJD74025', 9, 4);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('SJD74025', 10, 5);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('DRZ36800', 3, 1);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('DRZ36800', 4, 2);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('DRZ36800', 8, 3);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('DRZ36800', 9, 4);
+insert into StudentPreferences (netID, projectID, preference_number)
+values ('DRZ36800', 10, 5);
