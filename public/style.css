@@ -496,13 +496,19 @@ input[type="email"] {
 
   }
 
-  input[type="submit"]{
+input[type="submit"]{
     font-size: 16px;
     width: 100px;
     cursor: pointer;
-  }
+ }
 
-  .adminLinksList,
-  .adminPage p{
+.adminLinksList,
+.adminPage p{
     padding: 10px;
-  } 
+} 
+
+.adminBox{
+    display:flex;
+    justify-content: center;
+    padding-top: 5px;
+}

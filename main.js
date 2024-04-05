@@ -43,15 +43,15 @@ app.use(session({
 app.use(passport.session());
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, "./public/user-files")
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
         cb(null, `${file.fieldname}-${uniqueSuffix}.${mime.getExtension(file.mimetype)}`);
     }
 });
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 
 app.get("/teamTest", (req, res) => {
     res.render("teamPage.ejs", dummyData.teams[1]);
@@ -132,7 +132,42 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
-    res.render("project-list.ejs", dummyData.teamList);
+    database.getNetID(req.user.userID)
+        .then(netID => {
+            return database.getProject(netID);
+        })
+        .then(yourProjectID => {
+            return database.getAllProjects()
+                .then(projects => {
+                    console.log(yourProjectID)
+                    res.render("project-list.ejs", {
+                        yourProject: yourProjectID,
+                        projects: projects
+                    });
+                });
+        });
+    // database.getStudentByUserID(req.user.userID).then((student) => {
+    //     var project;
+    //     if (!student) {
+    //         project = null;
+    //     } else {
+    //         project = student.project;
+    //     }
+    //     database.getAllProjects().then((projects) => {
+    //         console.log(project)
+    //         res.render("project-list.ejs", { yourProject: project, projects });
+    //     })
+    // })
+})
+
+app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.project.projectID).then((project) => {
+        if (!project) {
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID + " does not exist.");
+        } else {
+            res.render("profile.ejs", { project: project, curr: req.project.userID });
+        }
+    });
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
@@ -165,7 +200,6 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
-
     database.getUserByEmail(req.body.email).then((user) => {
         if (!user)
             return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
@@ -264,7 +298,7 @@ app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, 
             FROM user U, UTD D
             WHERE D.userID = U.userID AND U.userID = ?
         )
-    `, [{avatar: req.file.filename}, req.user.userID]).then(() => {
+    `, [{ avatar: req.file.filename }, req.user.userID]).then(() => {
         // Send the browser to the user's own page to view new preferences
         res.redirect("/profile");
     });

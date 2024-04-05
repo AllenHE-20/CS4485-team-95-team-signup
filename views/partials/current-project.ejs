@@ -2,7 +2,9 @@
     Your Project:
     <% if (yourProject===null) { %>
         No project assigned
-    <% } else { %>
-        <a class="project" href="/project/<%= yourProject %>">Team Sign-Up!</a>
-    <% } %>
+        <% } else { %>
+            <a class="project" href="/project/<%= yourProject %>">
+                <%= yourProject %>
+            </a>
+            <% } %>
 </p>

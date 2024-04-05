@@ -1,100 +1,92 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<%- include("partials/doc-head.ejs", {title: "Project List"}); %>
+<%- include("partials/doc-head.ejs", {title: "Project List" }); %>
 
-<body>
-    <%- include('partials/header.ejs'); %>
+    <body>
+        <%- include('partials/header.ejs'); %>
 
-   <!-- Navigation Bar -->
-   <div class="function-container">
-    <div class="function-item">
-        <input type="text" id="searchInput" placeholder="Search projects" onkeyup="searchProjects()">
-    </div>
-    <div class="function-item">
-        <label for="skills"></label>
-        <select id="skills">
-            <option value=""></option>
-            <option value="all">All</option>
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-        </select>
-    </div>
-    <div class="function-item">
-        <label for="sponsor"></label>
-        <select id="sponsor">
-            <option value=""></option>
-            <option value="all">All</option>
-        </select>
-    </div>
-    <div class = "your-project">
-        <%- include('partials/current-project.ejs'); %>
-    </div>
-</div>
+            <!-- Navigation Bar -->
+            <div class="function-container">
+                <div class="function-item">
+                    <input type="text" id="searchInput" placeholder="Search projects" onkeyup="searchProjects()">
+                </div>
+                <div class="function-item">
+                    <label for="sponsor"></label>
+                    <select id="sponsor">
+                        <option value=""></option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="your-project">
+                    <%- include('partials/current-project.ejs'); %>
+                </div>
+            </div>
 
-    <main>
-        <article>
-            <ul class="profile-list" id="projectList">
-                <% projects.forEach(project => { %> 
-                    <li class="project-item" style="display: block;">
-                        <a href="/projects/<%= project.id %>">
-                            <div class="profile-image-box">
-                                <img class="profile-image" src="<%= project.avatar %>" />
-                            </div>
-                            <div class="profile-box">
-                                <h2 class="project-name">
-                                    <%= project.title %>
-                                    <% if (project.id == yourProject) { %>
-                                        <span class="your-project-indicator">Your Project</span>
-                                    <% } %>
-                                </h2>
-                                <div class="project-sponsor">
-                                    <%= project.sponsor %> 
-                                </div>
-                                <div class="project-description">
-                                    <%= project.description %>
-                                </div>
-                                <div class="project-skills inline-list">
-                                    <%- include("partials/labeled-list.ejs", { label: "Skills needed", list: project.skills || []}); %>
-                                </div>
-                                <div class="project-status-box">
-                                    <p>
-                                        Project Status:
-                                        <% if (project.team_assigned == "Open") { %>
-                                            <span class="project-status-open">Open</span>
-                                        <% } else { %>
-                                            <span class="project-status-closed">Assigned to <%= project.team_assigned %></span>
-                                        <% } %>
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                <% }) %>
-            </ul>
-        </article>
-    </main>
+            <main>
+                <article>
+                    <ul class="profile-list" id="projectList">
+                        <% projects.forEach(project=> { %>
+                            <li class="project-item" style="display: block;">
+                                <a href="/projects/<%= project.id %>">
+                                    <div class="profile-image-box">
+                                        <img class="profile-image" src="<%= project.avatar %>" />
+                                    </div>
+                                    <div class="profile-box">
+                                        <h2 class="project-name">
+                                            <%= project.projectname %>
+                                                <% if (project.id==yourProject.projectID) { %>
+                                                    <span class="your-project-indicator">Your Project</span>
+                                                    <% } %>
+                                        </h2>
+                                        <div class="project-sponsor">
+                                            <%= project.affiliation %>
+                                        </div>
+                                        <div class="project-description">
+                                            <%= project.description %>
+                                        </div>
+                                        <div class="project-skills inline-list">
+                                            <%- include("partials/labeled-list.ejs", { label: "Skills needed" , list:
+                                                project.skills || []}); %>
+                                        </div>
+                                        <div class="project-status-box">
+                                            <p>
+                                                Project Status:
+                                                <% if (project.team_assigned) { %>
+                                                    <span class="project-status-open">Open</span>
+                                                    <% } else { %>
+                                                        <span class="project-status-closed">Closed</span>
+                                                        <% } %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <% }) %>
+                    </ul>
+                </article>
+            </main>
 
-    <script>
-        function searchProjects() {
-            var input, filter, ul, li, a, txtValue;
-            input = document.getElementById('searchInput');
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("projectList");
-            li = ul.getElementsByClassName('project-item');
+            <script>
+                function searchProjects() {
+                    var input, filter, ul, li, a, txtValue;
+                    input = document.getElementById('searchInput');
+                    filter = input.value.toUpperCase();
+                    ul = document.getElementById("projectList");
+                    li = ul.getElementsByClassName('project-item');
 
-            for (var i = 0; i < li.length; i++) {
-                a = li[i].getElementsByClassName("project-name")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "block";
-                } else {
-                    li[i].style.display = "none";
+                    for (var i = 0; i < li.length; i++) {
+                        a = li[i].getElementsByClassName("project-name")[0];
+                        txtValue = a.textContent || a.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            li[i].style.display = "block";
+                        } else {
+                            li[i].style.display = "none";
+                        }
+                    }
                 }
-            }
-        }
-    </script>
+            </script>
 
-</body>
+    </body>
 
 </html>
