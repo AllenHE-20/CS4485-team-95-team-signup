@@ -382,21 +382,38 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
             UPDATE Student
             SET ?
             WHERE netID = ?`, [
-                {
-                    resumeFile: null,
-                    phoneNumber: null,
-                    email: null,
-                    discord: null,
-                    groupme: null,
-                    instagram: null,
-                    avatar: null,
-                },
-                netID,
-            ]
+            {
+                resumeFile: null,
+                phoneNumber: null,
+                email: null,
+                discord: null,
+                groupme: null,
+                instagram: null,
+                avatar: null,
+            },
+            netID,
+        ]
         ),
         res.redirect("/adminClearProfile"),
     ]);
 })
+
+//Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
+//Maybe some kind of check box for UTD to make a student?
+app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput } = req.body; // Correct variable names
+
+    const result = schemas.addUser.validate(req.body);
+    console.log(result);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+    await database.pool.query(`
+        INSERT INTO user (firstName, middleName, lastName, email) VALUES
+        (?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput]);
+
+    res.redirect("/adminAccess");
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

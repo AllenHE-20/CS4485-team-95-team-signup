@@ -51,7 +51,15 @@ const clearProfile = Joi.object({
         .required(),
 })
 
+const addUser = Joi.object({
+    firstNameInput: Joi.string().required(),
+    middleNameInput: Joi.string().optional().empty(''),
+    lastNameInput: Joi.string().required(),
+    emailInput: Joi.string().required()
+})
+
 module.exports.preferences = preferences;
 module.exports.inviteResponse = inviteResponse;
 module.exports.resumeContact = resumeContact;
 module.exports.clearProfile = clearProfile;
+module.exports.addUser = addUser;
