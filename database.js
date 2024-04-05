@@ -205,13 +205,10 @@ async function getAllTeams() {
         ORDER BY T.preference`);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
-        SELECT S.skillName, T.teamID
+        SELECT DISTINCT S.skillName, T.teamID
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
-    skills.forEach((skill) => {
-        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
-            teams[skill.teamID].skills.push(skill.skillName);
-    });
+    skills.forEach((skill) => teams[skill.teamID].skills.push(skill.skillName));
 
     return Object.values(teams);
 }
@@ -242,8 +239,8 @@ async function getTeam(teamID) {
     const team = {
         id: teamID,
         avatar: "/images/profile.png",
-        interests: prefs.map(Object.values),
-        skills: skills.map(Object.values),
+        interests: prefs.flatMap(Object.values),
+        skills: skills.flatMap(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
