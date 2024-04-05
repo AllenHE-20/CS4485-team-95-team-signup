@@ -55,7 +55,8 @@ const addUser = Joi.object({
     firstNameInput: Joi.string().required(),
     middleNameInput: Joi.string().optional().empty(''),
     lastNameInput: Joi.string().required(),
-    emailInput: Joi.string().required()
+    emailInput: Joi.string().required(),
+    adminPriv: Joi.string().valid('on', 'off')
 })
 
 module.exports.preferences = preferences;

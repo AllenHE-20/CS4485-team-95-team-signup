@@ -129,6 +129,7 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
+<<<<<<< Updated upstream
     
     //Duplicated from '/teams'
     database.getStudentByUserID(req.user.userID).then((student) => {
@@ -142,6 +143,11 @@ app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
           res.render("teamPage.ejs", {yourTeam: team, teamDataObj});
       });
   });
+=======
+    database.getTeam(req.params.teamid).then((teamDataObj) => {
+        res.render("teamPage.ejs", teamDataObj);
+    });
+>>>>>>> Stashed changes
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
@@ -411,15 +417,18 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
 //Maybe some kind of check box for UTD to make a student?
 app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { firstNameInput, middleNameInput, lastNameInput, emailInput } = req.body; // Correct variable names
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, adminPriv } = req.body;
+    const adminBool = adminPriv ? 1 : 0;
+    console.log(adminPriv)
+    console.log(adminBool)
 
     const result = schemas.addUser.validate(req.body);
     console.log(result);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
     await database.pool.query(`
-        INSERT INTO user (firstName, middleName, lastName, email) VALUES
-        (?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput]);
+        INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
+        (?,?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
 
     res.redirect("/adminAccess");
 });
