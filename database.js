@@ -202,7 +202,7 @@ async function getAllTeams() {
         SELECT T.teamID, P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = T.projectID
-        ORDER BY T.preference`);
+        ORDER BY T.preference_number`);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName, T.teamID
@@ -269,9 +269,9 @@ async function getInvites(userID) {
     invites = invites.map(async (invite) => {
         var listItem;
         if (invite.teamID === null) {
-            listItem = {student: await getStudentByNetID(invite.sender)};
+            listItem = { student: await getStudentByNetID(invite.sender) };
         } else {
-            listItem = {team: await getTeam(invite.teamID)};
+            listItem = { team: await getTeam(invite.teamID) };
         }
         listItem.message = invite.message;
         listItem.senderNetID = invite.sender;
