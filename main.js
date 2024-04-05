@@ -129,10 +129,20 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
-    database.getTeam(req.params.teamid).then((teamDataObj) => {
-          res.render("teamPage.ejs", teamDataObj);
+    
+    //Duplicated from '/teams'
+    database.getStudentByUserID(req.user.userID).then((student) => {
+      var team;
+      if (!student) {
+          team = null;
+      } else {
+          team = student.team;
+      }
+      database.getTeam(req.params.teamid).then((teamDataObj) => {
+          res.render("teamPage.ejs", {yourTeam: team, teamDataObj});
       });
-  })
+  });
+})
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
     database.getNetID(req.user.userID)
