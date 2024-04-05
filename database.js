@@ -196,6 +196,8 @@ async function getAllTeams() {
         if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
             teams[skill.teamID].skills.push(skill.skillName);
     });
+    console.log("logging team page skills");
+    console.log(skills);
     return Object.values(teams);
 }
 
@@ -217,12 +219,13 @@ async function getTeam(teamID) {
         WHERE P.projectID = ?
         ORDER BY T.preference_number`, teamID);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
-    
+    */
     
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
+    /*
     skills.forEach((skill) => {
         if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
             teams[skill.teamID].skills.push(skill.skillName);
@@ -232,7 +235,7 @@ async function getTeam(teamID) {
         id: teamID,
         avatar: "/profile.png",
         //interests: prefs.map(Object.values),
-        //skills: skills.map(Object.values),
+        skills: skills.map(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
