@@ -47,8 +47,7 @@ const resumeContact = Joi.object({
 })
 
 const clearProfile = Joi.object({
-    netidInput: Joi.string()
-        .regex(/[a-zA-Z]{3}[0-9]{5,6}/)
+    clearProfile: Joi.string()
         .required(),
 })
 

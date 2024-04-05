@@ -65,7 +65,7 @@ async function getNetID(userID) {
         SELECT D.netID
         FROM user U, UTD D
         WHERE U.userID = ? AND D.userID = U.userID`, [userID]);
-    if (netIDs) {
+    if (netIDs && netIDs.length) {
         return netIDs[0].netID;
     } else {
         return null;

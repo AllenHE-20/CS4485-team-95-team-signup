@@ -364,28 +364,35 @@ app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (re
     res.redirect("/team");
 });
 
-app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {
+app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.clearProfile.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
-    database.pool.query(`
-        UPDATE Student
-        SET ?
-        WHERE netID = ?`, [
-            {
-                resumeFile: null,
-                phoneNumber: null,
-                email: null,
-                discord: null,
-                groupme: null,
-                instagram: null,
-                avatar: null,
-            },
-            result.value.netidInput,
-        ]
-    ).then(() => {
-        res.redirect("/adminClearProfile");
-    });
+    const userID = (await database.getUserByEmail(result.value.clearProfile)).userID;
+    if (!userID)
+        return res.status(httpStatus.BAD_REQUEST).send("That email isn't associated with a user");
+    const netID = await database.getNetID(userID);
+    if (!netID)
+        return res.status(httpStatus.BAD_REQUEST).send("That user has no profile");
+    await Promise.all([
+        database.pool.query(`
+            UPDATE Student
+            SET ?
+            WHERE netID = ?`, [
+                {
+                    resumeFile: null,
+                    phoneNumber: null,
+                    email: null,
+                    discord: null,
+                    groupme: null,
+                    instagram: null,
+                    avatar: null,
+                },
+                netID,
+            ]
+        ),
+        res.redirect("/adminClearProfile"),
+    ]);
 })
 
 const port = process.env.PORT || 3000;
