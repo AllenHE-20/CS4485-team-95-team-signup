@@ -208,11 +208,14 @@ app.get("/adminAccess", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminDatabase", auth.isAdmin, (req, res) => {
-    res.render("adminDatabase.ejs", dummyData.teams[1]);
+    res.render("adminDatabase.ejs");
 })
 
 app.get("/adminTeams", auth.isAdmin, (req, res) => {
-    res.render("adminTeams.ejs", dummyData.teams[1]);
+    res.render("adminTeams.ejs", {
+        adminTeam: dummyData.adminTeam,
+        teams: dummyData.teams
+    });
 })
 
 
