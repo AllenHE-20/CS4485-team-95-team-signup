@@ -27,7 +27,6 @@ async function allStudents() {
     const [rows] = await pool.query(`
         SELECT u.firstName, u.lastName, u.userID FROM user u JOIN UTD on u.userID = UTD.userID
         JOIN student s on utd.netID = s.netID`);
-    console.log(rows);
     return rows;
 }
 
@@ -66,9 +65,26 @@ async function getNetID(userID) {
         SELECT D.netID
         FROM user U, UTD D
         WHERE U.userID = ? AND D.userID = U.userID`, [userID]);
-    if (netIDs) {
+    if (netIDs && netIDs.length) {
         return netIDs[0].netID;
     } else {
+        return null;
+    }
+}
+
+//only gets projectID but this could later be modified to grab more if needed.
+async function getProject(netID) {
+    const [project] = await pool.query(`
+    SELECT P.projectID, P.projectName
+    FROM Project P
+    INNER JOIN Team T ON P.projectID = T.projectID
+    INNER JOIN student S ON T.teamID = S.teamID
+    WHERE S.netID = ?
+    `, [netID]);
+    if (project.length > 0) {
+        return project;
+    }
+    else {
         return null;
     }
 }
@@ -115,6 +131,49 @@ async function getStudentByNetID(netid) {
     }
     return user;
 }
+async function getAllProjects() {
+    const [projects] = await pool.query(`
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, O.affiliation
+        FROM Project P, organizer O 
+        WHERE O.userID = P.userID;
+    `);
+    const [skills] = await pool.query(`
+        SELECT PS.projectID, S.skillName
+        FROM ProjectSkillset PS
+        INNER JOIN Skills S ON PS.skillID = S.skillID;
+    `);
+    const skillsByProject = {};
+    skills.forEach((skill) => {
+        if (!skillsByProject[skill.projectID]) {
+            skillsByProject[skill.projectID] = [];
+        }
+        skillsByProject[skill.projectID].push(skill.skillName);
+    });
+
+    //TODO: Add team_assigned to check if a project is full.
+    async function teamsPerProject(pID) {
+        const amt = await pool.query(`
+            SELECT COUNT(*) FROM Team WHERE projectID = ?`, [pID]);
+        return amt[0][0]['COUNT(*)'];
+    }
+
+    const teamWait = projects.map(project => teamsPerProject(project.projectID));
+    const teamCounts = await Promise.all(teamWait);
+
+    projects.forEach((project, i) => {
+        if (skillsByProject[project.projectID]) {
+            project.skills = skillsByProject[project.projectID];
+        } else {
+            project.skills = [];
+        }
+
+        const teamAmt = teamCounts[i];
+        project.team_assigned = project.maxTeams <= teamAmt;
+    });
+
+    return projects;
+}
+
 
 async function getAllTeams() {
     const [usersByTeam] = await pool.query(`
@@ -153,8 +212,14 @@ async function getAllTeams() {
         if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
             teams[skill.teamID].skills.push(skill.skillName);
     });
+
     return Object.values(teams);
 }
+
+/* TO:DO Pull projects to display on project list page, individual project page
+async function getAllProjects() {
+}
+*/
 
 async function getTeam(teamID) {
     if (!teamID)
@@ -164,27 +229,21 @@ async function getTeam(teamID) {
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
+
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = ?
         ORDER BY T.preference`, teamID);
-    const interests = [];
-    prefs.forEach((pref) => interests.push(pref.projectName));
     const [skills] = await pool.query(`
-        SELECT S.skillName
+        SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
-    const teamSkills = [];
-    skills.forEach((skill) => {
-        if (teamSkills.indexOf(skill.skillName) == -1)
-            teamSkills.push(skill.skillName);
-    });
     const team = {
         id: teamID,
         avatar: "/images/profile.png",
-        interests: interests,
-        skills: teamSkills,
+        interests: prefs.map(Object.values),
+        skills: skills.map(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
@@ -225,12 +284,13 @@ async function getInvites(userID) {
     return await Promise.all(invites);
 }
 
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
     console.log(users);
 }
-
+ 
 fetchUsers();
 */
 
@@ -246,3 +306,6 @@ module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
 module.exports.allStudents = allStudents;
 module.exports.getStudentByNetID = getStudentByNetID;
+
+module.exports.getAllProjects = getAllProjects;
+module.exports.getProject = getProject;

@@ -43,19 +43,16 @@ app.use(session({
 app.use(passport.session());
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, "./public/user-files")
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
         cb(null, `${file.fieldname}-${uniqueSuffix}.${mime.getExtension(file.mimetype)}`);
     }
 });
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 
-app.get("/teamTest", (req, res) => {
-    res.render("teamPage.ejs", dummyData.teams[1]);
-})
 
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
@@ -131,8 +128,60 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
     });
 })
 
+app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
+
+    //Duplicated from '/teams'
+    database.getStudentByUserID(req.user.userID).then((student) => {
+        var team;
+        if (!student) {
+            team = null;
+        } else {
+            team = student.team;
+        }
+        database.getTeam(req.params.teamid).then((teamDataObj) => {
+            res.render("teamPage.ejs", { yourTeam: team, teamDataObj });
+        });
+    });
+
+})
+
 app.get("/projects", auth.isAuthenticated, (req, res) => {
-    res.render("project-list.ejs", dummyData.teamList);
+    database.getNetID(req.user.userID)
+        .then(netID => {
+            return database.getProject(netID);
+        })
+        .then(yourProjectID => {
+            return database.getAllProjects()
+                .then(projects => {
+                    console.log(yourProjectID)
+                    res.render("project-list.ejs", {
+                        yourProjectID: yourProjectID,
+                        projects: projects
+                    });
+                });
+        });
+    // database.getStudentByUserID(req.user.userID).then((student) => {
+    //     var project;
+    //     if (!student) {
+    //         project = null;
+    //     } else {
+    //         project = student.project;
+    //     }
+    //     database.getAllProjects().then((projects) => {
+    //         console.log(project)
+    //         res.render("project-list.ejs", { yourProject: project, projects });
+    //     })
+    // })
+})
+
+app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.project.projectID).then((project) => {
+        if (!project) {
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID + " does not exist.");
+        } else {
+            res.render("profile.ejs", { project: project, curr: req.project.userID });
+        }
+    });
 })
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
@@ -165,7 +214,6 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
-
     database.getUserByEmail(req.body.email).then((user) => {
         if (!user)
             return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
@@ -264,7 +312,7 @@ app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, 
             FROM user U, UTD D
             WHERE D.userID = U.userID AND U.userID = ?
         )
-    `, [{avatar: req.file.filename}, req.user.userID]).then(() => {
+    `, [{ avatar: req.file.filename }, req.user.userID]).then(() => {
         // Send the browser to the user's own page to view new preferences
         res.redirect("/profile");
     });
@@ -388,14 +436,21 @@ app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, asyn
     ]);
 });
 
-app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {
+app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.clearProfile.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
-    database.pool.query(`
-        UPDATE Student
-        SET ?
-        WHERE netID = ?`, [
+    const userID = (await database.getUserByEmail(result.value.clearProfile)).userID;
+    if (!userID)
+        return res.status(httpStatus.BAD_REQUEST).send("That email isn't associated with a user");
+    const netID = await database.getNetID(userID);
+    if (!netID)
+        return res.status(httpStatus.BAD_REQUEST).send("That user has no profile");
+    await Promise.all([
+        database.pool.query(`
+            UPDATE Student
+            SET ?
+            WHERE netID = ?`, [
             {
                 resumeFile: null,
                 phoneNumber: null,
@@ -405,12 +460,32 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, (req, res) => {
                 instagram: null,
                 avatar: null,
             },
-            result.value.netidInput,
+            netID,
         ]
-    ).then(() => {
-        res.redirect("/adminClearProfile");
-    });
+        ),
+        res.redirect("/adminClearProfile"),
+    ]);
 })
+
+//Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
+//Maybe some kind of check box for UTD to make a student?
+app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, adminPriv } = req.body;
+    const adminBool = adminPriv ? 1 : 0;
+    console.log(adminPriv)
+    console.log(adminBool)
+
+    const result = schemas.addUser.validate(req.body);
+    console.log(result);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+    await database.pool.query(`
+        INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
+        (?,?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+
+    res.redirect("/adminAccess");
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

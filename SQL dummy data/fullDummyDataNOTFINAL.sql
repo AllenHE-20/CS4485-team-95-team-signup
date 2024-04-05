@@ -1503,169 +1503,229 @@ values ('NVB35927', 140);
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         1,
         141,
-        'vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales',
-        'elit sodales scelerisque mauris sit',
+        '/profile.png',
+        'Texas Instruments',
+        'Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx',
+        'Smart City Host Application over Wi-SUN-2',
         5,
-        5
+        5,
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         2,
         142,
-        'at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui',
-        'sed ante vivamus tortor',
-        6,
-        6
+        '/profile.png',
+        'Professor Sridhar Alagar',
+        'Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!',
+        'Team-Sign-Up!',
+        5,
+        5,
+        'Team 12'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         3,
         143,
-        'suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel',
-        'pede libero quis orci',
+        '/profile.png',
+        'L3Harris',
+        'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'AI-ML-Driven RF Pulse Detection',
         4,
-        6
+        6,
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         4,
         144,
-        'praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo',
-        'gravida sem praesent id massa',
+        '/profile.png',
+        'Apple',
+        'Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals',
+        'Apple Project',
         4,
-        5
+        6,
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         5,
         145,
-        'rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum',
-        'accumsan tortor',
-        5,
-        5
+        '/profile.png',
+        'UT Dallas',
+        'Join UTD in improving the academic experience!',
+        'UT Dallas eLearning Additions',
+        4,
+        6,
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         6,
         146,
-        'non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta volutpat quam pede lobortis ligula sit amet',
-        'mauris morbi non lectus aliquam',
+        '/profile.png',
+        'CVS Pharmacy',
+        'Join CVS to work on a CS solution!',
+        'CVS Boat Racing',
+        4,
         6,
-        4
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         7,
         147,
-        'amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend',
-        'faucibus orci luctus et ultrices',
+        '/profile.png',
+        'Walgreens',
+        'See how to identify drug using AI-ML procedures',
+        'Drug Identification System',
+        4,
         6,
-        4
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         8,
         148,
-        'aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in',
-        'justo nec condimentum neque sapien',
+        '/profile.png',
+        'Tesla',
+        'Join Tesla in creating a module for a car',
+        'Tesla Self Driving Enhancements',
+        4,
         6,
-        4
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         9,
         149,
-        'ipsum praesent blandit lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede justo lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor sed tristique in tempus sit amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis turpis enim blandit mi in porttitor pede justo eu massa',
-        'sapien cum',
+        '/profile.png',
+        'Jonson Controls',
+        'Create a dynamic air conditioner!',
+        'Dynamic Air Conditioning System',
         4,
-        6
+        6,
+        'Open'
     );
 insert into Project (
         projectID,
         userID,
+        avatar,
+        sponsor,
         description,
         projectName,
         teamSize,
-        maxTeams
+        maxTeams,
+        team_assigned
     )
 values (
         10,
         150,
-        'dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo maecenas',
-        'libero convallis eget eleifend',
+        '/profile.png',
+        'Dr. Becker',
+        'Dr. Beckers Project for Software/Software',
+        'Software/Software Project for Becker',
+        4,
         6,
-        4
+        'Open'
     );
 insert into Team (teamID, projectID)
 values (1, null);
 insert into Team (teamID, projectID)
 values (2, null);
 insert into Team (teamID, projectID)
-values (3, null);
+values (3, 3);
 insert into Team (teamID, projectID)
 values (4, null);
 insert into Team (teamID, projectID)
@@ -1688,7 +1748,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'BGO77836',
@@ -1698,7 +1759,8 @@ values (
         'dweatherdon0',
         'plarne0',
         'tbugbird0',
-        3
+        3,
+        1
     );
 insert into student (
         netID,
@@ -1708,7 +1770,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'SJD74025',
@@ -1718,7 +1781,8 @@ values (
         'ftremonte1',
         'smcturk1',
         'vserjent1',
-        3
+        3,
+        1
     );
 insert into student (
         netID,
@@ -1728,7 +1792,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'DRZ36800',
@@ -1738,7 +1803,8 @@ values (
         'tbeaudry2',
         'nmacgarvey2',
         'qabel2',
-        1
+        1,
+        2
     );
 insert into student (
         netID,
@@ -1748,7 +1814,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'WAC77069',
@@ -1758,7 +1825,8 @@ values (
         'athorington3',
         'lblaxland3',
         'mrenault3',
-        3
+        3,
+        1
     );
 insert into student (
         netID,
@@ -1768,7 +1836,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'OEX79326',
@@ -1778,7 +1847,8 @@ values (
         'shaighton4',
         'ecooley4',
         'zlevitt4',
-        3
+        3,
+        1
     );
 insert into student (
         netID,
@@ -1788,7 +1858,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'EXX53026',
@@ -1798,46 +1869,7 @@ values (
         'zjoanic5',
         'agarrood5',
         'fjosephi5',
-        2
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID
-    )
-values (
-        'UIK89282',
-        null,
-        '452-359-9745',
-        'kwoolveridge6@who.int',
-        'nstorrier6',
-        'cthorntondewhirst6',
-        'fcockman6',
-        2
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID
-    )
-values (
-        'POR81172',
-        null,
-        '775-549-4841',
-        'mpappin7@usgs.gov',
-        'ceggleston7',
-        'cmaxworthy7',
-        'plambird7',
+        2,
         3
     );
 insert into student (
@@ -1848,7 +1880,52 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
+    )
+values (
+        'UIK89282',
+        null,
+        '452-359-9745',
+        'kwoolveridge6@who.int',
+        'nstorrier6',
+        'cthorntondewhirst6',
+        'fcockman6',
+        2,
+        3
+    );
+insert into student (
+        netID,
+        resumeFile,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram,
+        teamID,
+        projectID
+    )
+values (
+        'POR81172',
+        null,
+        '775-549-4841',
+        'mpappin7@usgs.gov',
+        'ceggleston7',
+        'cmaxworthy7',
+        'plambird7',
+        3,
+        1
+    );
+insert into student (
+        netID,
+        resumeFile,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram,
+        teamID,
+        projectID
     )
 values (
         'TSC84017',
@@ -1858,7 +1935,8 @@ values (
         'dbaythrop8',
         'aglaves8',
         'atalbot8',
-        1
+        1,
+        2
     );
 insert into student (
         netID,
@@ -1868,7 +1946,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'FFS33232',
@@ -1878,6 +1957,7 @@ values (
         'rcastanaga9',
         'lyorke9',
         'apfaffe9',
+        4,
         4
     );
 insert into student (
@@ -1888,7 +1968,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'DCD93581',
@@ -1898,7 +1979,8 @@ values (
         'cdagnalla',
         'mbuckthoughta',
         'gsmitha',
-        2
+        2,
+        3
     );
 insert into student (
         netID,
@@ -1908,7 +1990,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'NZY34457',
@@ -1918,6 +2001,7 @@ values (
         'dgrzelakb',
         'kkilmartinb',
         'cweberb',
+        4,
         4
     );
 insert into student (
@@ -1928,7 +2012,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'VOX13251',
@@ -1938,6 +2023,7 @@ values (
         'rivashkovc',
         'mmailesc',
         'msmyliec',
+        4,
         4
     );
 insert into student (
@@ -1948,7 +2034,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'DOY24278',
@@ -1958,6 +2045,7 @@ values (
         'cbaudouxd',
         'smackimmd',
         'pmerond',
+        4,
         4
     );
 insert into student (
@@ -1968,7 +2056,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'CPW11708',
@@ -1978,6 +2067,7 @@ values (
         'rgurleye',
         'anisiuse',
         'eartise',
+        4,
         4
     );
 insert into student (
@@ -1988,7 +2078,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'ZZW35871',
@@ -1998,7 +2089,8 @@ values (
         'mcresswellf',
         'kbodef',
         'dcobellif',
-        1
+        1,
+        2
     );
 insert into student (
         netID,
@@ -2008,7 +2100,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'TVE65287',
@@ -2018,7 +2111,8 @@ values (
         'kbamlingg',
         'jkystong',
         'kgoacherg',
-        2
+        2,
+        3
     );
 insert into student (
         netID,
@@ -2028,7 +2122,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'JQV97981',
@@ -2038,7 +2133,8 @@ values (
         'dmeighanh',
         'bkevaneh',
         'ichaffinh',
-        1
+        1,
+        2
     );
 insert into student (
         netID,
@@ -2048,7 +2144,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'QWJ12261',
@@ -2058,7 +2155,8 @@ values (
         'wcymperi',
         'plingleyi',
         'ksuddardsi',
-        1
+        1,
+        2
     );
 insert into student (
         netID,
@@ -2068,7 +2166,8 @@ insert into student (
         discord,
         groupme,
         instagram,
-        teamID
+        teamID,
+        projectID
     )
 values (
         'KTL13581',
@@ -2078,7 +2177,8 @@ values (
         'glevyj',
         'cepiletj',
         'fsebbornj',
-        2
+        2,
+        3
     );
 insert into Skills (
         skillName,
@@ -2130,6 +2230,8 @@ insert into ProjectSkillset (projectID, skillID)
 values (1, 1);
 insert into ProjectSkillset (projectID, skillID)
 values (2, 2);
+insert into ProjectSkillset (projectID, skillID)
+values (1, 2);
 insert into ProjectSkillset (projectID, skillID)
 values (3, 2);
 insert into ProjectSkillset (projectID, skillID)

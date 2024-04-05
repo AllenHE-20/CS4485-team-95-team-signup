@@ -79,9 +79,9 @@
                         <div class="projects">
                             <h3>Project Preferences</h3>
                             <ul>
-                                <% student.interests.forEach(project=> { %>
+                                <% (student.interests).forEach(project=> { %>
                                     <li>
-                                        <%= student.project %>
+                                        <%= project %>
                                     </li>
                                     <% }) %>
                             </ul>

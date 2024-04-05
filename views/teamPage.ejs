@@ -6,26 +6,36 @@
 
 <main class="teamPageContents">
     <div class="teamNumheader">
-        <h1>Team <%= id %></h1>
+        <h1>Team <%= teamDataObj.id %></h1>
     </div>
 
     <div class="teamMembersList">
         <h2>Team Members</h2>
-        <% (members).forEach(member => { %>
+        <% (teamDataObj.members).forEach(member => { %>
             <p><%= member %></p>
             <% }) %>
     </div>
+    
+    <!-- <div class="teamProjectPrefsList"> --> 
+      <!-- <h2>Interested Projects</h2> --> 
+        <% /* interests.forEach(proj => { */ %>
+            <!-- <p><%= /* proj */ %></p> -->
+        <% /* }) */ %>
+    <!-- </div> -->
 
-    <div class="teamProjectPrefsList">
-        <h2>Interested Projects</h2>
-        <% interests.forEach(proj => { %>
-            <p><%= proj %></p>
-            <% }) %>
+    <div class="teamSkills">
+        <h2>Team Skills</h2>
+        <% (teamDataObj.skills).forEach(skill => {%>
+            <p><%= skill %></p>
+        <% }) %>
     </div>
 
-    <div class="leaveTeamButtonContainer">
-        <button class="leaveTeamButton" type="button">Leave Team</button>
-    </div>
+    <% if (teamDataObj.id == yourTeam) { %>
+        <div class="leaveTeamButtonContainer">
+            <button class="leaveTeamButton" type="button">Leave Team</button>
+        </div>
+    <% } %>
+
 
 </main>
 

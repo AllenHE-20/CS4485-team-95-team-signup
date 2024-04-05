@@ -47,12 +47,20 @@ const resumeContact = Joi.object({
 })
 
 const clearProfile = Joi.object({
-    netidInput: Joi.string()
-        .regex(/[a-zA-Z]{3}[0-9]{5,6}/)
+    clearProfile: Joi.string()
         .required(),
+})
+
+const addUser = Joi.object({
+    firstNameInput: Joi.string().required(),
+    middleNameInput: Joi.string().optional().empty(''),
+    lastNameInput: Joi.string().required(),
+    emailInput: Joi.string().required(),
+    adminPriv: Joi.string().valid('on', 'off')
 })
 
 module.exports.preferences = preferences;
 module.exports.inviteResponse = inviteResponse;
 module.exports.resumeContact = resumeContact;
 module.exports.clearProfile = clearProfile;
+module.exports.addUser = addUser;

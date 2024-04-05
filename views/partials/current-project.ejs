@@ -1,8 +1,10 @@
 <p class="current-project">
     Your Project:
-    <% if (yourProject===null) { %>
+    <% if (yourProjectID===null) { %>
         No project assigned
-    <% } else { %>
-        <a class="project" href="/project/<%= yourProject %>">Team Sign-Up!</a>
-    <% } %>
+        <% } else { %>
+            <a class="project" href="/project/<%= yourProjectID[0].projectID %>">
+                <%= yourProjectID[0].projectName %>
+            </a>
+            <% } %>
 </p>

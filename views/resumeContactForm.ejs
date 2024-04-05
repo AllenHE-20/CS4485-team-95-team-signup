@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Resume & Contact Form"}); %>
-<body>
-    <%- include('partials/header.ejs'); %>
-    
-<main>
-    <h2>Resume and Contact Information</h2>
-    <form action="/profile" method="post" class="resume-form" enctype="multipart/form-data">
-        <div class="resumeUploadSection">
-            <label for="resumeUploadButton">Select a PDF file to upload as your resume</label>
-            <input type="file" id="resumeUploadButton" name="resumeUploadButton" accept="application/pdf" />
-        </div>
-        
-        <div class="contactInfoSection">
-            <h4>(OPTIONAL)</h4>
-            <div class="contactRow">
-                <label for="contactByEmail">Email Address</label>
-                <input type="email" name="contactByEmail" id="contactByEmail" /> <!--May need to add pattern specifier to this-->
-            </div>
+<%- include("partials/doc-head.ejs", {title: "Resume & Contact Form" }); %>
 
-            <div class="contactRow">
-                <label for="contactByPhone">Phone Number</label>
-                <input type="tel" name="contactByPhone" id="contactByPhone" placeholder="XXX-XXX-XXXX"/>
-            </div>
+    <body>
+        <%- include('partials/header.ejs'); %>
 
-            <div class="contactRow">
-                <label for="contactByDiscord">Discord Handle</label>
-                <input type="text" name="contactByDiscord" id="contactByDiscord" />
-            </div>
+            <main>
+                <h2>Resume and Contact Information</h2>
+                <form action="/profile" method="post" class="resume-form" enctype="multipart/form-data">
+                    <div class="resumeUploadSection">
+                        <label for="resumeUploadButton">Select a PDF file to upload as your resume</label>
+                        <input type="file" id="resumeUploadButton" name="resumeUploadButton" accept="application/pdf" />
+                    </div>
 
-            <div class="contactRow">
-                <label for="contactByGroupme">Groupme Username</label>
-                <input type="text" name="contactByGroupme" id="contactByGroupme" />
-            </div>
+                    <div class="contactInfoSection">
+                        <h4>(OPTIONAL)</h4>
+                        <div class="contactRow">
+                            <label for="contactByEmail">Email Address</label>
+                            <input type="email" name="contactByEmail" id="contactByEmail" />
+                            <!--May need to add pattern specifier to this-->
+                        </div>
 
-            <div class="contactRow">
-                <label for="contactByX">Instagram Handle </label>
-                <input type="text" name="contactByInstagram" id="contactByInstagram"/>
-            </div>
-        </div>
-        
-        <div class="submitButton">
-            <input type="submit" value="Submit!" />
-        </div>
-    </form>
-</main>
-    
-</body>
+                        <div class="contactRow">
+                            <label for="contactByPhone">Phone Number</label>
+                            <input type="tel" name="contactByPhone" id="contactByPhone" placeholder="XXX-XXX-XXXX" />
+                        </div>
+
+                        <div class="contactRow">
+                            <label for="contactByDiscord">Discord Handle</label>
+                            <input type="text" name="contactByDiscord" id="contactByDiscord" />
+                        </div>
+
+                        <div class="contactRow">
+                            <label for="contactByGroupme">Groupme Username</label>
+                            <input type="text" name="contactByGroupme" id="contactByGroupme" />
+                        </div>
+
+                        <div class="contactRow">
+                            <label for="contactByX">Instagram Handle </label>
+                            <input type="text" name="contactByInstagram" id="contactByInstagram" />
+                        </div>
+                    </div>
+
+                    <div class="submitButton">
+                        <input type="submit" value="Submit!" />
+                    </div>
+                </form>
+            </main>
+
+    </body>
+
 </html>
