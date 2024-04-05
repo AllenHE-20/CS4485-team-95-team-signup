@@ -145,18 +145,6 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
                     });
                 });
         });
-    // database.getStudentByUserID(req.user.userID).then((student) => {
-    //     var project;
-    //     if (!student) {
-    //         project = null;
-    //     } else {
-    //         project = student.project;
-    //     }
-    //     database.getAllProjects().then((projects) => {
-    //         console.log(project)
-    //         res.render("project-list.ejs", { yourProject: project, projects });
-    //     })
-    // })
 })
 
 app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {

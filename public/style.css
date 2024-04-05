@@ -282,12 +282,12 @@ main {
 }
 
 .project-description {
-    margin-top: 0.2em;
+    margin-top: -0.3em;
 }
 
 .project-sponsor {
     font-size: 1.3rem;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.001em;
 }
 
 .profile-list > li > a {

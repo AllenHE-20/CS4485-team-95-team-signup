@@ -1200,25 +1200,25 @@ values (
         'ecuruclis45@microsoft.com'
     );
 insert into organizer (userID, affiliation)
-values (141, 'Zava');
+values (141, 'Texas Instruments');
 insert into organizer (userID, affiliation)
-values (142, 'Gabtype');
+values (142, 'Professor Sridhar Alagar');
 insert into organizer (userID, affiliation)
-values (143, 'Divavu');
+values (143, 'L3Harris');
 insert into organizer (userID, affiliation)
-values (144, 'Podcat');
+values (144, 'Apple');
 insert into organizer (userID, affiliation)
-values (145, 'Kwinu');
+values (145, 'UT Dallas');
 insert into organizer (userID, affiliation)
-values (146, 'Fadeo');
+values (146, 'CVS Pharmacy');
 insert into organizer (userID, affiliation)
-values (147, 'Voonyx');
+values (147, 'Walgreens');
 insert into organizer (userID, affiliation)
-values (148, 'Skilith');
+values (148, 'Tesla');
 insert into organizer (userID, affiliation)
-values (149, 'Tekfly');
+values (149, 'Jonson Controls');
 insert into organizer (userID, affiliation)
-values (150, 'Aibox');
+values (150, 'Dr. Becker');
 insert into UTD (netID, userID)
 values ('BGO77836', 1);
 insert into UTD (netID, userID)
