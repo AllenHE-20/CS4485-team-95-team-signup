@@ -18,6 +18,19 @@ const preferences = Joi.object({
         .required(),
 });
 
+const invite = Joi.object({
+    target: Joi.string()
+        .valid("user", "team")
+        .required(),
+    id: Joi.number()
+        .integer()
+        .required(),
+    message: Joi.string()
+        .max(255)
+        .min(1)
+        .required(),
+});
+
 const inviteResponse = Joi.object({
     action: Joi.string()
         .valid("accept", "decline")
@@ -25,27 +38,43 @@ const inviteResponse = Joi.object({
 });
 
 const resumeContact = Joi.object({
-        resumeUploadButton: Joi.any()
-            .allow("")
-            .optional(),
-        contactByEmail: Joi.string()
-            .email()
-            .allow("")
-            .optional(),
-        contactByPhone: Joi.string()
-            .allow("")
-            .optional(),
-        contactByDiscord: Joi.string()
-            .allow("")
-            .optional(),
-        contactByGroupme: Joi.string()
-            .allow("")
-            .optional(),
-        contactByInstagram: Joi.string()
-            .allow("")
-            .optional(),
+    resumeUploadButton: Joi.any()
+        .allow("")
+        .optional(),
+    contactByEmail: Joi.string()
+        .email()
+        .allow("")
+        .optional(),
+    contactByPhone: Joi.string()
+        .allow("")
+        .optional(),
+    contactByDiscord: Joi.string()
+        .allow("")
+        .optional(),
+    contactByGroupme: Joi.string()
+        .allow("")
+        .optional(),
+    contactByInstagram: Joi.string()
+        .allow("")
+        .optional(),
+})
+
+const clearProfile = Joi.object({
+    clearProfile: Joi.string()
+        .required(),
+})
+
+const addUser = Joi.object({
+    firstNameInput: Joi.string().required(),
+    middleNameInput: Joi.string().optional().empty(''),
+    lastNameInput: Joi.string().required(),
+    emailInput: Joi.string().required(),
+    adminPriv: Joi.string().valid('on', 'off')
 })
 
 module.exports.preferences = preferences;
+module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
 module.exports.resumeContact = resumeContact;
+module.exports.clearProfile = clearProfile;
+module.exports.addUser = addUser;

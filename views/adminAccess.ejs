@@ -1,57 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Manage User Access - Administrator"}); %>
-<body>
+<%- include("partials/doc-head.ejs", {title: "Manage User Access - Administrator" }); %>
 
-<%- include('partials/admin-header.ejs'); %>
+    <body>
 
-<main class=adminPage>
-    <h1>Manage User Access</h1>
-    <p>To give access to a new user, please enter their name and email address: </p>
-    <form onsubmit="return confirmMessage()">
-        <div class="contactRow">
-            <label for="nameInput">Name</label>
-            <input type="text" name="nameInput" id="nameInput" />            
-        </div>
-        
-        <div class="contactRow">
-            <label for="emailInput"> Email</label>
-            <input type="text" name="emailInput" id="emailInput" />
-        </div>
+        <%- include('partials/admin-header.ejs'); %>
 
-        <div class="adminBox">
-            <input type="checkbox" id="facultyPriv" name="facultyPriv">
-            <label for="adminPriv">Faculty Privledges</label>            
-        </div>
+            <main class=adminPage>
+                <h1>Manage User Access</h1>
+                <p>To give access to a new user, please enter their name and email address: </p>
+                <form action="/admin/adminAccess" method="POST" onsubmit="return confirmMessage()">
+                    <div class="contactRow">
+                        <label for="firstNameInput">First Name</label>
+                        <input type="text" name="firstNameInput" id="firstNameInput" />
+                    </div>
 
-        <div class="adminBox">
-            <input type="checkbox" id="adminPriv" name="adminPriv">
-            <label for="adminPriv">Admin Privledges</label>            
-        </div>
+                    <div class="contactRow">
+                        <label for="middleNameInput">Middle Name</label>
+                        <input type="text" name="middleNameInput" id="middleNameInput" />
+                    </div>
 
-        <div class="submitButton">
-            <input type="submit" value="Grant Access"/>
-        </div>
-    </form>
-</main>
+                    <div class="contactRow">
+                        <label forst="lastNameInput">Last Name</label>
+                        <input type="text" name="lastNameInput" id="lastNameInput" />
+                    </div>
 
-<script>
-    function confirmMessage() {    
-    var newEmail = document.getElementById("emailInput").value;
-    var newUser = document.getElementById("nameInput").value;    
-    if (newUser.trim() === "") {
-        alert("No name has been entered.");
+                    <div class="contactRow">
+                        <label for="emailInput"> Email</label>
+                        <input type="text" name="emailInput" id="emailInput" />
+                    </div>
+
+                    <div class="adminBox">
+                        <input type="checkbox" id="facultyPriv" name="facultyPriv">
+                        <label for="adminPriv">Faculty Privileges</label>
+                    </div>
+
+                    <div class="adminBox">
+                        <input type="checkbox" id="adminPriv" name="adminPriv">
+                        <label for="adminPriv">Admin Privileges</label>
+                    </div>
+
+                    <div class="submitButton">
+                        <input type="submit" value="Grant Access" />
+                    </div>
+                </form>
+            </main>
+
+    <script>
+        function confirmMessage() {    
+        var newEmail = document.getElementById("emailInput").value;
+        var firstName = document.getElementById("firstNameInput").value;    
+        var lastName = document.getElementById("lastNameInput").value;
+        if (firstName.trim() === "") {
+            alert("No first name has been entered.");
+            return false;
+        }
+        else if (lastName.trim() === ""){
+            alert("No last name has been entered.")
+            return false;
+        }
+        else if (newEmail.trim() === ""){
+            alert("No email has been entered.");
+            return false;
+        }
+        else {
+            var message = firstName +" " + lastName + " has been given access. \nTheir email can now be used to register a new account.";
+            return alert(message);
+        }    
     }
-    else if (newEmail.trim() === ""){
-        alert("No email has been entered.");
-        return false;
-    }
-    else {
-        var message = newUser + " has been given access. \nTheir email can now be used to register a new account.";
-        return alert(message);
-    }    
-  }
-</script>
+    </script>
 
-</body>
+    </body>
+
 </html>

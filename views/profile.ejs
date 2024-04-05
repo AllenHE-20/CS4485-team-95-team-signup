@@ -16,16 +16,30 @@
                             <label for="input-file">Upload Image</label>
                             <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
                         </div>
-                        <form class="upload-picture" action="/api/upload-avatar" method="post" enctype="multipart/form-data">
+                        <form class="upload-picture" action="/upload-avatar" method="post" enctype="multipart/form-data">
                             <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar" />
                             <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
                         </form>
                         <% } %>
-                            <div class="add-info">
+                            <div class="add-info inline-list bar-sep">
                                 <h3>Contact Information</h3>
-                                <p>Email: <%= student.email %> | Phone: <%= student.phone %> | Discord: <%=
-                                                student.discord %>
-                                </p>
+                                <ul>
+                                    <% if (student.email) { %>
+                                        <li>Email: <%= student.email %></li>
+                                    <% } %>
+                                    <% if (student.phone) { %>
+                                        <li>Phone: <%= student.phone %></li>
+                                    <% } %>
+                                    <% if (student.discord) { %>
+                                        <li>Discord: <%= student.discord %></li>
+                                    <% } %>
+                                    <% if (student.groupme) { %>
+                                        <li>Groupme: <%= student.groupme %></li>
+                                    <% } %>
+                                    <% if (student.instagram) { %>
+                                        <li>Instagram: <%= student.instagram %></li>
+                                    <% } %>
+                                </ul>
                             </div>
                 </div>
 
@@ -65,9 +79,9 @@
                         <div class="projects">
                             <h3>Project Preferences</h3>
                             <ul>
-                                <% student.interests.forEach(project=> { %>
+                                <% (student.interests).forEach(project=> { %>
                                     <li>
-                                        <%= student.project %>
+                                        <%= project %>
                                     </li>
                                     <% }) %>
                             </ul>

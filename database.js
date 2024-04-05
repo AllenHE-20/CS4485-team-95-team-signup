@@ -65,7 +65,7 @@ async function getNetID(userID) {
         SELECT D.netID
         FROM user U, UTD D
         WHERE U.userID = ? AND D.userID = U.userID`, [userID]);
-    if (netIDs) {
+    if (netIDs && netIDs.length) {
         return netIDs[0].netID;
     } else {
         return null;
@@ -73,9 +73,9 @@ async function getNetID(userID) {
 }
 
 //only gets projectID but this could later be modified to grab more if needed.
-async function getProject(netID) {
+async function getUsersProject(netID) {
     const [project] = await pool.query(`
-    SELECT P.projectID
+    SELECT P.projectID, P.projectName
     FROM Project P
     INNER JOIN Team T ON P.projectID = T.projectID
     INNER JOIN student S ON T.teamID = S.teamID
@@ -90,14 +90,22 @@ async function getProject(netID) {
 }
 
 async function getStudentByUserID(userID) {
+    return await getStudentByNetID(await getNetID(userID));
+}
+
+async function getStudentByNetID(netid) {
+    if (!netid)
+        return null;
+
     const [users] = await pool.query(`
         SELECT *
-        FROM user U, UTD D, student S
-        WHERE U.userID = ? AND D.userID = U.userID AND D.netID = S.netID`, [userID]);
+        FROM student S, UTD D, user U
+        WHERE S.netID = ? AND S.netID = D.netID AND D.userID = U.userID`, [netid]);
     const dbUser = users[0];
     if (!dbUser) {
         return null;
     }
+
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM Skills S, StudentSkillset A
@@ -141,20 +149,27 @@ async function getAllProjects() {
         }
         skillsByProject[skill.projectID].push(skill.skillName);
     });
-    projects.forEach((project) => {
-        const projectId = project.projectID;
-        if (skillsByProject[projectId]) {
-            project.skills = skillsByProject[projectId];
+
+    //TODO: Add team_assigned to check if a project is full.
+    async function teamsPerProject(pID) {
+        const amt = await pool.query(`
+            SELECT COUNT(*) FROM Team WHERE projectID = ?`, [pID]);
+        return amt[0][0]['COUNT(*)'];
+    }
+
+    const teamWait = projects.map(project => teamsPerProject(project.projectID));
+    const teamCounts = await Promise.all(teamWait);
+
+    projects.forEach((project, i) => {
+        if (skillsByProject[project.projectID]) {
+            project.skills = skillsByProject[project.projectID];
         } else {
             project.skills = [];
         }
-    });
 
-    //TODO: Add team_assigned to check if a project is full.
-    const [teamsPerProject] = await pool.query(`
-        SELECT projectID, COUNT(*) AS teamCount
-        FROM Team GROUP BY projectID`);
-    const projectStatus = {};
+        const teamAmt = teamCounts[i];
+        project.team_assigned = project.maxTeams <= teamAmt;
+    });
 
     return projects;
 }
@@ -174,7 +189,7 @@ async function getAllTeams() {
         } else {
             accumulator[dbUser.teamID] = {
                 id: dbUser.teamID,
-                avatar: "/profile.png",
+                avatar: "/images/profile.png",
                 interests: [],
                 skills: [],
                 members: [user],
@@ -186,43 +201,41 @@ async function getAllTeams() {
     const [prefs] = await pool.query(`
         SELECT T.teamID, P.projectName
         FROM TeamPreferences T, Project P
-        WHERE P.projectID = T.projectID`);
+        WHERE P.projectID = T.projectID
+        ORDER BY T.preference_number`);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
-        SELECT S.skillName, T.teamID
+        SELECT DISTINCT S.skillName, T.teamID
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
-    skills.forEach((skill) => {
-        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
-            teams[skill.teamID].skills.push(skill.skillName);
-    });
+    skills.forEach((skill) => teams[skill.teamID].skills.push(skill.skillName));
+
     return Object.values(teams);
 }
 
 async function getTeam(teamID) {
+    if (!teamID)
+        return null;
+
     const [members] = await pool.query(`
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
+
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
-        WHERE P.projectID = ?
+        WHERE T.teamID = ? AND P.projectID = T.projectID
         ORDER BY T.preference_number`, teamID);
-    prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
-        SELECT S.skillName
+        SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
-    skills.forEach((skill) => {
-        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
-            teams[skill.teamID].skills.push(skill.skillName);
-    });
     const team = {
         id: teamID,
-        avatar: "/profile.png",
-        interests: prefs.map(Object.values),
-        skills: skills.map(Object.values),
+        avatar: "/images/profile.png",
+        interests: prefs.flatMap(Object.values),
+        skills: skills.flatMap(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
@@ -234,33 +247,51 @@ async function getInvites(userID) {
         SELECT S.teamID, S.netID
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND U.userID = ?`, [userID]);
-    // FIXME: There's no way to tell which way an invite was sent, so a user can invite themselves
     var invites;
     if (teamID === null) {
         // Invites toward the user
         [invites] = await pool.query(`
-            SELECT P.teamID, P.message
-            FROM PendingInvites P
-            WHERE P.netID = ?`, [netID]);
+            SELECT P.sender, P.receiver, S.teamID, P.message
+            FROM PendingInvites P, Student S
+            WHERE P.receiver = ? AND S.netID = P.sender`, [netID]);
     } else {
         // Invites toward any member of the user's team
         [invites] = await pool.query(`
-            SELECT P.teamID, P.message
-            FROM PendingInvites P, Student S
-            WHERE P.netID = S.netID AND S.teamID = ?`, [teamID]);
+            SELECT P.sender, P.receiver, S.teamID, P.message
+            FROM PendingInvites P, Student R, Student S
+            WHERE P.receiver = R.netID AND S.netID = P.sender AND R.teamID = ?`, [teamID]);
     }
-    // TODO: Let database handle team data grabs
-    const teams = (await getAllTeams())
-        .filter((team) => invites.some((invite) => team.id == invite.teamID))
-        .map((team) => {
-            return {
-                team: team,
-                message: invites.find((invite) => invite.teamID == team.id).message
-            }
-        });
-    return teams;
+    invites = invites.map(async (invite) => {
+        var listItem;
+        if (invite.teamID === null) {
+            listItem = { student: await getStudentByNetID(invite.sender) };
+        } else {
+            listItem = { team: await getTeam(invite.teamID) };
+        }
+        listItem.message = invite.message;
+        listItem.senderNetID = invite.sender;
+        listItem.receiverNetID = invite.receiver;
+        return listItem;
+    });
+    return await Promise.all(invites);
 }
 
+
+async function getProject(projID){
+    const [projInfo] = await pool.query(`
+        SELECT *
+        FROM project P
+        WHERE P.projectID = ?
+    `, projID);
+
+    const project = projInfo[0];
+
+    if(!project){
+        return null;
+    }else{
+        return project;
+    }
+}
 
 /*
 async function fetchUsers() {
@@ -282,5 +313,9 @@ module.exports.getTeam = getTeam;
 module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
 module.exports.allStudents = allStudents;
+module.exports.getStudentByNetID = getStudentByNetID;
+
 module.exports.getAllProjects = getAllProjects;
+module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
+

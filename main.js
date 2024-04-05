@@ -52,9 +52,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.get("/teamTest", (req, res) => {
-    res.render("teamPage.ejs", dummyData.teams[1]);
-})
 
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
@@ -113,7 +110,14 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-    res.render("submitPreferences.ejs");
+
+    database.getAllProjects()
+        .then(projects => {
+            console.log(projects)
+            res.render("submitPreferences.ejs", {
+                projects: projects
+            });
+        })
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -130,32 +134,54 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
     });
 })
 
+app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
+
+    //Duplicated from '/teams'
+    database.getStudentByUserID(req.user.userID).then((student) => {
+        var team;
+        if (!student) {
+            team = null;
+        } else {
+            team = student.team;
+        }
+        database.getTeam(req.params.teamid).then((teamDataObj) => {
+            res.render("teamPage.ejs", { yourTeam: team, teamDataObj });
+        });
+    });
+
+})
+
 app.get("/projects", auth.isAuthenticated, (req, res) => {
     database.getNetID(req.user.userID)
         .then(netID => {
-            return database.getProject(netID);
+            return database.getUsersProject(netID);
         })
         .then(yourProjectID => {
             return database.getAllProjects()
                 .then(projects => {
-                    console.log(yourProjectID)
                     res.render("project-list.ejs", {
-                        yourProject: yourProjectID,
+                        yourProjectID: yourProjectID,
                         projects: projects
                     });
                 });
         });
 })
 
-app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
-    database.getProject(req.project.projectID).then((project) => {
+app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.params.projectid).then((project) => {
         if (!project) {
-            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID + " does not exist.");
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + req.params.projectid + " does not exist.");
         } else {
-            res.render("profile.ejs", { project: project, curr: req.project.userID });
+            console.log(project);
+            res.render("project-page.ejs", {project: project});
         }
     });
 })
+
+app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    res.render("inviteUser.ejs", { yourTeam: student.team });
+});
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.user.userID).then((student) => {
@@ -184,6 +210,14 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
     res.render("adminDatabase.ejs");
 })
 
+app.get("/adminTeams", auth.isAdmin, (req, res) => {
+    res.render("adminTeams.ejs", {
+        adminTeam: dummyData.adminTeam,
+        teams: dummyData.teams
+    });
+})
+
+
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {
@@ -206,7 +240,7 @@ app.post("/register", urlencodedParser, (req, res) => {
 });
 
 //resumeContactInfo
-app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
+app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
     const result = schemas.resumeContact.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -257,7 +291,7 @@ app.post('/api/profile', auth.isAuthenticated, upload.single("resumeUploadButton
     });
 });
 
-app.post("/api/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, res) => {
+app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, res) => {
     if (!req.file)
         res.status(httpStatus.BAD_REQUEST).send("Must upload a new avatar");
 
@@ -338,18 +372,201 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
     });
 });
 
-app.post("/invites/:teamid/respond", auth.isAuthenticated, urlencodedParser, (req, res) => {
+app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const {value, error} = schemas.invite.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
+
+    if (value.target === "user") {
+        const ourNetID = await database.getNetID(req.user.userID);
+        const otherNetID = await database.getNetID(value.id);
+        if (!otherNetID)
+            return res.status(httpStatus.BAD_REQUEST).message("Invalid student ID");
+
+        const ourTeam = (await database.getStudentByNetID(ourNetID)).team;
+        const theirTeam = (await database.getStudentByNetID(otherNetID)).team;
+        if (ourTeam === theirTeam)
+            return res.status(httpStatus.BAD_REQUEST).send("You and that user are on the same team");
+
+        const [[existingInvites], [reverseInvites]] = await Promise.all([
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites
+                WHERE sender = ? AND receiver = ?`, [ourNetID, otherNetID]),
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites
+                WHERE receiver = ? AND sender = ?`, [ourNetID, otherNetID]),
+        ]);
+        if (reverseInvites && reverseInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("That user has already invited you. Accept their invitation from the Invites page.");
+        if (existingInvites && existingInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("You have already invited that user");
+
+        await Promise.all([
+            database.pool.query(`
+                INSERT INTO PendingInvites (sender, receiver, message)
+                VALUES (?, ?, ?)`, [ourNetID, otherNetID, value.message]),
+            res.redirect("back"),
+        ]);
+    } else {
+        const ourNetID = await database.getNetID(req.user.userID);
+        if ((await database.getStudentByNetID(ourNetID)).team)
+            return res.status(httpStatus.BAD_REQUEST).send("Cannot request to join a team: You are already on a team");
+        const team = await database.getTeam(value.id);
+        if (!team)
+            return res.status(httpStatus.BAD_REQUEST).message("Invalid team ID");
+        const [[existingInvites], [reverseInvites]] = await Promise.all([
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites P, Student S, Student T
+                WHERE P.sender = S.netID AND T.teamID = ? AND P.receiver = T.netID
+            `, [team.id]),
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites P, Student S, Student T
+                WHERE P.sender = T.netID AND T.teamID = ? AND P.receiver = S.netID
+            `, [team.id]),
+        ]);
+        if (reverseInvites && reverseInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("Someone from that team has already invited you. Accept their invitation from the Invites page.");
+        if (existingInvites && existingInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("You have already invited someone from that team");
+
+        const [result] = await database.pool.query(`
+            SELECT S.netID
+            FROM student S
+            WHERE S.teamID = ?`, [team.id]);
+        await Promise.all([
+            database.pool.query(`
+                INSERT INTO PendingInvites (sender, receiver, message)
+                VALUES (?, ?, ?)`, [ourNetID, result[0].netID, value.message]),
+            res.redirect("back"),
+        ]);
+    }
+})
+
+app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, async (req, res) => {
     const result = schemas.inviteResponse.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    // TODO: Ensure user is not on a team if accepting
-    // TODO: Apply team change
+    const invites = await database.getInvites(req.user.userID)
+    const invite = invites[req.params.index]
+    const netID = await database.getNetID(req.user.userID);
+    const senderNetID = invite.senderNetID;
 
-    // Send the user to their new team's page
-    // TODO: Update this URL when that gets set up
-    res.redirect("/team");
+    if (result.value.action === "decline") {
+        await database.pool.query(`
+            DELETE FROM PendingInvites
+            WHERE sender = ? AND receiver = ?`, [senderNetID, invite.receiverNetID]);
+        return res.redirect("/invites");
+    }
+
+    if (!invite) {
+        return res.status(httpStatus.BAD_REQUEST).send(`Invite number ${req.params.index} is invalid`)
+    }
+
+    const student = await database.getStudentByNetID(netID);
+    const ourTeam = await database.getTeam(student.team);
+    var newTeam;
+
+    if (invite.team) {
+        // They have team: switch our team
+        if (!invite.team.open)
+            return res.status(httpStatus.BAD_REQUEST).send(`Team ${invite.team.teamID} is closed`);
+        newTeam = invite.team.id;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ?`, [newTeam, netID]);
+    } else if (ourTeam) {
+        // They don't have team but we do: switch their team
+        if (!ourTeam.open)
+            return res.status(httpStatus.BAD_REQUEST).send(`Your team is closed`);
+        newTeam = ourTeam.teamID;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ?`, [newTeam, senderNetID]);
+    } else {
+        // Neither has team: Add both of us to new team
+        const [result] = await database.pool.query(`
+            INSERT INTO team ()
+            VALUES ()`);
+        newTeam = result.insertId;
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID = ? OR netID = ?`, [newTeam, netID, senderNetID]);
+    }
+
+    await Promise.all([
+        database.pool.query(`
+            DELETE FROM PendingInvites
+            WHERE sender = ? AND receiver = ?`, [senderNetID, invite.receiverNetID]),
+        database.pool.query(`
+            DELETE FROM team
+            WHERE teamID NOT IN (
+                SELECT teamID
+                FROM student
+                WHERE teamID IS NOT NULL
+            )`),
+        // Send the user to their new team's page
+        res.redirect(`/team/${newTeam}`),
+    ]);
 });
+
+app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = schemas.clearProfile.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+    const userID = (await database.getUserByEmail(result.value.clearProfile)).userID;
+    if (!userID)
+        return res.status(httpStatus.BAD_REQUEST).send("That email isn't associated with a user");
+    const netID = await database.getNetID(userID);
+    if (!netID)
+        return res.status(httpStatus.BAD_REQUEST).send("That user has no profile");
+    await Promise.all([
+        database.pool.query(`
+            UPDATE Student
+            SET ?
+            WHERE netID = ?`, [
+            {
+                resumeFile: null,
+                phoneNumber: null,
+                email: null,
+                discord: null,
+                groupme: null,
+                instagram: null,
+                avatar: null,
+            },
+            netID,
+        ]
+        ),
+        res.redirect("/adminClearProfile"),
+    ]);
+})
+
+//Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
+//Maybe some kind of check box for UTD to make a student?
+app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, adminPriv } = req.body;
+    const adminBool = adminPriv ? 1 : 0;
+    console.log(adminPriv)
+    console.log(adminBool)
+
+    const result = schemas.addUser.validate(req.body);
+    console.log(result);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+    await database.pool.query(`
+        INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
+        (?,?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+
+    res.redirect("/adminAccess");
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
