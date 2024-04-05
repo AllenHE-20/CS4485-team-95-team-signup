@@ -53,11 +53,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.get("/teamTest", (req, res) => {
-  database.getTeam(1).then((testObjTeam) => {
-        res.render("teamPage.ejs", testObjTeam);
-    });
-})
 
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
@@ -132,6 +127,12 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
         });
     });
 })
+
+app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
+    database.getTeam(req.params.teamid).then((teamDataObj) => {
+          res.render("teamPage.ejs", teamDataObj);
+      });
+  })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
     database.getNetID(req.user.userID)

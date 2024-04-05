@@ -209,7 +209,7 @@ async function getTeam(teamID) {
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
-        
+    
     /*
     const [prefs] = await pool.query(`
         SELECT P.projectName
@@ -217,6 +217,7 @@ async function getTeam(teamID) {
         WHERE P.projectID = ?
         ORDER BY T.preference_number`, teamID);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
+    
     
     const [skills] = await pool.query(`
         SELECT S.skillName
