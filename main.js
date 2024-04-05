@@ -54,7 +54,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.get("/teamTest", (req, res) => {
-    res.render("teamPage.ejs", dummyData.teams[1]);
+  database.getTeam(1).then((testObjTeam) => {
+        res.render("teamPage.ejs", testObjTeam);
+    });
 })
 
 app.get("/", (req, res) => {

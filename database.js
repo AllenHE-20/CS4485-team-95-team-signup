@@ -209,12 +209,15 @@ async function getTeam(teamID) {
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
+        
+    /*
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = ?
         ORDER BY T.preference_number`, teamID);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
+    
     const [skills] = await pool.query(`
         SELECT S.skillName
         FROM StudentSkillset C, Skills S, Student T
@@ -223,11 +226,12 @@ async function getTeam(teamID) {
         if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
             teams[skill.teamID].skills.push(skill.skillName);
     });
+    */
     const team = {
         id: teamID,
         avatar: "/profile.png",
-        interests: prefs.map(Object.values),
-        skills: skills.map(Object.values),
+        //interests: prefs.map(Object.values),
+        //skills: skills.map(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
     };
