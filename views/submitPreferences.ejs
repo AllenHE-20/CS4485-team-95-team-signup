@@ -1,40 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Set Project Preferences"}); %>
-<body>
-<%- include('partials/header.ejs'); %>
+<%- include("partials/doc-head.ejs", {title: "Set Project Preferences" }); %>
 
-<main>
-    <form action="/submitPreferences/" method="post" class="pref-form" onsubmit="prefFormLog()">
-        <div class="projectPrefs">
-            <h3>Enter your top 5 project preferences:</h3>
-            <div class="formField">
-                <label for="preference1">Enter your 1st project.</label>
-                <input type="number" name="preference1" id="preference1" required />
-            </div>
-            <div class="formField">
-                <label for="preference2">Enter your 2nd project.</label>
-                <input type="number" name="preference2" id="preference2" required />
-            </div>
-            <div class="formField">
-                <label for="preference3">Enter your 3rd project.</label>
-                <input type="number" name="preference3" id="preference3" required />
-            </div>
-            <div class="formField">
-                <label for="preference4">Enter your 4th project.</label>
-                <input type="number" name="preference4" id="preference4" required />
-            </div>
-            <div class="formField">
-                <label for="preference5">Enter your 5th project.</label>
-                <input type="number" name="preference5" id="preference5" required />
-            </div>
-        </div>
+    <body>
+        <%- include('partials/header.ejs'); %>
 
-        <div class="prefSubmitButton">
-            <input type="submit" value="Submit Preferences" />
-        </div>
-    </form>
-</main>
-<script src="/main.js"></script>
-</body>
+            <main>
+                <form action="/submitPreferences/" method="post" class="pref-form" onsubmit="prefFormLog()">
+                    <div class="projectPrefs">
+                        <h3>Enter your top 5 project preferences:</h3>
+                        <% for (let i=0; i < 5; i++) { %>
+                            <div class="formField">
+                                <label for="preference<%= i+1 %>">Preference #<%= i+1 %>:</label>
+                                <select name="preference<%= i+1 %>" id="preference<%= i+1 %>" required>
+                                    <% for (let j=0; j < projects.length; j++) { %>
+                                        <option value="<%= projects[j].projectID %>">
+                                            <%= projects[j].projectname %>
+                                        </option>
+                                        <% } %>
+                                </select>
+                            </div>
+                            <% } %>
+                    </div>
+
+                    <div class="prefSubmitButton">
+                        <input type="submit" value="Submit" />
+                    </div>
+                </form>
+            </main>
+            <script src="/main.js"></script>
+    </body>
+
 </html>

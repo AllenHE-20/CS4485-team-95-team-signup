@@ -17,7 +17,6 @@ const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
 const auth = require("./authMiddleware");
-const { url } = require('inspector');
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -111,7 +110,14 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-    res.render("submitPreferences.ejs");
+
+    database.getAllProjects()
+        .then(projects => {
+            console.log(projects)
+            res.render("submitPreferences.ejs", {
+                projects: projects
+            });
+        })
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -148,12 +154,11 @@ app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
 app.get("/projects", auth.isAuthenticated, (req, res) => {
     database.getNetID(req.user.userID)
         .then(netID => {
-            return database.getProject(netID);
+            return database.getUsersProject(netID);
         })
         .then(yourProjectID => {
             return database.getAllProjects()
                 .then(projects => {
-                    console.log(yourProjectID)
                     res.render("project-list.ejs", {
                         yourProjectID: yourProjectID,
                         projects: projects
@@ -174,15 +179,21 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
     // })
 })
 
-app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
-    database.getProject(req.project.projectID).then((project) => {
+app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.params.projectid).then((project) => {
         if (!project) {
-            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID + " does not exist.");
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + req.params.projectid + " does not exist.");
         } else {
-            res.render("profile.ejs", { project: project, curr: req.project.userID });
+            console.log(project);
+            res.render("project-page.ejs", {project: project});
         }
     });
 })
+
+app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    res.render("inviteUser.ejs", { yourTeam: student.team });
+});
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.user.userID).then((student) => {
@@ -373,6 +384,80 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
     });
 });
 
+app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const {value, error} = schemas.invite.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
+
+    if (value.target === "user") {
+        const ourNetID = await database.getNetID(req.user.userID);
+        const otherNetID = await database.getNetID(value.id);
+        if (!otherNetID)
+            return res.status(httpStatus.BAD_REQUEST).message("Invalid student ID");
+
+        const ourTeam = (await database.getStudentByNetID(ourNetID)).team;
+        const theirTeam = (await database.getStudentByNetID(otherNetID)).team;
+        if (ourTeam === theirTeam)
+            return res.status(httpStatus.BAD_REQUEST).send("You and that user are on the same team");
+
+        const [[existingInvites], [reverseInvites]] = await Promise.all([
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites
+                WHERE sender = ? AND receiver = ?`, [ourNetID, otherNetID]),
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites
+                WHERE receiver = ? AND sender = ?`, [ourNetID, otherNetID]),
+        ]);
+        if (reverseInvites && reverseInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("That user has already invited you. Accept their invitation from the Invites page.");
+        if (existingInvites && existingInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("You have already invited that user");
+
+        await Promise.all([
+            database.pool.query(`
+                INSERT INTO PendingInvites (sender, receiver, message)
+                VALUES (?, ?, ?)`, [ourNetID, otherNetID, value.message]),
+            res.redirect("back"),
+        ]);
+    } else {
+        const ourNetID = await database.getNetID(req.user.userID);
+        if ((await database.getStudentByNetID(ourNetID)).team)
+            return res.status(httpStatus.BAD_REQUEST).send("Cannot request to join a team: You are already on a team");
+        const team = await database.getTeam(value.id);
+        if (!team)
+            return res.status(httpStatus.BAD_REQUEST).message("Invalid team ID");
+        const [[existingInvites], [reverseInvites]] = await Promise.all([
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites P, Student S, Student T
+                WHERE P.sender = S.netID AND T.teamID = ? AND P.receiver = T.netID
+            `, [team.id]),
+            database.pool.query(`
+                SELECT *
+                FROM PendingInvites P, Student S, Student T
+                WHERE P.sender = T.netID AND T.teamID = ? AND P.receiver = S.netID
+            `, [team.id]),
+        ]);
+        if (reverseInvites && reverseInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("Someone from that team has already invited you. Accept their invitation from the Invites page.");
+        if (existingInvites && existingInvites.length)
+            return res.status(httpStatus.BAD_REQUEST).send("You have already invited someone from that team");
+
+        const [result] = await database.pool.query(`
+            SELECT S.netID
+            FROM student S
+            WHERE S.teamID = ?`, [team.id]);
+        await Promise.all([
+            database.pool.query(`
+                INSERT INTO PendingInvites (sender, receiver, message)
+                VALUES (?, ?, ?)`, [ourNetID, result[0].netID, value.message]),
+            res.redirect("back"),
+        ]);
+    }
+})
+
 app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, async (req, res) => {
     const result = schemas.inviteResponse.validate(req.body);
     if (result.error)
@@ -493,7 +578,7 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
 
     res.redirect("/adminAccess");
 });
-    
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

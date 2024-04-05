@@ -18,6 +18,19 @@ const preferences = Joi.object({
         .required(),
 });
 
+const invite = Joi.object({
+    target: Joi.string()
+        .valid("user", "team")
+        .required(),
+    id: Joi.number()
+        .integer()
+        .required(),
+    message: Joi.string()
+        .max(255)
+        .min(1)
+        .required(),
+});
+
 const inviteResponse = Joi.object({
     action: Joi.string()
         .valid("accept", "decline")
@@ -60,6 +73,7 @@ const addUser = Joi.object({
 })
 
 module.exports.preferences = preferences;
+module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
 module.exports.resumeContact = resumeContact;
 module.exports.clearProfile = clearProfile;

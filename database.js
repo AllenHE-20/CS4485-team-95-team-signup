@@ -73,7 +73,7 @@ async function getNetID(userID) {
 }
 
 //only gets projectID but this could later be modified to grab more if needed.
-async function getProject(netID) {
+async function getUsersProject(netID) {
     const [project] = await pool.query(`
     SELECT P.projectID, P.projectName
     FROM Project P
@@ -202,7 +202,7 @@ async function getAllTeams() {
         SELECT T.teamID, P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = T.projectID
-        ORDER BY T.preference`);
+        ORDER BY T.preference_number`);
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName, T.teamID
@@ -230,8 +230,8 @@ async function getTeam(teamID) {
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
-        WHERE P.projectID = ?
-        ORDER BY T.preference`, teamID);
+        WHERE T.teamID = ? AND P.projectID = T.projectID
+        ORDER BY T.preference_number`, teamID);
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
@@ -269,9 +269,9 @@ async function getInvites(userID) {
     invites = invites.map(async (invite) => {
         var listItem;
         if (invite.teamID === null) {
-            listItem = {student: await getStudentByNetID(invite.sender)};
+            listItem = { student: await getStudentByNetID(invite.sender) };
         } else {
-            listItem = {team: await getTeam(invite.teamID)};
+            listItem = { team: await getTeam(invite.teamID) };
         }
         listItem.message = invite.message;
         listItem.senderNetID = invite.sender;
@@ -281,6 +281,22 @@ async function getInvites(userID) {
     return await Promise.all(invites);
 }
 
+
+async function getProject(projID){
+    const [projInfo] = await pool.query(`
+        SELECT *
+        FROM project P
+        WHERE P.projectID = ?
+    `, projID);
+
+    const project = projInfo[0];
+
+    if(!project){
+        return null;
+    }else{
+        return project;
+    }
+}
 
 /*
 async function fetchUsers() {
@@ -305,4 +321,6 @@ module.exports.allStudents = allStudents;
 module.exports.getStudentByNetID = getStudentByNetID;
 
 module.exports.getAllProjects = getAllProjects;
+module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
+
