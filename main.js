@@ -111,7 +111,14 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-    res.render("submitPreferences.ejs");
+
+    database.getAllProjects()
+        .then(projects => {
+            console.log(projects)
+            res.render("submitPreferences.ejs", {
+                projects: projects
+            });
+        })
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -148,12 +155,11 @@ app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
 app.get("/projects", auth.isAuthenticated, (req, res) => {
     database.getNetID(req.user.userID)
         .then(netID => {
-            return database.getProject(netID);
+            return database.getUsersProject(netID);
         })
         .then(yourProjectID => {
             return database.getAllProjects()
                 .then(projects => {
-                    console.log(yourProjectID)
                     res.render("project-list.ejs", {
                         yourProjectID: yourProjectID,
                         projects: projects
@@ -490,7 +496,7 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
 
     res.redirect("/adminAccess");
 });
-    
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

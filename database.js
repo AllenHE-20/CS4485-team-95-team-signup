@@ -73,7 +73,7 @@ async function getNetID(userID) {
 }
 
 //only gets projectID but this could later be modified to grab more if needed.
-async function getProject(netID) {
+async function getUsersProject(netID) {
     const [project] = await pool.query(`
     SELECT P.projectID, P.projectName
     FROM Project P
@@ -305,4 +305,4 @@ module.exports.allStudents = allStudents;
 module.exports.getStudentByNetID = getStudentByNetID;
 
 module.exports.getAllProjects = getAllProjects;
-module.exports.getProject = getProject;
+module.exports.getUsersProject = getUsersProject;
