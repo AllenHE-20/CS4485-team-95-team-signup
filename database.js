@@ -282,6 +282,22 @@ async function getInvites(userID) {
 }
 
 
+async function getProject(projID){
+    const [projInfo] = await pool.query(`
+        SELECT *
+        FROM project P
+        WHERE P.projectID = ?
+    `, projID);
+
+    const project = projInfo[0];
+
+    if(!project){
+        return null;
+    }else{
+        return project;
+    }
+}
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
@@ -306,3 +322,5 @@ module.exports.getStudentByNetID = getStudentByNetID;
 
 module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
+module.exports.getProject = getProject;
+

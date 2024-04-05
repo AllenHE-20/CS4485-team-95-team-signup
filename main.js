@@ -179,12 +179,13 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
     // })
 })
 
-app.get("/projects/:projectid", auth.isAuthenticated, (req, res) => {
-    database.getProject(req.project.projectID).then((project) => {
+app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
+    database.getProject(req.params.projectid).then((project) => {
         if (!project) {
-            return res.status(httpStatus.NOT_FOUND).send("The project with id " + project.projectID + " does not exist.");
+            return res.status(httpStatus.NOT_FOUND).send("The project with id " + req.params.projectid + " does not exist.");
         } else {
-            res.render("profile.ejs", { project: project, curr: req.project.userID });
+            console.log(project);
+            res.render("project-page.ejs", {project: project});
         }
     });
 })
