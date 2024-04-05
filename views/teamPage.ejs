@@ -23,6 +23,13 @@
         <% /* }) */ %>
     <!-- </div> -->
 
+    <div class="teamSkills">
+        <h2>Team Skills</h2>
+        <% (teamDataObj.skills).forEach(skill => {%>
+            <p><%= skill %></p>
+        <% }) %>
+    </div>
+
     <% if (teamDataObj.id == yourTeam) { %>
         <div class="leaveTeamButtonContainer">
             <button class="leaveTeamButton" type="button">Leave Team</button>

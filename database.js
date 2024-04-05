@@ -203,8 +203,7 @@ async function getAllTeams() {
         if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
             teams[skill.teamID].skills.push(skill.skillName);
     });
-    console.log("logging team page skills");
-    console.log(skills);
+
     return Object.values(teams);
 }
 
@@ -229,15 +228,11 @@ async function getTeam(teamID) {
     */
     
     const [skills] = await pool.query(`
-        SELECT S.skillName
+        SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
-    /*
-    skills.forEach((skill) => {
-        if (teams[skill.teamID].skills.indexOf(skill.skillName) == -1)
-            teams[skill.teamID].skills.push(skill.skillName);
-    });
-    */
+    
+   
     const team = {
         id: teamID,
         avatar: "/profile.png",
