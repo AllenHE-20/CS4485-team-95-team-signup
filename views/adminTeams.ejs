@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("partials/doc-head.ejs", {title: "Manage Database - Administrator"}); %>
+<body>
+
+<%- include('partials/admin-header.ejs'); %>
+    
+<main class="adminPage">
+    <h1>Manage Teams</h1>
+    <p></p>
+    <p>Choose a Team</p>
+    <div class="categoryList">
+        <label for="categoryLabel"></label>
+        <select id="categoryLabel" name="categoryLabel">            
+            <option value=""></option>
+            <option value="1">Team 1</option>
+            <option value="2">Team 2</option>
+            <option value="3">Team 3</option>
+            <option value="4">Team 4</option>            
+        </select>        
+    </div>
+
+    <div class="teamNumheader">
+        <h1>Team <%= id %></h1>
+    </div>
+
+    <div class="teamMembersList">
+        <h2>Team Members</h2>
+        <% (members).forEach(member => { %>
+            <p><%= member %></p>
+            <% }) %>
+    </div>
+
+    <div class="teamProjectPrefsList">
+        <h2>Interested Projects</h2>
+        <% interests.forEach(proj => { %>
+            <p><%= proj %></p>
+            <% }) %>
+    </div>
+</main>
+
+</body>
+</html>
