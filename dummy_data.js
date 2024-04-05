@@ -147,7 +147,13 @@ const invites = {
     ],
 }
 
+const adminTeam = {
+    team: teams[1],
+    project: projects[2],   
+};
+
 module.exports.teams = teams;
 module.exports.teamList = teamList;
 module.exports.projects = projects;
 module.exports.invites = invites;
+module.exports.adminTeam = adminTeam;

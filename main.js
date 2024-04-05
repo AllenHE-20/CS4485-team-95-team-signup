@@ -208,8 +208,13 @@ app.get("/adminAccess", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminDatabase", auth.isAdmin, (req, res) => {
-    res.render("adminDatabase.ejs");
+    res.render("adminDatabase.ejs", dummyData.teams[1]);
 })
+
+app.get("/adminTeams", auth.isAdmin, (req, res) => {
+    res.render("adminTeams.ejs", dummyData.teams[1]);
+})
+
 
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 

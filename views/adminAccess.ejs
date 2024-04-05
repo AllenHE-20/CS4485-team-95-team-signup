@@ -46,24 +46,24 @@
                 </form>
             </main>
 
-            <script>
-                function confirmMessage() {
-                    var newEmail = document.getElementById("emailInput").value;
-                    var newUser = document.getElementById("nameInput").value;
-                    if (newUser.trim() === "") {
-                        alert("No name has been entered.");
-                    }
-                    else if (newEmail.trim() === "") {
-                        alert("No email has been entered.");
-                        return false;
-                    }
-                    else {
-                        var message = newUser + " has been given access. \nTheir email can now be used to register a new account.";
-                        return alert(message);
-                    }
-                }
-
-            </script>
+<script>
+    function confirmMessage() {    
+    var newEmail = document.getElementById("emailInput").value;
+    var newUser = document.getElementById("nameInput").value;    
+    if (newUser.trim() === "") {
+        alert("No name has been entered.");
+        return false;
+    }
+    else if (newEmail.trim() === ""){
+        alert("No email has been entered.");
+        return false;
+    }
+    else {
+        var message = newUser + " has been given access. \nTheir email can now be used to register a new account.";
+        return alert(message);
+    }    
+  }
+</script>
 
     </body>
 

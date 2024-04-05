@@ -8,7 +8,7 @@
 <main class="adminPage">
     <h1>Clear User Profile</h1>
     <p>Enter a user's email to clear all public information associated with their profile.</p>
-    <form onsubmit="return confirm('Are you sure you want to clear this user\'s profile? \nThis action cannot be undone.');" action="/admin/clear-profile" method="post">
+    <form onsubmit="return confirmMessage()">    
         <label for="clearProfile"></label>
         <input type="text" name="clearProfile" id="clearProfile" />
         <div class=submitButton>
@@ -16,6 +16,20 @@
         </div>
     </form>
 </main>   
+
+<script>
+    function confirmMessage() {    
+    var userEmail = document.getElementById("clearProfile").value;    
+    if (userEmail.trim() === "") {
+        alert("No email has been entered.");
+        return false;
+    }
+    else {
+        var message = "Are you sure you want to clear this user\'s profile? \nThis action cannot be undone.";
+        return alert(message);
+    }    
+  }  
+</script>
 
 </body>
 </html>
