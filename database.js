@@ -232,6 +232,8 @@ async function getTeam(teamID) {
         FROM TeamPreferences T, Project P
         WHERE P.projectID = ?
         ORDER BY T.preference_number`, teamID);
+    //console.log("logging prefs");
+    //console.log(prefs);
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
