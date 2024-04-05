@@ -231,7 +231,7 @@ async function getTeam(teamID) {
         SELECT P.projectName
         FROM TeamPreferences T, Project P
         WHERE P.projectID = ?
-        ORDER BY T.preference`, teamID);
+        ORDER BY T.preference_number`, teamID);
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
