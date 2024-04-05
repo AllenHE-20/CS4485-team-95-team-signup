@@ -75,7 +75,7 @@ async function getNetID(userID) {
 //only gets projectID but this could later be modified to grab more if needed.
 async function getProject(netID) {
     const [project] = await pool.query(`
-    SELECT P.projectID
+    SELECT P.projectID, P.projectName
     FROM Project P
     INNER JOIN Team T ON P.projectID = T.projectID
     INNER JOIN student S ON T.teamID = S.teamID
@@ -141,20 +141,27 @@ async function getAllProjects() {
         }
         skillsByProject[skill.projectID].push(skill.skillName);
     });
-    projects.forEach((project) => {
-        const projectId = project.projectID;
-        if (skillsByProject[projectId]) {
-            project.skills = skillsByProject[projectId];
+
+    //TODO: Add team_assigned to check if a project is full.
+    async function teamsPerProject(pID) {
+        const amt = await pool.query(`
+            SELECT COUNT(*) FROM Team WHERE projectID = ?`, [pID]);
+        return amt[0][0]['COUNT(*)'];
+    }
+
+    const teamWait = projects.map(project => teamsPerProject(project.projectID));
+    const teamCounts = await Promise.all(teamWait);
+
+    projects.forEach((project, i) => {
+        if (skillsByProject[project.projectID]) {
+            project.skills = skillsByProject[project.projectID];
         } else {
             project.skills = [];
         }
-    });
 
-    //TODO: Add team_assigned to check if a project is full.
-    const [teamsPerProject] = await pool.query(`
-        SELECT projectID, COUNT(*) AS teamCount
-        FROM Team GROUP BY projectID`);
-    const projectStatus = {};
+        const teamAmt = teamCounts[i];
+        project.team_assigned = project.maxTeams <= teamAmt;
+    });
 
     return projects;
 }
@@ -211,7 +218,7 @@ async function getTeam(teamID) {
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
-    
+
     /*
     const [prefs] = await pool.query(`
         SELECT P.projectName

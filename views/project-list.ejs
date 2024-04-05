@@ -35,7 +35,7 @@
                                     <div class="profile-box">
                                         <h2 class="project-name">
                                             <%= project.projectname %>
-                                                <% if (project.id==yourProject.projectID) { %>
+                                                <% if (project.projectID==yourProjectID[0].projectID) { %>
                                                     <span class="your-project-indicator">Your Project</span>
                                                     <% } %>
                                         </h2>
@@ -52,7 +52,7 @@
                                         <div class="project-status-box">
                                             <p>
                                                 Project Status:
-                                                <% if (project.team_assigned) { %>
+                                                <% if (!project.team_assigned) { %>
                                                     <span class="project-status-open">Open</span>
                                                     <% } else { %>
                                                         <span class="project-status-closed">Closed</span>

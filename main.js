@@ -155,7 +155,7 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
                 .then(projects => {
                     console.log(yourProjectID)
                     res.render("project-list.ejs", {
-                        yourProject: yourProjectID,
+                        yourProjectID: yourProjectID,
                         projects: projects
                     });
                 });
