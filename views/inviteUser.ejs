@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<%- include("partials/doc-head.ejs", {title: "Team Invites"}); %>
+
+<body>
+    <%- include('partials/header.ejs'); %>
+
+    <main>
+        <article>
+            <h1>Invite</h1>
+
+            <%- include('partials/current-team.ejs'); %>
+            
+            <!-- This is super internals-y and not pretty at all but I just need to test the endpoint -->
+            <form action="/invite/new" method="post" id="invite">
+                <p>
+                    <input type="radio" name="target" id="student" value="user">
+                    <label for="student">Student</label>
+                    <input type="radio" name="target" id="team" value="team">
+                    <label for="team">Team</label>
+                </p>
+                <p>
+                    <label for="id">ID: </label>
+                    <input type="number" name="id">
+                    <input type="submit" value="Submit">
+                </p>
+            </form>
+            <p><label for="message">Message:</label></p>
+            <p><textarea form="invite" id="message" name="message"></textarea></p>
+
+        </article>
+    </main>
+</body>
+
+</html>
