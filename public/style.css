@@ -183,24 +183,80 @@ main {
 .resume-card{
     display: inline-block;
     vertical-align: top;
-    width: 1100px;
-    height: 550px;
+    width: 475px;
+    height: 300px;
     border-radius: 10px;
     background: #fff;
     text-align: center;
+    margin-top: 10px;
+}
+
+.resume-card h1 {
+    text-align: left;
+    margin-left: 37px;
+    margin-top: 20px;
+}
+
+.resume-card h2 {
+    text-align: left;
     margin-left: 50px;
+    font-size: 1.1em;
+    color: rgb(92, 92, 92);
+}
+
+.resume-info{
+    margin-top: 20px;;
+}
+
+.myinfo-card{
+    display: inline-block;
+    vertical-align: top;
+    width: 750px;
+    height: 400px;
+    border-radius: 10px;
+    background: #fff;
+    margin: 10px;
+    margin-left: 50px;
+    font-size: 1.5em;
+}
+
+.myinfo-card h1{
+    text-align: left;
+    margin-left: 45px;
+    margin-top: 30px;
+}
+
+.myinfo-project h1{
+    color: rgb(92, 92, 92);
+    padding-top: 10px;
+    font-size: 1.1em;
+    margin-top: -10px;
+}
+
+.myinfo-team h1{
+    color: rgb(92, 92, 92);
+    padding-top: 10px;
+    font-size: 1.1em;
+    margin-top: -10px;
 }
 
 .project-card{
     display: inline-block;
     vertical-align: top;
-    width: 1100px;
-    height: 500px;
+    width: 750px;
+    height: 400px;
     border-radius: 10px;
     background: #fff;
     margin: 10px;
     text-align: center;
     margin-left: 50px;
+    font-size: 1.5em;
+}
+
+.project-card h1{
+    text-align: left;
+    margin-left: 45px;
+    margin-top: 30px;
 }
 
 .setting-links a:hover{
@@ -253,10 +309,18 @@ main {
 
 .projects{
     padding: 10px;
+    text-align: left;
+    margin-left: 50px;
 }
 
 .projects h3{
-    padding:10px;
+    color: rgb(92, 92, 92);
+    padding-top: 10px;
+}
+
+.projects-pref-list {
+    margin-top: 10px;
+    font-size: 0.8em;
 }
 
 .add-info{

@@ -52,38 +52,55 @@
                             </ul>
                         </div>
                     </div>
-                </div>
 
-                <div class="profile-right-column">
                     <div class="resume-card">
                         <h1>Resume</h1>
+                        <h2>Document</h2>
+                        <div class="resume-info">
+                            <% if (student.resume==null) {%>
+                                <h4>&times; Resume not found!</h4>
+                                <% } else{ %>
+                                    <a href="#" class="resume-link">
+                                        <img src="/images/resume.svg" width="50" height="auto">
+                                    </a>
+                                    <p>Resume</p>
+                                    <% } %>
+                        </div>
                         <div class="setting-links">
                             <a href="/resumeContact">Upload Resume & Contact Information</a>
                         </div>
-                        <% if (student.resume==null) {%>
-                            <h4>&times; Resume not found!</h4>
-                            <% } else{ %>
-                                <a href="#" class="resume-link">
-                                    <img src="/images/resume.svg" width="50" height="auto">
-                                </a>
-                                <p>Resume</p>
-                                <% } %>
                     </div>
-    
+                </div>
+
+                <div class="profile-right-column">
+                    <div class ="myinfo-card">
+                        <h1>Project & Team Information</h1>
+                        <div class ="myinfo-project">
+                            <h1>Your Project</h1>
+                        </div>
+                        <div class="myinfo-team">
+                            <h1>Your Team</h1>
+                        </div>
+                    </div>
+
                     <div class="project-card">
                         <h1>Project Preferences</h1>
+                        <div class="projects">
+                            <h3>Preferences</h3>
+                            <ul>
+                                <% let counter = 1; %>
+                                <% student.interests.forEach(project => { %>
+                                    <div class="projects-pref-list">
+                                        <li>
+                                            <%= counter %>. <%= project %>
+                                        </li>
+                                    </div>
+                                    <% counter++; %>
+                                <% }); %>
+                            </ul>
+                        </div>
                         <div class="setting-links">
                             <a href="/submitPreferences">Set Project Preferences</a>
-                        </div>
-                        <div class="projects">
-                            <h3>Project Preferences</h3>
-                            <ul>
-                                <% (student.interests).forEach(project=> { %>
-                                    <li>
-                                        <%= project %>
-                                    </li>
-                                    <% }) %>
-                            </ul>
                         </div>
                     </div>
                 </div>
