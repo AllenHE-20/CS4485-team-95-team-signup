@@ -97,8 +97,12 @@ main {
 
 .profile-page {
     display: flex;
-    flex-wrap: wrap;
-    text-align: left;
+    justify-content: center;
+}
+
+.profile-left-column, .profile-right-column {
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-page h1{
@@ -113,8 +117,26 @@ main {
     border-radius: 15px;
     text-align: center;
     color: #333;
-    padding-left: 20px;
-    margin-left: 20px;
+  }
+
+  .profile-page .project-card ul {
+    list-style-type: none; /* Remove the dots */
+    padding-left: 0; /* Remove default padding */
+}
+
+  .personal-info-card{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: left;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  .personal-info-card h1{
+        text-align: left;
   }
 
   .profile-card h1{
@@ -126,8 +148,6 @@ main {
     width: 180px;
     height: 180px;
     border-radius: 50%;
-    margin-top: 40px;
-    margin-bottom: 30px;
   }
 
 .image-link>label{
@@ -164,10 +184,9 @@ main {
     display: inline-block;
     vertical-align: top;
     width: 1100px;
-    height: 500px;
+    height: 550px;
     border-radius: 10px;
     background: #fff;
-    margin: 10px;
     text-align: center;
     margin-left: 50px;
 }
@@ -181,6 +200,7 @@ main {
     background: #fff;
     margin: 10px;
     text-align: center;
+    margin-left: 50px;
 }
 
 .setting-links a:hover{
@@ -244,6 +264,16 @@ main {
 }
 .add-info p{
     padding: 10px;
+}
+
+.add-info h3{
+    padding-top: 5px;
+    font-size: 1.4em;
+}
+
+.add-info h4{
+    padding-top: 15px;
+    color: rgb(92, 92, 92);
 }
 
 .team {
@@ -349,14 +379,6 @@ main {
     display: inline;
 }
 
-.inline-list > ul > li:after {
-    content: ", ";
-}
-
-.inline-list.bar-sep > ul > li:after {
-    content: " | ";
-}
-
 .inline-list > ul > li:last-child:after {
     content: "";
 }
@@ -401,6 +423,18 @@ main {
     margin-left: 8px;
     justify-content: right;
     font-size: 1.1em;
+}
+
+.your-team {
+    color: #333;
+    margin-top: 5px;
+    margin-left: 8px;
+    justify-content: right;
+    font-size: 1.1em;
+}
+
+.your-team a {
+    color: #007bff;
 }
 
 .your-project a {

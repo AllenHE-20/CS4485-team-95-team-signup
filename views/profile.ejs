@@ -6,71 +6,70 @@
         <%- include('partials/header.ejs'); %>
 
             <main class="profile-page">
-                <div class="profile-card">
-                    <img src="<%= student.avatar %>" id="profile-pic">
-                    <h1>
-                        <%= student.name %>
-                    </h1>
-                    <% if (curr===student.userID) { %>
-                        <div class="image-link">
-                            <label for="input-file">Upload Image</label>
-                            <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
-                        </div>
-                        <form class="upload-picture" action="/upload-avatar" method="post" enctype="multipart/form-data">
-                            <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar" />
-                            <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
-                        </form>
-                        <% } %>
-                            <div class="add-info inline-list bar-sep">
-                                <h3>Contact Information</h3>
-                                <ul>
-                                    <% if (student.email) { %>
-                                        <li>Email: <%= student.email %></li>
-                                    <% } %>
-                                    <% if (student.phone) { %>
-                                        <li>Phone: <%= student.phone %></li>
-                                    <% } %>
-                                    <% if (student.discord) { %>
-                                        <li>Discord: <%= student.discord %></li>
-                                    <% } %>
-                                    <% if (student.groupme) { %>
-                                        <li>Groupme: <%= student.groupme %></li>
-                                    <% } %>
-                                    <% if (student.instagram) { %>
-                                        <li>Instagram: <%= student.instagram %></li>
-                                    <% } %>
-                                </ul>
+                <div class = "profile-left-column">
+                    <div class="profile-card">
+                        <img src="<%= student.avatar %>" id="profile-pic">
+                        <h1>
+                            <%= student.name %>
+                        </h1>
+                        <% if (curr===student.userID) { %>
+                            <div class="image-link">
+                                <label for="input-file">Upload Image</label>
+                                <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
                             </div>
-                </div>
-
-                <script>
-                    let profilePic = document.getElementById("profile-pic");
-                    let inputFile = document.getElementById("input-file");
-                    let avatarSubmit = document.getElementById("avatar-submit-link");
-                    avatarSubmit.style.display = "none";
-
-                    inputFile.onchange = function () {
-                        profilePic.src = URL.createObjectURL(inputFile.files[0]);
-                        avatarSubmit.style.display = "block";
-                    }
-                </script>
-
-                <div class="resume-card">
-                    <h1>Resume</h1>
-                    <div class="setting-links">
-                        <a href="/resumeContact">Upload Resume & Contact Information</a>
-                    </div>
-                    <% if (student.resume==null) {%>
-                        <h4>&times; Resume not found!</h4>
-                        <% } else{ %>
-                            <a href="#" class="resume-link">
-                                <img src="/images/resume.svg" width="50" height="auto">
-                            </a>
-                            <p>Resume</p>
+                            <form class="upload-picture" action="/upload-avatar" method="post" enctype="multipart/form-data">
+                                <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar" />
+                                <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
+                            </form>
                             <% } %>
+                    </div>
+
+                    <div class = "personal-info-card">
+                        <h1>Personal Information</h1>
+                        <div class="add-info inline-list">
+                            <h3>Contact Information</h3>
+                            <ul>
+                                <h4>Email</h4>
+                                <% if (student.email) { %>
+                                    <li><%= student.email %></li>
+                                <% } %>
+                                <h4>Phone Number</h4>
+                                <% if (student.phone) { %>
+                                    <li><%= student.phone %></li>
+                                <% } %>
+                                <h4>Discord</h4>
+                                <% if (student.discord) { %>
+                                    <li><%= student.discord %></li>
+                                <% } %>
+                                <h4>GroupMe</h4>
+                                <% if (student.groupme) { %>
+                                    <li><%= student.groupme %></li>
+                                <% } %>
+                                <h4>Instagram</h4>
+                                <% if (student.instagram) { %>
+                                    <li>Instagram: <%= student.instagram %></li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <section>
+                <div class="profile-right-column">
+                    <div class="resume-card">
+                        <h1>Resume</h1>
+                        <div class="setting-links">
+                            <a href="/resumeContact">Upload Resume & Contact Information</a>
+                        </div>
+                        <% if (student.resume==null) {%>
+                            <h4>&times; Resume not found!</h4>
+                            <% } else{ %>
+                                <a href="#" class="resume-link">
+                                    <img src="/images/resume.svg" width="50" height="auto">
+                                </a>
+                                <p>Resume</p>
+                                <% } %>
+                    </div>
+    
                     <div class="project-card">
                         <h1>Project Preferences</h1>
                         <div class="setting-links">
@@ -87,7 +86,20 @@
                             </ul>
                         </div>
                     </div>
+                </div>
             </main>
+
+            <script>
+                let profilePic = document.getElementById("profile-pic");
+                let inputFile = document.getElementById("input-file");
+                let avatarSubmit = document.getElementById("avatar-submit-link");
+                avatarSubmit.style.display = "none";
+
+                inputFile.onchange = function () {
+                    profilePic.src = URL.createObjectURL(inputFile.files[0]);
+                    avatarSubmit.style.display = "block";
+                }
+            </script>
 
             <script>
 

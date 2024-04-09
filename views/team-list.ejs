@@ -6,13 +6,18 @@
 <body>
     <%- include('partials/header.ejs'); %>
 
+    <div class="function-container">
+        <div class="function-item">
+            <input type="text" id="searchInput" placeholder="Search projects" onkeyup="filterTeams()">
+        </div>
+        <div class="your-team">
+            <%- include('partials/current-team.ejs'); %>
+        </div>
+    </div>
+
     <main>
         <article>
-            <h1>Team List</h1>
-
-            <%- include('partials/current-team.ejs'); %>
-
-            <ul class="profile-list">
+            <ul class="profile-list" id="teamList">
                 <% teams.forEach(team => { %>
                 <li>
                     <a href="/team/<%= team.id %>">
@@ -20,7 +25,7 @@
                             <img class="profile-image" src="<%= team.avatar %>" />
                         </div>
                         <div class="profile-box">
-                            <h2 class="team">
+                            <h2 class="team-name">
                                 Team <%= team.id %>
                                 <% if (team.id == yourTeam) { %>
                                     <span class="your-team-indicator">Your Team</span>
@@ -52,6 +57,29 @@
             </ul>
         </article>
     </main>
+
+    <script>
+        function filterTeams() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("teamList");
+            li = ul.getElementsByTagName('li');
+    
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByClassName("team-name")[0];
+                if (a) {
+                    txtValue = a.textContent || a.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
 </body>
 
 </html>
