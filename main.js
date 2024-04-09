@@ -157,15 +157,22 @@ app.get("/projects", auth.isAuthenticated, (req, res) => {
             return database.getUsersProject(netID);
         })
         .then(yourProjectID => {
-            return database.getAllProjects()
-                .then(projects => {
-                    res.render("project-list.ejs", {
-                        yourProjectID: yourProjectID,
-                        projects: projects
-                    });
+            return Promise.all([
+                database.getAllSponsors(),
+                database.getAllProjects()
+            ]).then(([sponsors, projects]) => {
+                res.render("project-list.ejs", {
+                    yourProjectID: yourProjectID,
+                    sponsors: sponsors,
+                    projects: projects
                 });
+            });
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            res.status(500).send("Internal Server Error");
         });
-})
+});
 
 app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
     database.getProject(req.params.projectid).then((project) => {

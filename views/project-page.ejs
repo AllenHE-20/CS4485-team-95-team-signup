@@ -6,6 +6,38 @@
 <body>
     <%- include('partials/header.ejs'); %>
 
+    <main>
+        <article>
+            <ul class="project-info" id="projectInfo">
+                <div class="projectPageImage">
+                    <img class="profile-image" src="/images/<%= project.avatar %>" />
+                </div>
+                <div class="projectPageName">
+                    <h1><%= project.projectName %></h1>
+                </div>
+                <div class="projectPageSponsor">
+                    <%= project.affiliation %>
+                </div>
+                <div class="projectPageDescription">
+                    <%= project.description %>
+                </div>
+                <div class="project-skills inline-list">
+                    <%- include("partials/labeled-list.ejs", { label: "Skills needed" , list:
+                        project.skills || []}); %>
+                </div>
+                <div class="projectPageStatus">
+                    <p>
+                        Project Status:
+                        <% if (!project.team_assigned) { %>
+                            <span class="project-status-open">Open</span>
+                        <% } else { %>
+                            <span class="project-status-closed">Closed</span>
+                        <% } %>
+                    </p>
+                </div>
+            </ul>
+        </article>
+    </main>
 </body>
 
 </html>

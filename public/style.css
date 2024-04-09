@@ -459,9 +459,58 @@ main {
     transition: transform 0.3s ease;
 }
 
-#sponsor:hover {
-    transform: scale(1.1);
+#sponsorDropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.select-box {
+    position: relative;
+}
+
+.selected-item {
+    border: 1px solid #ccc;
+    padding: 5px;
     cursor: pointer;
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+}
+
+.options-container label {
+    display: block;
+    padding: 5px;
+}
+
+.options-container label:hover {
+    background-color: #f4f4f4;
+}
+
+.options-container label input[type="checkbox"] {
+    display: none;
+}
+
+.options-container label input[type="checkbox"]+span {
+    position: relative;
+}
+
+.options-container label input[type="checkbox"]:checked+span:after {
+    content: '\2713';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 14px;
+    color: #007bff;
 }
 
 .invite-actions {

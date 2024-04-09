@@ -133,7 +133,7 @@ async function getStudentByNetID(netid) {
 }
 async function getAllProjects() {
     const [projects] = await pool.query(`
-        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, O.affiliation
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
         FROM Project P, organizer O 
         WHERE O.userID = P.userID;
     `);
@@ -173,6 +173,16 @@ async function getAllProjects() {
 
     return projects;
 }
+
+async function getAllSponsors() {
+    const [sponsors] = await pool.query(`
+        SELECT *
+        FROM organizer O
+    `);
+
+    return sponsors;
+}
+
 
 
 async function getAllTeams() {
@@ -314,7 +324,7 @@ module.exports.getInvites = getInvites;
 module.exports.getNetID = getNetID;
 module.exports.allStudents = allStudents;
 module.exports.getStudentByNetID = getStudentByNetID;
-
+module.exports.getAllSponsors = getAllSponsors;
 module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
