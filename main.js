@@ -27,7 +27,7 @@ app.set("view engine", "ejs");
 
 const sessionStore = new MySqlStore({ createDatabaseTable: true }, database.pool);
 
-const SESSION_MAX_AGE = 1000 * 60 * 60 * 24  // 1 day
+const SESSION_MAX_AGE = 1000 * 60 * 60 * 24 * 30  // 30 days
 
 app.use(passport.initialize());
 app.use(session({
