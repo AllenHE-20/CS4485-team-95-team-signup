@@ -6,36 +6,25 @@
 <%- include('partials/admin-header.ejs'); %>
     
 <main class="adminPage">
-    <h1>Manage Teams</h1>
-    <p></p>
-    <p>Choose a Team</p>
-    <div class="teamDropdown">
-        <label for="teamNum"></label>
-        <select id="teamNum" name="teamNum">            
-            <option value=""></option>       
-            <option value="Team 1"> Team <%= teams[0].id %></option> 
-            <option value="Team 2"> Team <%= teams[1].id %></option> 
-            <option value="Team 3"> Team <%= teams[2].id %></option> 
-        </select>        
-    </div>
+    <h1>Manage Teams</h1>    
 
-    <div class="teamCard">
-        <div>
-            <h1>Team <%= adminTeam.team.id %></h1>
-        </div>
-
-        <div>
+    <% for (let i = 0; i < teams.length; i++) { %>    
+        <div class="teamCard">    
+            <h1>Team <%= teams[i].id %></h1>        
             <h2>Team Members</h2>
-            <% (adminTeam.team.members).forEach(member => { %>
+            <% (teams[i].members).forEach(member => { %>
                 <p><%= member %></p>
-                <% }) %>           
-        </div>
-
-        <div>
+            <% }) %>                                            
+                
             <h2>Assigned Project</h2>
-            <p>Project <%= adminTeam.project.id %> - <%= adminTeam.project.title %><br><%= adminTeam.project.sponsor %></p>              
-        </div>                                
-    </div>
+            
+            <% if (teams[i].projectID === null) { %>
+                <p>NULL</p>
+            <% } else { %>
+                <p>Project <%= projects[i].id %> - <%= projects[i].title %><br><%= projects[i].sponsor %></p>
+            <% } %>
+        </div>    
+    <% } %>                 
     
 </main>
 

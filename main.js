@@ -219,11 +219,10 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 
 app.get("/adminTeams", auth.isAdmin, (req, res) => {
     res.render("adminTeams.ejs", {
-        adminTeam: dummyData.adminTeam,
-        teams: dummyData.teams
+        teams: dummyData.adminTeam,
+        projects: dummyData.projects
     });
 })
-
 
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 

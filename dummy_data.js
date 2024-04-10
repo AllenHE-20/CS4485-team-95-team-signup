@@ -147,10 +147,27 @@ const invites = {
     ],
 }
 
-const adminTeam = {
-    team: teams[1],
-    project: projects[2],   
-};
+const adminTeam = [    
+    {
+        id: 9,
+        members: [
+            "John Doe",
+            "Jane Doe",
+        ],        
+        projectID: null      
+    },
+    {
+        id: 12,
+        members: [
+            "Michael Pham",
+            "Allen Elledge",
+            "Nghia Nguyen",
+            "David Wilkinson",
+            "Justin Eggers",
+        ],
+        projectID: 11
+    }
+]
 
 module.exports.teams = teams;
 module.exports.teamList = teamList;
