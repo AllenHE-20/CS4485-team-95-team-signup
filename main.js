@@ -522,6 +522,28 @@ app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, asyn
     ]);
 });
 
+app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
+    const netID = await database.getNetID(req.user.userID);
+    const student = await database.getStudentByNetID(netID);
+    if (student.team === null) {
+        return res.status(httpStatus.BAD_REQUEST).message("You are not on a team");
+    }
+    await Promise.all([
+        database.pool.query(`
+            UPDATE student
+            SET teamID = NULL
+            WHERE netID = ?`, [netID]),
+        database.pool.query(`
+            DELETE FROM team
+            WHERE teamID NOT IN (
+                SELECT teamID
+                FROM student
+                WHERE teamID IS NOT NULL
+            )`),
+        res.redirect(`/teams`),
+    ]);
+});
+
 app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.clearProfile.validate(req.body);
     if (result.error)

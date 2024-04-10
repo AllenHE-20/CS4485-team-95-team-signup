@@ -32,7 +32,9 @@
 
     <% if (teamDataObj.id == yourTeam) { %>
         <div class="leaveTeamButtonContainer">
-            <button class="leaveTeamButton" type="button">Leave Team</button>
+            <form action="/leave-team" method="post">
+                <input class="leaveTeamButton" type="submit" value="Leave Team" />
+            </form>
         </div>
     <% } %>
 
