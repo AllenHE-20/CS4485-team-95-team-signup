@@ -51,11 +51,8 @@
                                 <% } %>
                             </ul>
                         </div>
-                    </div>
 
-                    <div class="resume-card">
-                        <h1>Resume</h1>
-                        <h2>Document</h2>
+                        <h2>Resume</h2>
                         <div class="resume-info">
                             <% if (student.resume==null) {%>
                                 <h4>&times; Resume not found!</h4>
@@ -66,8 +63,10 @@
                                     <p>Resume</p>
                                     <% } %>
                         </div>
-                        <div class="setting-links">
-                            <a href="/resumeContact">Upload Resume & Contact Information</a>
+                        <div class="resume-setting-link">
+                            <div class="setting-links">
+                                <a href="/resumeContact">Upload Resume & Contact Information</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,7 +85,7 @@
                     <div class="project-card">
                         <h1>Project Preferences</h1>
                         <div class="projects">
-                            <h3>Preferences</h3>
+                            <h3>Projects</h3>
                             <ul>
                                 <% let counter = 1; %>
                                 <% student.interests.forEach(project => { %>
@@ -101,6 +100,20 @@
                         </div>
                         <div class="setting-links">
                             <a href="/submitPreferences">Set Project Preferences</a>
+                        </div>
+                        <div class="project-skills">
+                            <h1>Skills</h1>
+                            <ul id="projectSkillsList">
+                                <!-- Existing project skills will be listed here -->
+                            </ul>
+                            <div class="add-skill">
+                                <input type="text" id="newSkillInput" placeholder="Enter a skill to add">
+                                <button id="addSkillButton">Add Skill</button>
+                            </div>
+                            <div class="remove-skill">
+                                <input type="text" id="newSkillInput" placeholder="Enter a skill to remove">
+                                <button id="addSkillButton">Remove Skill</button>
+                            </div>
                         </div>
                     </div>
                 </div>
