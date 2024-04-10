@@ -73,17 +73,11 @@ const teams = [
 
 const projects = [
     {
-        id: 9,
+        projectID: 9,
         avatar: "/profile.png",
-        title: [
-            "Smart City Host Application over Wi-SUN",
-        ],
-        sponsor: [
-            "Texas Instruments",
-        ],
-        description: [
-            "Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx",
-        ],
+        title: "Smart City Host Application over Wi-SUN",
+        sponsor: "Texas Instruments",
+        description: "Join the ECE Team in developing a functional Wi-SUN Host Application on TI MSP 432 communicating over TI CC 13xx",
         skills: [
             "Embedded SW Development",
             "Basic Understanding of wireless networks",
@@ -93,15 +87,9 @@ const projects = [
     {
         id: 10,
         avatar: "/profile.png",
-        title: [
-            "AI-ML-Driven RF Pulse Detection",
-        ],
-        sponsor: [
-            "L3Harris",
-        ],
-        description: [
-            "Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals",
-        ],
+        title: "AI-ML-Driven RF Pulse Detection",
+        sponsor: "L3Harris",
+        description: "Join our company in developing a traditional DSP to create spectrograms that visualize signals, and characterize how well ML and MV can identify signals",
         skills: [
             "Basic understanding of AI/ML proramming",
             "Solid understanding of imaginary numbers, sequences, and series",
@@ -111,21 +99,15 @@ const projects = [
     {
         id: 11,
         avatar: "/profile.png",
-        title: [
-            "Team-Sign Up!",
-        ],
-        sponsor: [
-            "Professor Sridhar Alagar",
-        ],
-        description: [
-            "Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!",
-        ],
+        title: "Team-Sign Up!",
+        sponsor: "Professor Sridhar Alagar",
+        description: "Create a website for future ECS students, utilizing many different skillsets with the potential for its practical use!",
         skills: [
             "Understanding of HTML/CSS",
             "Work with databases, and EJS",
             "ML algorithms",
         ],
-        team_assigned: "Team 12",
+        team_assigned: true,
     },
 ];
 

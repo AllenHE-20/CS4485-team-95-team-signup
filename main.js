@@ -179,7 +179,6 @@ app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
         if (!project) {
             return res.status(httpStatus.NOT_FOUND).send("The project with id " + req.params.projectid + " does not exist.");
         } else {
-            console.log(project);
             res.render("project-page.ejs", {project: project});
         }
     });
@@ -217,10 +216,10 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
     res.render("adminDatabase.ejs");
 })
 
-app.get("/adminTeams", auth.isAdmin, (req, res) => {
+app.get("/adminTeams", auth.isAdmin, async (req, res) => {
     res.render("adminTeams.ejs", {
-        teams: dummyData.adminTeam,
-        projects: dummyData.projects
+        teams: await database.getAllTeams(),
+        projects: await database.getAllProjects(),
     });
 })
 

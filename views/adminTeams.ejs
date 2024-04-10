@@ -21,6 +21,7 @@
             <% if (teams[i].projectID === null) { %>
                 <p>NULL</p>
             <% } else { %>
+                <% console.log(projects[i]); %>
                 <p>Project <%= projects[i].id %> - <%= projects[i].title %><br><%= projects[i].sponsor %></p>
             <% } %>
         </div>    

@@ -131,6 +131,13 @@ async function getStudentByNetID(netid) {
     }
     return user;
 }
+
+async function teamsPerProject(pID) {
+    const amt = await pool.query(`
+        SELECT COUNT(*) FROM Team WHERE projectID = ?`, [pID]);
+    return amt[0][0]['COUNT(*)'];
+}
+
 async function getAllProjects() {
     const [projects] = await pool.query(`
         SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
@@ -150,13 +157,6 @@ async function getAllProjects() {
         skillsByProject[skill.projectID].push(skill.skillName);
     });
 
-    //TODO: Add team_assigned to check if a project is full.
-    async function teamsPerProject(pID) {
-        const amt = await pool.query(`
-            SELECT COUNT(*) FROM Team WHERE projectID = ?`, [pID]);
-        return amt[0][0]['COUNT(*)'];
-    }
-
     const teamWait = projects.map(project => teamsPerProject(project.projectID));
     const teamCounts = await Promise.all(teamWait);
 
@@ -174,6 +174,43 @@ async function getAllProjects() {
     return projects;
 }
 
+async function getProject(projID){
+    const [projects] = await pool.query(`
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
+        FROM Project P, organizer O
+        WHERE O.userID = P.userID AND P.projectID = ?;`, [projID]);
+    const project = projects[0];
+    if (!project) {
+        return null;
+    }
+
+    const [skills] = await pool.query(`
+        SELECT PS.projectID, S.skillName
+        FROM ProjectSkillset PS
+        INNER JOIN Skills S ON PS.skillID = S.skillID
+        WHERE PS.projectID = ?;`, [projID]);
+
+    const [files] = await pool.query(`
+        SELECT PF.filename
+        FROM ProjectFiles PF
+        WHERE PF.projectID = ?`, [projID]);
+
+    const teamCount = await teamsPerProject(projID);
+    const result = {
+        projectID: project.projectID,
+        projectname: project.projectname,
+        description: project.description,
+        teamSize: project.teamSize,
+        maxTeams: project.maxTeams,
+        avatar: project.avatar,
+        affiliation: project.affiliation,
+        skills: skills.map(skill => skill.skillName),
+        team_assigned: project.maxTeams <= teamCount,
+        files: files,
+    }
+    return result;
+}
+
 async function getAllSponsors() {
     const [sponsors] = await pool.query(`
         SELECT *
@@ -182,8 +219,6 @@ async function getAllSponsors() {
 
     return sponsors;
 }
-
-
 
 async function getAllTeams() {
     const [usersByTeam] = await pool.query(`
@@ -204,6 +239,7 @@ async function getAllTeams() {
                 skills: [],
                 members: [user],
                 open: true,
+                projectID: null,
             }
         }
         return accumulator;
@@ -219,6 +255,10 @@ async function getAllTeams() {
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
     skills.forEach((skill) => teams[skill.teamID].skills.push(skill.skillName));
+    const [projects] = await pool.query(`
+        SELECT projectID, teamID
+        FROM Team`)
+    projects.forEach((project) => teams[project.teamID].projectID = project.projectID);
 
     return Object.values(teams);
 }
@@ -241,6 +281,10 @@ async function getTeam(teamID) {
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, Student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
+    const [project] = await pool.query(`
+        SELECT projectID
+        FROM Team
+        WHERE teamID = ?`, teamID);
     const team = {
         id: teamID,
         avatar: "/images/profile.png",
@@ -248,6 +292,7 @@ async function getTeam(teamID) {
         skills: skills.flatMap(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
+        projectID: project[0],
     };
     return team;
 }
@@ -286,22 +331,6 @@ async function getInvites(userID) {
     return await Promise.all(invites);
 }
 
-
-async function getProject(projID){
-    const [projInfo] = await pool.query(`
-        SELECT *
-        FROM project P
-        WHERE P.projectID = ?
-    `, projID);
-
-    const project = projInfo[0];
-
-    if(!project){
-        return null;
-    }else{
-        return project;
-    }
-}
 
 /*
 async function fetchUsers() {
