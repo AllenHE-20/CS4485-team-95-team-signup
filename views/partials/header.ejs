@@ -5,11 +5,21 @@
         </div>
         <div class="nav-links">
             <ul>
-                <li><a href="/">HOME</a></li>
+                <% if (isAdmin) { %>
+                    <li><a href="/adminHomepage">HOME</a></li>    
+                <% } else { %>
+                    <li><a href="/">HOME</a></li> 
+                <% } %>
                 <li><a href="/projects">PROJECT LIST</a></li>
                 <li><a href="/teams">TEAM LIST</a></li>
                 <li><a href="/users">STUDENT LIST</a></li>
-                <li><a href="/profile">PROFILE</a></li>
+                <% if (!isAdmin) { %>
+                    <li><a href="/profile">PROFILE</a></li>
+                <% } %>        
+                <li><form action="/logout" method="post">
+                        <button type="submit">LOGOUT</button>
+                    </form>
+                </li>            
             </ul>
     </nav>
 </section>

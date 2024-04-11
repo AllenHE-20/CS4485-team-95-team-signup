@@ -45,6 +45,14 @@ nav{
     font-size: 1.4em;
     text-transform: uppercase;
 }
+.nav-links ul li button {
+    color: #fff;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    background-color: inherit; 
+    border: none;     
+    cursor: pointer;         
+}
 
 .nav-links ul li::after {
     content: '';

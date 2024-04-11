@@ -52,12 +52,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
 
-    res.render("index.ejs");
+    res.render("index.ejs", {isAdmin: req.user.admin});
 })
 
 app.get("/register", (req, res) => {
@@ -90,7 +89,6 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
         res.render("allUsersList.ejs", { studentlist: list });
     });
 });
-
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.params.userid).then((student) => {
