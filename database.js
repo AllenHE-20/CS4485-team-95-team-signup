@@ -23,10 +23,41 @@ async function getUser(id) {
 */
 
 //currently not displaying on student list. But it does send the data over in the format [{firstName: 'x', lastName: 'y', userID: 0}]
+async function getAllStudentPreferences() {
+    const [preferences] = await pool.query(`
+        SELECT SP.*, P.projectName
+        FROM StudentPreferences SP
+        INNER JOIN Project P ON SP.projectID = P.projectID
+        ORDER BY SP.preference_number;`);
+
+    return preferences;
+}
+
 async function allStudents() {
     const [rows] = await pool.query(`
-        SELECT u.firstName, u.lastName, u.userID FROM user u JOIN UTD on u.userID = UTD.userID
-        JOIN student s on utd.netID = s.netID`);
+        SELECT u.firstName, u.lastName, u.userID, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
+        JOIN student s on utd.netID = s.netID;`);
+
+    const [skills] = await pool.query(`
+    SELECT SS.netID, S.skillName
+    FROM studentSkillset SS
+    INNER JOIN Skills S ON SS.skillID = S.skillID;
+    `);
+    const skillsForStudent = [];
+    skills.forEach((skill) => {
+        if (!skillsForStudent[skill.netID]) {
+            skillsForStudent[skill.netID] = [skill.skillName];
+        }
+        else {
+            skillsForStudent[skill.netID].push(skill.skillName);
+        }
+    });
+
+    rows.forEach((rows, i) => {
+        if (skillsForStudent[i] = rows.netID) {
+            rows.skills = skillsForStudent[rows.netID] || [];
+        }
+    })
     return rows;
 }
 
@@ -174,7 +205,7 @@ async function getAllProjects() {
     return projects;
 }
 
-async function getProject(projID){
+async function getProject(projID) {
     const [projects] = await pool.query(`
         SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
         FROM Project P, organizer O
@@ -357,4 +388,4 @@ module.exports.getAllSponsors = getAllSponsors;
 module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
-
+module.exports.getAllStudentPreferences = getAllStudentPreferences;
