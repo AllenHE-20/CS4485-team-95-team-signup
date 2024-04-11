@@ -22,7 +22,6 @@ async function getUser(id) {
 }
 */
 
-//currently not displaying on student list. But it does send the data over in the format [{firstName: 'x', lastName: 'y', userID: 0}]
 async function getAllStudentPreferences() {
     const [preferences] = await pool.query(`
         SELECT SP.*, P.projectName
