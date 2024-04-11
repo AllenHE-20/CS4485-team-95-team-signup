@@ -3,12 +3,29 @@ const dotenv = require('dotenv');
 const path = require("path");
 dotenv.config();
 
+const password = require("./password")
+
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
 }).promise();
+
+
+// Create admin user if none exists
+pool.query(`SELECT userID FROM user`).then(async ([users]) => {
+    if (!users.length) {
+        await pool.query(`
+            INSERT INTO user (lastName, email, admin)
+            VALUES ("admin", "admin@example.com", 1)`);
+        const {hash, salt} = password.genPassword(process.env.ADMIN_PASSWORD);
+        await pool.query(`
+            INSERT INTO login (userID, passwordHash, passwordSalt)
+            VALUES (LAST_INSERT_ID(), ?, ?)`, [hash, salt]);
+    }
+});
+
 
 /* Various basic function examples.
 async function getUsers() {
@@ -40,8 +57,9 @@ async function getUserByEmail(email) {
 
 async function addLogin(userID, hash, salt) {
     const result = await pool.query(`
-        INSERT INTO login(userID, passwordHash, passwordSalt)
-        VALUES (?, ?, ?)`, [userID, hash, salt]);
+        UPDATE login
+        SET passwordHash = ?, passwordSalt = ?, oneTimeTokenHash = NULL
+        WHERE userID = ?`, [hash, salt, userID]);
     return result;
 }
 

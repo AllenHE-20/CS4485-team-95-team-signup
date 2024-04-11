@@ -10,6 +10,7 @@ const passport = require("passport");
 const MySqlStore = require("express-mysql-session")(session);
 
 const database = require('./database');
+const sendEmail = require('./email');
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
 //console.debug(httpStatus);
@@ -60,7 +61,7 @@ app.get("/", (req, res) => {
     res.render("index.ejs");
 })
 
-app.get("/register", (req, res) => {
+app.get("/register/:token", (req, res) => {
     if (req.isAuthenticated())
         return res.redirect("/");
 
@@ -225,24 +226,23 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
 
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
-app.post("/register", urlencodedParser, (req, res) => {
-    database.getUserByEmail(req.body.email).then((user) => {
-        if (!user)
-            return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
+app.post("/register/:token", urlencodedParser, async (req, res) => {
+    const tokenHash = password.hashToken(req.params.token);
+    const [users] = await database.pool.query(`
+        SELECT U.userID
+        FROM user U, login L
+        WHERE U.userID = L.userID AND L.oneTimeTokenHash = ?`, [tokenHash]);
 
-        database.getLoginByEmail(req.body.email).then(login => {
-            if (login)
-                return res.status(httpStatus.BAD_REQUEST).send("That user is already registered.");
+    if (users.length === 0) {
+        return res.status(httpStatus.BAD_REQUEST).send("Invalid token");
+    }
 
-            const { salt, hash } = password.genPassword(req.body.password);
-            database.addLogin(user.userID, hash, salt);
-            res.redirect("/login");
-        });
-    }).catch((err) => {
-        console.log(err);
-        res.status(httpStatus.BAD_REQUEST).send(err);
-    });
-});
+    const user = users[0];
+    const { salt, hash } = password.genPassword(req.body.password);
+    database.addLogin(user.userID, hash, salt);
+
+    res.redirect("/login");
+})
 
 //resumeContactInfo
 app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
@@ -578,18 +578,38 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
 //Maybe some kind of check box for UTD to make a student?
 app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { firstNameInput, middleNameInput, lastNameInput, emailInput, adminPriv } = req.body;
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, facultyPriv, adminPriv } = req.body;
     const adminBool = adminPriv ? 1 : 0;
-    console.log(adminPriv)
-    console.log(adminBool)
 
     const result = schemas.addUser.validate(req.body);
-    console.log(result);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
-    await database.pool.query(`
+
+    const user = await database.getUserByEmail(emailInput);
+    if (user)
+        return res.status(httpStatus.BAD_REQUEST).send("A user with that email already exists");
+
+    const {token, hash} = password.createOneTimePasswordToken();
+
+    const [insert] = await database.pool.query(`
         INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
-        (?,?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+        (?,?,?,?,?)`,
+        [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+    const userID = insert.insertId;
+    await database.pool.query(`
+        INSERT INTO login (userID, oneTimeTokenHash)
+        VALUES (?, ?);`, [userID, hash])
+
+    const registerUrl = `${req.protocol}://${req.get("host")}/register/${token}`;
+    const message = `You have been registered into Team Sign-Up. Please use the below link to set your login information\n\n${registerUrl}`;
+    try {
+        await sendEmail(emailInput, "Team Sign-Up: New User", message);
+    } catch (err) {
+        await database.pool.query(`
+            DELETE FROM user
+            WHERE userID = ?`, userID);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Unable to send registration email. Please try again later.");
+    }
 
     res.redirect("/adminAccess");
 });
