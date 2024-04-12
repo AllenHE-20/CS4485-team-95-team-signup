@@ -235,7 +235,7 @@ app.get("/invites", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/adminHomepage", auth.isAdmin, (req, res) => {
-    res.render("adminHomePage.ejs");
+    res.render("adminHomepage.ejs");
 })
 
 app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
