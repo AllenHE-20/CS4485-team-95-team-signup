@@ -14,7 +14,7 @@
 <main class="adminTeamPage">
     
     <% for (let i = 0; i < teams.length; i++) { %>    
-        <div class="teamCard">               
+        <div class="teamCard">                     
             <h1>Team <%= teams[i].id %></h1>                    
             <form action="/admin/disband-team" method="post">
                 <input type="hidden" name="team" value="<%= teams[i].id %>" />
@@ -46,12 +46,17 @@
             <div class="projSubmitButton">
                 <input type="submit" value="Submit" />
             </div>
-
+                
             <% if (teams[i].projectID != null) { %>                                            
                 <% console.log(projects[i]); %>
-                <p>Project <%= projects[i].projectID %> </p>
-                <p><%= projects[i].projectname %></p>
-                <p><%= projects[i].sponsor %></p>
+                <% for (let j=0; j < projects.length; j++) { %>   
+                    <% if (teams[i].projectID === projects[j].projectID) { %> 
+                        <p>Project <%= projects[j].projectID %></p>
+                        <p><%= projects[j].projectname %></p>
+                        <p><%= projects[j].sponsor %></p>
+                        <% break; %>
+                    <% } %>
+                <% } %>                 
             <% } %>
         </div>    
     <% } %>                 

@@ -4,14 +4,14 @@
 <body>
 
 <%- include('partials/header.ejs'); %>
-    
+
 <main class="adminPage">
     <h1>Manage Projects</h1>
     <article>
         <ul class="profile-list" id="projectList">
             <% projects.forEach(project=> { %>
                 <li class="profile-item" style="display: block;">
-                    <a href="/project/<%= project.projectID %>">
+                    <div>
                         <div class="profile-image-box">
                             <script>
                                 console.log("<%= project.avatar %>");
@@ -23,7 +23,14 @@
                                 <%= project.projectname %>
                             </h2>
                             <div class="project-sponsor">
-                                <%= project.affiliation %>
+                                <%= project.affiliation %> - <%= project.sponsor %>                                
+                            </div>
+                            <div class="project-description">
+                                Project <%= project.projectID %><br>
+                                Team Size: <%= project.teamSize %>
+                                <% if (project.maxTeams > project.teamSize) { %>
+                                     - <%= project.maxTeams %>
+                                <% } %>
                             </div>
                             <div class="project-description">
                                 <%= project.description %>
@@ -32,22 +39,22 @@
                                 <%- include("partials/labeled-list.ejs", { label: "Skills needed" , list:
                                     project.skills || []}); %>
                             </div>
-                            <div class="project-status-box">
-                                <p>
-
-                                    <script>
-                                        console.log("<%= project.team_assigned %>");
-                                    </script>
-                                    Project Status:
-                                    <% if (!project.team_assigned) { %>
-                                        <span class="project-status-open">Open</span>
-                                    <% } else { %>
-                                        <span class="project-status-closed">Closed</span>
-                                    <% } %>
-                                </p>
+                            <div class="project-status-box">                                
+                                <script>
+                                    console.log("<%= project.team_assigned %>");
+                                </script>
+                                Project Status:
+                                <% if (!project.team_assigned) { %>
+                                    <span class="project-status-open">Open</span>
+                                <% } else { %>
+                                    <span class="project-status-closed">Closed</span>
+                                <% } %>                                                                                                                             
+                            </div>                                    
+                            <div class="editProject">                                
+                                <a href="/adminEditProject">Edit Project</a>                                
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </li>
             <% }) %>
         </ul>
