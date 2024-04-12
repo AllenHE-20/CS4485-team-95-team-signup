@@ -26,28 +26,28 @@
 
                     <div class = "personal-info-card">
                         <h1>Personal Information</h1>
-                        <div class="add-info inline-list">
+                        <div class="add-info">
                             <h3>Contact Information</h3>
                             <ul>
                                 <h4>Email</h4>
                                 <% if (student.email) { %>
-                                    <li><%= student.email %></li>
+                                    <%= student.email %>
                                 <% } %>
                                 <h4>Phone Number</h4>
                                 <% if (student.phone) { %>
-                                    <li><%= student.phone %></li>
+                                    <%= student.phone %>
                                 <% } %>
                                 <h4>Discord</h4>
                                 <% if (student.discord) { %>
-                                    <li><%= student.discord %></li>
+                                    <%= student.discord %>
                                 <% } %>
                                 <h4>GroupMe</h4>
                                 <% if (student.groupme) { %>
-                                    <li><%= student.groupme %></li>
+                                    <%= student.groupme %>
                                 <% } %>
                                 <h4>Instagram</h4>
                                 <% if (student.instagram) { %>
-                                    <li>Instagram: <%= student.instagram %></li>
+                                    Instagram: <%= student.instagram %>
                                 <% } %>
                             </ul>
                         </div>
@@ -73,12 +73,20 @@
 
                 <div class="profile-right-column">
                     <div class ="myinfo-card">
-                        <h1>Project & Team Information</h1>
+                        <h1>Project Information</h1>
                         <div class ="myinfo-project">
-                            <h1>Your Project</h1>
+                            <% if (curr === student.userID) { %>
+                                <h1>Your Project</h1>
+                            <% } else { %>
+                                <h1>Project</h1>
+                            <% } %>
                         </div>
                         <div class="myinfo-team">
-                            <h1>Your Team</h1>
+                            <% if (curr === student.userID) { %>
+                                <h1>Your Team</h1>
+                            <% } else { %>
+                                <h1>Team</h1>
+                            <% } %>
                         </div>
                     </div>
 
@@ -106,6 +114,7 @@
                             <ul id="projectSkillsList">
                                 <!-- Existing project skills will be listed here -->
                             </ul>
+                            <% if (curr===student.userID) { %>
                             <div class="add-skill">
                                 <input type="text" id="newSkillInput" placeholder="Enter a skill to add">
                                 <button id="addSkillButton">Add Skill</button>
@@ -114,6 +123,7 @@
                                 <input type="text" id="newSkillInput" placeholder="Enter a skill to remove">
                                 <button id="addSkillButton">Remove Skill</button>
                             </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>

@@ -128,8 +128,8 @@ main {
   }
 
   .profile-page .project-card ul {
-    list-style-type: none; /* Remove the dots */
-    padding-left: 0; /* Remove default padding */
+    list-style-type: none;
+    padding-left: 0;
 }
 
   .personal-info-card{
@@ -278,6 +278,11 @@ main {
     font-size: 1.2em;
 }
 
+.profile-skills {
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+
 .project-card h1{
     text-align: left;
     margin-left: 45px;
@@ -396,6 +401,19 @@ main {
     font-size: 0.5em;
 }
 
+.student-list {
+    text-align: left;
+    background-color: #ebebeb;
+    padding: 1em;
+    list-style-type: none;
+    line-height: 1.8em;
+}
+
+.profile-list h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 .profile-list {
     text-align: left;
     background-color: #ebebeb;
@@ -422,6 +440,15 @@ main {
     font-size: 1.3rem;
     margin-bottom: 0.001em;
 }
+.student-project-preferences {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.student-skills {
+    font-size: 1.1rem;
+}
 
 .profile-list > li > a {
     padding: 1em;
@@ -434,12 +461,17 @@ main {
 .profile-image-box {
     height: 12rem;
     width: 12rem;
-    margin-right: 1em;
+    margin-right: 2em;
     float: left;
     flex-grow: 0;
     display: flex;
     justify-content: center;
     align-content: flex-start;
+}
+
+.profile-item{
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .profile-image {
@@ -579,6 +611,11 @@ main {
     cursor: pointer;
 }
 
+#sponsor:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
 #sponsor {
     width: 150px;
     height: 30px;
@@ -594,6 +631,14 @@ main {
     outline: none;
     color: #000;
     transition: transform 0.3s ease;
+}
+
+.inline-list > ul > li:after {
+    content: ", ";
+}
+
+.inline-list.bar-sep > ul > li:after {
+    content: " | ";
 }
 
 #sponsorDropdown {
