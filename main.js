@@ -235,7 +235,7 @@ app.get("/invites", auth.isAuthenticated, (req, res) => {
 })
 
 app.get("/adminHomepage", auth.isAdmin, (req, res) => {
-    res.render("adminHomePage.ejs");
+    res.render("adminHomepage.ejs");
 })
 
 app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
@@ -255,6 +255,16 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
         teams: await database.getAllTeams(),
         projects: await database.getAllProjects(),
     });
+})
+
+app.get("/adminProjects", auth.isAdmin, async (req, res) => {
+    res.render("adminProjects.ejs",{
+        projects: await database.getAllProjects(),
+    });
+})
+
+app.get("/adminFormTeam", auth.isAdmin, (req, res) => {
+    res.render("adminFormTeam.ejs");
 })
 
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));

@@ -348,13 +348,13 @@ async function getInvites(userID) {
         // Invites toward the user
         [invites] = await pool.query(`
             SELECT P.sender, P.receiver, S.teamID, P.message
-            FROM PendingInvites P, Student S
+            FROM PendingInvites P, student S
             WHERE P.receiver = ? AND S.netID = P.sender`, [netID]);
     } else {
         // Invites toward any member of the user's team
         [invites] = await pool.query(`
             SELECT P.sender, P.receiver, S.teamID, P.message
-            FROM PendingInvites P, Student R, Student S
+            FROM PendingInvites P, student R, student S
             WHERE P.receiver = R.netID AND S.netID = P.sender AND R.teamID = ?`, [teamID]);
     }
     invites = invites.map(async (invite) => {

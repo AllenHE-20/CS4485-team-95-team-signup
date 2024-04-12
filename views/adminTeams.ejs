@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Manage Database - Administrator"}); %>
+<%- include("partials/doc-head.ejs", {title: "Manage Teams"}); %>
 <body>
-
+    
 <%- include('partials/header.ejs'); %>
     
+<div class="function-container">
+    <div class="function-item">
+        <input type="text" id="searchInput" placeholder="Search teams">
+    </div>
+</div>
+
 <main class="adminTeamPage">
+    
     <% for (let i = 0; i < teams.length; i++) { %>    
         <div class="teamCard">               
             <h1>Team <%= teams[i].id %></h1>                    
@@ -28,8 +35,12 @@
                     <option value="<%= projects[i].projectID %>">
                         <%= projects[i].projectname %>
                     </option>
-                    <% } %>
+                <% } %>                
             </select>
+            <div class="projSubmitButton">
+                <input type="submit" value="Submit" />
+            </div>
+
             <% if (teams[i].projectID != null) { %>                                            
                 <% console.log(projects[i]); %>
                 <p>Project <%= projects[i].projectID %> </p>
