@@ -10,6 +10,7 @@ const passport = require("passport");
 const MySqlStore = require("express-mysql-session")(session);
 
 const database = require('./database');
+const sendEmail = require('./email');
 const schemas = require("./schemas");
 const httpStatus = require("./http_status");
 //console.debug(httpStatus);
@@ -79,7 +80,6 @@ app.use(async (req, res, next) => {
             project: projectID,
         },
     };
-    console.log(res.locals.user);
     next();
 });
 
@@ -87,10 +87,10 @@ app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
 
-    res.render("index.ejs", { isAdmin: req.user.admin });
+    res.render("index.ejs");
 })
 
-app.get("/register", (req, res) => {
+app.get("/register/:token", (req, res) => {
     if (req.isAuthenticated())
         return res.redirect("/");
 
@@ -252,14 +252,22 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminTeams", auth.isAdmin, async (req, res) => {
+    // HACK: We need user IDs
+    const teams = await database.getAllTeams();
+    teams.forEach(async (team) => {
+        [team.members] = await database.pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM user U, UTD D, student S
+            WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, team.id);
+    });
     res.render("adminTeams.ejs", {
-        teams: await database.getAllTeams(),
+        teams: teams,
         projects: await database.getAllProjects(),
     });
 })
 
 app.get("/adminProjects", auth.isAdmin, async (req, res) => {
-    res.render("adminProjects.ejs",{
+    res.render("adminProjects.ejs", {
         projects: await database.getAllProjects(),
     });
 })
@@ -270,24 +278,23 @@ app.get("/adminFormTeam", auth.isAdmin, (req, res) => {
 
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
-app.post("/register", urlencodedParser, (req, res) => {
-    database.getUserByEmail(req.body.email).then((user) => {
-        if (!user)
-            return res.status(httpStatus.UNAUTHORIZED).send("That email is not associated with an assigned user.");
+app.post("/register/:token", urlencodedParser, async (req, res) => {
+    const tokenHash = password.hashToken(req.params.token);
+    const [users] = await database.pool.query(`
+        SELECT U.userID
+        FROM user U, login L
+        WHERE U.userID = L.userID AND L.oneTimeTokenHash = ?`, [tokenHash]);
 
-        database.getLoginByEmail(req.body.email).then(login => {
-            if (login)
-                return res.status(httpStatus.BAD_REQUEST).send("That user is already registered.");
+    if (users.length === 0) {
+        return res.status(httpStatus.BAD_REQUEST).send("Invalid token");
+    }
 
-            const { salt, hash } = password.genPassword(req.body.password);
-            database.addLogin(user.userID, hash, salt);
-            res.redirect("/login");
-        });
-    }).catch((err) => {
-        console.log(err);
-        res.status(httpStatus.BAD_REQUEST).send(err);
-    });
-});
+    const user = users[0];
+    const { salt, hash } = password.genPassword(req.body.password);
+    database.addLogin(user.userID, hash, salt);
+
+    res.redirect("/login");
+})
 
 //resumeContactInfo
 app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), (req, res) => {
@@ -618,7 +625,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
     const netID = await database.getNetID(req.user.userID);
     const student = await database.getStudentByNetID(netID);
     if (student.team === null) {
-        return res.status(httpStatus.BAD_REQUEST).message("You are not on a team");
+        return res.status(httpStatus.BAD_REQUEST).send("You are not on a team");
     }
     await Promise.all([
         database.pool.query(`
@@ -626,7 +633,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
             SET teamID = NULL
             WHERE netID = ?`, [netID]),
         database.pool.query(`
-            DELETE FROM team
+            DELETE FROM Team
             WHERE teamID NOT IN (
                 SELECT teamID
                 FROM student
@@ -668,6 +675,22 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
 });
 
 app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
+    const [files] = await database.pool.query(`
+        SELECT S.resumeFile, S.avatar
+        FROM Student S, UTD D, user U
+        WHERE U.userID = D.userID AND D.netID = U.netID AND NOT U.admin`);
+    files.forEach((resumeFile, avatar) => {
+        try {
+            fs.unlink(path.join("public/user-files", resumeFile));
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            fs.unlink(path.join("public/user-files", avatar));
+        } catch (err) {
+            console.error(err);
+        }
+    });
     await database.pool.query(`
         DELETE FROM user
         WHERE NOT admin`);
@@ -681,23 +704,90 @@ app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
 
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
 //Maybe some kind of check box for UTD to make a student?
+// TODO: Handle faculty checkbutton
 app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { firstNameInput, middleNameInput, lastNameInput, emailInput, adminPriv } = req.body;
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, netIdInput, facultyPriv, adminPriv } = req.body;
     const adminBool = adminPriv ? 1 : 0;
-    console.log(adminPriv)
-    console.log(adminBool)
 
     const result = schemas.addUser.validate(req.body);
-    console.log(result);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
-    await database.pool.query(`
+
+    const user = await database.getUserByEmail(emailInput);
+    if (user)
+        return res.status(httpStatus.BAD_REQUEST).send("A user with that email already exists");
+
+    if (adminPriv && !netIdInput)
+        return res.status(httpStatus.BAD_REQUEST).send("Faculty or admin must be UTD affiliated");
+
+    const { token, hash } = password.createOneTimePasswordToken();
+
+    const [insert] = await database.pool.query(`
         INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
-        (?,?,?,?,?)`, [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+        (?,?,?,?,?)`,
+        [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+    const userID = insert.insertId;
+    await database.pool.query(`
+        INSERT INTO login (userID, oneTimeTokenHash)
+        VALUES (?, ?);`, [userID, hash])
+
+    if (netIdInput) {
+        await database.pool.query(`
+            INSERT INTO UTD (userID, netID)
+            VALUES (?, ?);`, [userID, netIdInput]);
+
+        if (!adminPriv) {
+            await database.pool.query(`
+            INSERT INTO student (netID)
+            VALUES (?)`, [netIdInput]);
+        }
+    }
+
+    const registerUrl = `${req.protocol}://${req.get("host")}/register/${token}`;
+    const message = `You have been registered into Team Sign-Up. Please use the below link to set your login information\n\n${registerUrl}`;
+    try {
+        await sendEmail(emailInput, "Team Sign-Up: New User", message);
+    } catch (err) {
+        await database.pool.query(`
+            DELETE FROM user
+            WHERE userID = ?`, userID);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Unable to send registration email. Please try again later.");
+    }
 
     res.redirect("/adminAccess");
 });
 
+app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const userID = req.body.user;
+    console.log(userID);
+    const netID = await database.getNetID(userID);
+    const student = await database.getStudentByNetID(netID);
+    if (!student || !student.team) {
+        return res.status(httpStatus.BAD_REQUEST).send("That user is not on a team");
+    }
+    await Promise.all([
+        database.pool.query(`
+            UPDATE student
+            SET teamID = NULL
+            WHERE netID = ?`, [netID]),
+        database.pool.query(`
+            DELETE FROM Team
+            WHERE teamID NOT IN (
+                SELECT teamID
+                FROM student
+                WHERE teamID IS NOT NULL
+            )`),
+        res.redirect(`/adminTeams`),
+    ]);
+});
+
+app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const teamID = req.body.team;
+    await database.pool.query(`
+        DELETE FROM Team
+        WHERE teamID = ?`, [teamID]);
+    res.redirect("/adminTeams");
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

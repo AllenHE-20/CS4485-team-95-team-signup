@@ -17,38 +17,46 @@
 </script>
 
 <main class="teamPageContents">
-    <div class="teamNumheader">
-        <h1>Team <%= teamDataObj.id %></h1>
-    </div>
 
-    <div class="teamMembersList">
-        <h2>Team Members</h2>
-        <% (teamDataObj.members).forEach(member => { %>
-            <p><%= member %></p>
-            <% }) %>
+    <div class="team-page-left-column">
+        <div class="teamNumheader">
+            <h1>Team <%= teamDataObj.id %></h1>
+        </div>
+    
+        <div class="teamMembersList">
+            <h2>Team Members</h2>
+            <% (teamDataObj.members).forEach(member => { %>
+                <p><%= member %></p>
+                <% }) %>
+        </div>
+
+        <% if (teamDataObj.id == yourTeam) { %>
+            <div class="leaveTeamButtonContainer">
+                <form action="/leave-team" method="post">
+                    <input class="leaveTeamButton" type="submit" value="Leave Team" />
+                </form>
+            </div>
+        <% } %>
+    </div>
+    <div class="team-page-right-column">
+        <div class="teamProjectPrefsList">
+            <h2>Interested Projects</h2>
+                <% (teamDataObj.interests).forEach(proj => { %>
+                    <p><%= proj %></p>
+                <% }) %>
+            </div>
+        
+            <div class="teamSkills">
+                <h2>Team Skills</h2>
+                <% (teamDataObj.skills).forEach(skill => {%>
+                    <p><%= skill %></p>
+                <% }) %>
+            </div>
     </div>
     
-    <div class="teamProjectPrefsList">
-    <h2>Interested Projects</h2>
-        <% (teamDataObj.interests).forEach(proj => { %>
-            <p><%= proj %></p>
-        <% }) %>
-    </div>
+   
 
-    <div class="teamSkills">
-        <h2>Team Skills</h2>
-        <% (teamDataObj.skills).forEach(skill => {%>
-            <p><%= skill %></p>
-        <% }) %>
-    </div>
-
-    <% if (teamDataObj.id == yourTeam) { %>
-        <div class="leaveTeamButtonContainer">
-            <form action="/leave-team" method="post">
-                <input class="leaveTeamButton" type="submit" value="Leave Team" />
-            </form>
-        </div>
-    <% } %>
+    
 
 
 </main>

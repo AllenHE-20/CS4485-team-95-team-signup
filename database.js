@@ -3,12 +3,29 @@ const dotenv = require('dotenv');
 const path = require("path");
 dotenv.config();
 
+const password = require("./password")
+
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
 }).promise();
+
+
+// Create admin user if none exists
+pool.query(`SELECT userID FROM user`).then(async ([users]) => {
+    if (!users.length) {
+        await pool.query(`
+            INSERT INTO user (lastName, email, admin)
+            VALUES ("admin", "admin@example.com", 1)`);
+        const { hash, salt } = password.genPassword(process.env.ADMIN_PASSWORD);
+        await pool.query(`
+            INSERT INTO login (userID, passwordHash, passwordSalt)
+            VALUES (LAST_INSERT_ID(), ?, ?)`, [hash, salt]);
+    }
+});
+
 
 /* Various basic function examples.
 async function getUsers() {
@@ -81,8 +98,9 @@ async function getUserByEmail(email) {
 
 async function addLogin(userID, hash, salt) {
     const result = await pool.query(`
-        INSERT INTO login(userID, passwordHash, passwordSalt)
-        VALUES (?, ?, ?)`, [userID, hash, salt]);
+        UPDATE login
+        SET passwordHash = ?, passwordSalt = ?, oneTimeTokenHash = NULL
+        WHERE userID = ?`, [hash, salt, userID]);
     return result;
 }
 
@@ -348,13 +366,13 @@ async function getInvites(userID) {
         // Invites toward the user
         [invites] = await pool.query(`
             SELECT P.sender, P.receiver, S.teamID, P.message
-            FROM PendingInvites P, Student S
+            FROM PendingInvites P, student S
             WHERE P.receiver = ? AND S.netID = P.sender`, [netID]);
     } else {
         // Invites toward any member of the user's team
         [invites] = await pool.query(`
             SELECT P.sender, P.receiver, S.teamID, P.message
-            FROM PendingInvites P, Student R, Student S
+            FROM PendingInvites P, student R, student S
             WHERE P.receiver = R.netID AND S.netID = P.sender AND R.teamID = ?`, [teamID]);
     }
     invites = invites.map(async (invite) => {
@@ -371,7 +389,67 @@ async function getInvites(userID) {
     });
     return await Promise.all(invites);
 }
+async function getAllStudentsWithoutTeam() {
+    const [students] = await pool.query(`
+        SELECT * FROM Student WHERE teamID IS NULL;
+    `)
+    return students;
+}
 
+//gets teams less than specific teamSize
+async function getAllNotFullTeams(teamSize) {
+    const [teams] = await pool.query(`
+    SELECT teamID, COUNT(*) AS teamSize
+    FROM student
+    WHERE teamID IS NOT NULL
+    GROUP BY teamID
+    HAVING teamSize < ?;
+    `, [teamSize]);
+    return teams;
+}
+
+async function matchTeamsRandom(teamSize) {
+    //gets array of student netIDs
+    let students = (await getAllStudentsWithoutTeam());
+    const teamNotFull = await getAllNotFullTeams(teamSize);
+    let AddStudentToTeam = [];
+
+    //we loop through all teams not full and fill them to designated teamSize.
+    for (var i = 0; i < teamNotFull.length; i++) {
+        studentIndex = Math.floor(Math.random() * students.length);
+        const toAdd = {
+            netID: students[studentIndex],
+            teamID: teamNotFull[i].teamID
+        }
+        AddStudentToTeam.push(toAdd);
+
+    }
+    const amtOfTeams = Math.floor(students.length / teamSize);
+    const leftOverStudents = students.slice(students.length - (students.length % teamSize), students.length)
+
+
+    //makes each teams initially start as empty
+    let teams = new Array(amtOfTeams);
+
+    //loops through all the potential teams and randomly fills them.
+    for (var i = 0; i < amtOfTeams; i++) {
+        teams[i] = [];
+        for (var j = 0; j < teamSize; j++) {
+            studentIndex = Math.floor(Math.random() * students.length);
+            teams[i].push(students[studentIndex])
+            students.splice(studentIndex, 1);
+        }
+    }
+    //teams are newly made to be inserted into the teams table
+    //console.log(teams);
+    //AddStudentToTeam contains the student and the team to add them to.
+    console.log(AddStudentToTeam);
+    //These are are students that did not fit in anywhere.
+    //console.log(leftOverStudents);
+    return (teams, AddStudentToTeam, leftOverStudents)
+
+
+}
 
 /*
 async function fetchUsers() {
@@ -400,3 +478,4 @@ module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
+module.exports.matchTeamsRandom = matchTeamsRandom;

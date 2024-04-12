@@ -14,9 +14,11 @@ CREATE TABLE user (
 );
 CREATE TABLE login (
     userID INT PRIMARY KEY UNIQUE NOT NULL,
-    passwordHash VARCHAR(128) CHECK(passwordHash REGEXP '^[0-9A-Za-z]{128}$') NOT NULL,
-    passwordSalt VARCHAR(64) CHECK(passwordSalt REGEXP '^[0-9A-Za-z]{64}$') NOT NULL,
-    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
+    passwordHash VARCHAR(128) CHECK(passwordHash REGEXP '^[0-9A-Za-z]{128}$'),
+    passwordSalt VARCHAR(64) CHECK(passwordSalt REGEXP '^[0-9A-Za-z]{64}$'),
+    oneTimeTokenHash VARCHAR(128) CHECK(oneTimeTokenHash REGEXP '^[0-9A-Za-z]{128}$') UNIQUE,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
+    CONSTRAINT newUser CHECK((passwordHash IS NOT NULL AND passwordSalt IS NOT NULL) OR oneTimeTokenHash IS NOT NULL)
 );
 --
 CREATE TABLE organizer(

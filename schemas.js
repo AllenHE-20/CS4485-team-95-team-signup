@@ -69,6 +69,7 @@ const addUser = Joi.object({
     middleNameInput: Joi.string().optional().empty(''),
     lastNameInput: Joi.string().required(),
     emailInput: Joi.string().required(),
+    netIdInput: Joi.string().regex(/[A-Z]{3}[0-9]{5}/).empty(''),
     adminPriv: Joi.string().valid('on', 'off')
 })
 

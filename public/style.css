@@ -918,6 +918,10 @@ input[type="submit"]{
     margin-left: 120px;        
 }
 
+.teamMembers>form, .teamMembers>p {
+    display: inline;
+}
+
 .deleteMember {
     background-color: #ff0000;
     color: #ffffff;
@@ -925,6 +929,7 @@ input[type="submit"]{
     padding: 2px 7px;
     border-radius: 50px;
     cursor: pointer;
+    width: 1.5em !important;
 }
 
 .deleteMember:hover, 
@@ -940,6 +945,52 @@ input[type="submit"]{
     border-radius: 5px; 
     cursor: pointer; 
     margin: 10px;
+}
+/* teamPage.ejs */
+
+.teamPageContents {
+    display: flex;
+    justify-content: center;
+}
+
+.teamNumheader {
+    width: 200px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamMembersList{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamProjectPrefsList{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamSkills{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
 }
 
 .editProject a{
