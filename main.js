@@ -578,6 +578,16 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
         ),
         res.redirect("/adminClearProfile"),
     ]);
+});
+
+app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
+    await database.pool.query(`
+        DELETE FROM user
+        WHERE NOT admin`);
+    await database.pool.query(`
+        DELETE FROM team`);
+
+    res.redirect("/adminHomepage");
 })
 
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
