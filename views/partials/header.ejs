@@ -16,10 +16,53 @@
                 <% if (!isAdmin) { %>
                     <li><a href="/profile">PROFILE</a></li>
                 <% } %>        
-                <li><form action="/logout" method="post">
+                <li>
+                    <form action="/logout" method="post">
                         <button type="submit">LOGOUT</button>
                     </form>
-                </li>            
+                </li>
             </ul>
+            <li class="user-pic-item">
+                <img src="/images/profile.png" class="user-pic" onclick="toggleMenu()">
+
+                <div class="sub-menu-wrap" id="subMenu">
+                    <div class="sub-menu">
+                        <div class="user-info">
+                            <img src="/images/profile.png">
+                            <h2>Michael Pham</h2>
+                        </div>
+                        <hr>
+                        <a href="#" class="sub-menu-link">
+                            <img src="/images/profile.png">
+                            <p>Profile</p>
+                            <span>></span>
+                        </a>
+                        <a href="#" class="sub-menu-link">
+                            <img src="/images/setting.png">
+                            <p>View Project</p>
+                            <span>></span>
+                        </a>
+                        <a href="#" class="sub-menu-link">
+                            <img src="/images/setting.png">
+                            <p>View Team</p>
+                            <span>></span>
+                        </a>
+                        <a href="#" class="sub-menu-link">
+                            <img src="/images/logout.png">
+                            <p>Logout</p>
+                            <span>></span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </div>
     </nav>
+
+    <script>
+        let subMenu = document.getElementById("subMenu");
+
+        function toggleMenu(){
+            subMenu.classList.toggle("open-menu");
+        }
+    </script>
 </section>

@@ -34,7 +34,7 @@ async function getAllStudentPreferences() {
 
 async function allStudents() {
     const [rows] = await pool.query(`
-        SELECT u.firstName, u.lastName, u.userID, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
+        SELECT u.firstName, u.lastName, u.userID, s.avatar, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
         JOIN student s on utd.netID = s.netID;`);
 
     const [skills] = await pool.query(`
@@ -57,6 +57,9 @@ async function allStudents() {
             rows.skills = skillsForStudent[rows.netID] || [];
         }
     })
+
+    console.log(rows.avatar, '\n')
+
     return rows;
 }
 

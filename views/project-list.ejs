@@ -28,7 +28,7 @@
                 <article>
                     <ul class="profile-list" id="projectList">
                         <% projects.forEach(project=> { %>
-                            <li class="project-item" style="display: block;">
+                            <li class="profile-item" style="display: block;">
                                 <a href="/project/<%= project.projectID %>">
                                     <div class="profile-image-box">
                                         <script>
@@ -84,7 +84,7 @@
                     selectedSponsor = sponsorSelect.value.toUpperCase();
 
                     ul = document.getElementById("projectList");
-                    li = ul.getElementsByClassName('project-item');
+                    li = ul.getElementsByClassName('profile-item');
             
                     for (var i = 0; i < li.length; i++) {
                         var projectNameElement = li[i].querySelector(".project-name");
