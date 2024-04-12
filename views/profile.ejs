@@ -107,12 +107,18 @@
                                 <!-- Existing project skills will be listed here -->
                             </ul>
                             <div class="add-skill">
-                                <input type="text" id="newSkillInput" placeholder="Enter a skill to add">
-                                <button id="addSkillButton">Add Skill</button>
+                                <form method="post" action="/skills/change">
+                                    <input type="hidden" name="action" value="add" />
+                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to add" />
+                                    <input type="submit" id="addSkillButton" value="Add Skill" />
+                                </form>
                             </div>
                             <div class="remove-skill">
-                                <input type="text" id="newSkillInput" placeholder="Enter a skill to remove">
-                                <button id="addSkillButton">Remove Skill</button>
+                                <form method="post" action="/skills/change">
+                                    <input type="hidden" name="action" value="remove" />
+                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to remove" />
+                                    <input type="submit" id="addSkillButton" value="Remove Skill" />
+                                </form>
                             </div>
                         </div>
                     </div>

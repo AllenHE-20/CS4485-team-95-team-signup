@@ -382,6 +382,53 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
     });
 });
 
+app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const { value, error } = schemas.skillChange.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
+
+    const [skills] = await database.pool.query(`
+        SELECT skillID
+        FROM Skills
+        WHERE skillName = ?`, value.skill);
+    const netID = await database.getNetID(req.user.userID);
+
+    if (value.action === "add") {
+        var skillID;
+        if (!skills.length) {
+            const [result] = await database.pool.query(`
+                INSERT INTO Skills (skillName)
+                VALUES (?)`, [value.skill]);
+            skillID = result.insertId;
+        } else {
+            skillID = skills[0].skillID;
+        }
+
+        try {
+            await database.pool.query(`
+                INSERT INTO StudentSkillset (netID, skillID)
+                VALUES (?, ?)`, [netID, skillID])
+        } catch (err) {
+            if (err.code === 'ER_DUP_ENTRY')
+                console.log("Duplicate skill ignored");
+            else
+                throw err;
+        }
+    } else {
+        if (!skills.length) {
+            console.log("Non-existing skill ignored");
+            return res.redirect("/profile");
+        }
+
+        const skillID = skills[0].skillID;
+        await database.pool.query(`
+            DELETE FROM StudentSkillset
+            WHERE netID = ? AND skillID = ?`, [netID, skillID]);
+    }
+
+    res.redirect("/profile");
+});
+
 app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res) => {
     const { value, error } = schemas.invite.validate(req.body);
     if (error)
@@ -585,7 +632,9 @@ app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
         DELETE FROM user
         WHERE NOT admin`);
     await database.pool.query(`
-        DELETE FROM team`);
+        DELETE FROM Team`);
+    await database.pool.query(`
+        DELETE FROM Skills`);
 
     res.redirect("/adminHomepage");
 })
