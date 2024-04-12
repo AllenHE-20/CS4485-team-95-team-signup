@@ -18,6 +18,7 @@ const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
 const auth = require("./authMiddleware");
+const { preferences } = require('joi');
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -53,12 +54,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
 
-    res.render("index.ejs");
+    res.render("index.ejs", { isAdmin: req.user.admin });
 })
 
 app.get("/register/:token", (req, res) => {
@@ -88,10 +88,15 @@ app.get("/logout", (req, res) => {
 //sends list with firstName, lastName, and userID.
 app.get("/users", auth.isAuthenticated, (req, res) => {
     database.allStudents().then((list) => {
-        res.render("allUsersList.ejs", { studentlist: list });
+        database.getAllStudentPreferences().then((preferences) => {
+
+
+            console.log(list, '\n')
+            //console.log('\n', preferences)
+            res.render("allUsersList.ejs", { studentlist: list, preferences: preferences });
+        })
     });
 });
-
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.params.userid).then((student) => {
@@ -180,7 +185,7 @@ app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
         if (!project) {
             return res.status(httpStatus.NOT_FOUND).send("The project with id " + req.params.projectid + " does not exist.");
         } else {
-            res.render("project-page.ejs", {project: project});
+            res.render("project-page.ejs", { project: project });
         }
     });
 })
@@ -377,8 +382,55 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
     });
 });
 
+app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const { value, error } = schemas.skillChange.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
+
+    const [skills] = await database.pool.query(`
+        SELECT skillID
+        FROM Skills
+        WHERE skillName = ?`, value.skill);
+    const netID = await database.getNetID(req.user.userID);
+
+    if (value.action === "add") {
+        var skillID;
+        if (!skills.length) {
+            const [result] = await database.pool.query(`
+                INSERT INTO Skills (skillName)
+                VALUES (?)`, [value.skill]);
+            skillID = result.insertId;
+        } else {
+            skillID = skills[0].skillID;
+        }
+
+        try {
+            await database.pool.query(`
+                INSERT INTO StudentSkillset (netID, skillID)
+                VALUES (?, ?)`, [netID, skillID])
+        } catch (err) {
+            if (err.code === 'ER_DUP_ENTRY')
+                console.log("Duplicate skill ignored");
+            else
+                throw err;
+        }
+    } else {
+        if (!skills.length) {
+            console.log("Non-existing skill ignored");
+            return res.redirect("/profile");
+        }
+
+        const skillID = skills[0].skillID;
+        await database.pool.query(`
+            DELETE FROM StudentSkillset
+            WHERE netID = ? AND skillID = ?`, [netID, skillID]);
+    }
+
+    res.redirect("/profile");
+});
+
 app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res) => {
-    const {value, error} = schemas.invite.validate(req.body);
+    const { value, error } = schemas.invite.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
@@ -573,6 +625,18 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
         ),
         res.redirect("/adminClearProfile"),
     ]);
+});
+
+app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
+    await database.pool.query(`
+        DELETE FROM user
+        WHERE NOT admin`);
+    await database.pool.query(`
+        DELETE FROM Team`);
+    await database.pool.query(`
+        DELETE FROM Skills`);
+
+    res.redirect("/adminHomepage");
 })
 
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.

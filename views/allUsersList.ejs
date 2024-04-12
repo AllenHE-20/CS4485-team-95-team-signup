@@ -6,53 +6,47 @@
 
         <%- include('partials/header.ejs'); %>
 
-            <main>
-                <div class="listHeading">
-                    <p class="pageIndicator">Currently viewing page x of y.</p>
-                    <input class="prevButton" type="button" value="Previous Page" onclick="decrementPageNo();" />
-                    <input class="nextButton" type="button" value="Next Page" onclick="incrementPageNo()" />
-                </div>
+        <div class="function-container">
+            <div class="function-item">
+                <input type="text" id="searchInput" placeholder="Search students" onkeyup="filterStudents()">
+            </div>
+        </div>
 
-                <section class="listContainer">
-                    <ol class="listBody" id="listBody"></ol>
-                </section>
-            </main>
+        <main>
+            <article>
+                <ul class="profile-list" id="studentList">
+                    <% studentlist.forEach(student => { %>
+                        <script>
+                            console.log("<%= student.name %>");
+                        </script>
+                        <li class="profile-item" style="display: block;">
+                            <a href="/users/<%= student.userID %>">
+                                <div class="profile-image-box">
+                                    <img class="profile-image" src="/user-files/<%= student.avatar %>" />
+                                </div>
+                                <div class="profile-box">
+                                    <h2 class="student-name">
+                                        <%= student.firstName %> <%= student.lastName %>
+                                    </h2>
+                                    <div class="student-project-preferences">
+                                        Project Preferences
+                                    </div>
+                                    <div class="profile-skills inline-list">
+                                        <%- include("partials/labeled-list.ejs", { label: "Skills" , list:
+                                            student.skills || []}); %>
+                                    </div>
+                                    <div class="team-status-box">
+                                        <p>
+                                            Team Status:
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+            </article>
+        </main>
 
-            <script src="/main.js"></script>
-
-            <script>
-                var curPageNo = 1;
-                //TODO: Replace this with an API call to fetch the info on page load
-                const maxPageNo = Math.ceil(50 / 25); //Number of participants divided by # of participants per page
-
-                function incrementPageNo() {
-                    const tempNewVal = curPageNo + 1;
-                    if (tempNewVal <= maxPageNo) {
-                        curPageNo++;
-                        //TODO: Invocation of populateUserList with new page # goes here
-                        populateUserList(curPageNo);
-                    }
-                    console.log(curPageNo);
-                }
-
-                function decrementPageNo() {
-                    if (curPageNo > 1) {
-                        curPageNo--;
-                        //TODO: Invocation of populateUserList with new page # goes here
-                        populateUserList(curPageNo);
-                    }
-
-
-                    console.log(curPageNo);
-                }
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    // this function runs when the DOM is ready, i.e. when the document has been parsed
-                    populateUserList(1);
-
-
-                });
-            </script>
     </body>
-
 </html>

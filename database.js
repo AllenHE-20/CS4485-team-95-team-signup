@@ -39,11 +39,44 @@ async function getUser(id) {
 }
 */
 
-//currently not displaying on student list. But it does send the data over in the format [{firstName: 'x', lastName: 'y', userID: 0}]
+async function getAllStudentPreferences() {
+    const [preferences] = await pool.query(`
+        SELECT SP.*, P.projectName
+        FROM StudentPreferences SP
+        INNER JOIN Project P ON SP.projectID = P.projectID
+        ORDER BY SP.preference_number;`);
+
+    return preferences;
+}
+
 async function allStudents() {
     const [rows] = await pool.query(`
-        SELECT u.firstName, u.lastName, u.userID FROM user u JOIN UTD on u.userID = UTD.userID
-        JOIN student s on utd.netID = s.netID`);
+        SELECT u.firstName, u.lastName, u.userID, s.avatar, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
+        JOIN student s on UTD.netID = s.netID;`);
+
+    const [skills] = await pool.query(`
+    SELECT SS.netID, S.skillName
+    FROM StudentSkillset SS
+    INNER JOIN Skills S ON SS.skillID = S.skillID;
+    `);
+    const skillsForStudent = [];
+    skills.forEach((skill) => {
+        if (!skillsForStudent[skill.netID]) {
+            skillsForStudent[skill.netID] = [skill.skillName];
+        }
+        else {
+            skillsForStudent[skill.netID].push(skill.skillName);
+        }
+    });
+
+    rows.forEach((rows, i) => {
+        if (skillsForStudent[i] = rows.netID) {
+            rows.skills = skillsForStudent[rows.netID] || [];
+        }
+    })
+
+    console.log(rows.avatar, '\n')
+
     return rows;
 }
 
@@ -158,7 +191,7 @@ async function teamsPerProject(pID) {
 
 async function getAllProjects() {
     const [projects] = await pool.query(`
-        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, P.sponsor, O.affiliation
         FROM Project P, organizer O 
         WHERE O.userID = P.userID;
     `);
@@ -192,7 +225,7 @@ async function getAllProjects() {
     return projects;
 }
 
-async function getProject(projID){
+async function getProject(projID) {
     const [projects] = await pool.query(`
         SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
         FROM Project P, organizer O
@@ -270,7 +303,7 @@ async function getAllTeams() {
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName, T.teamID
-        FROM StudentSkillset C, Skills S, Student T
+        FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
     skills.forEach((skill) => teams[skill.teamID].skills.push(skill.skillName));
     const [projects] = await pool.query(`
@@ -297,7 +330,7 @@ async function getTeam(teamID) {
         ORDER BY T.preference_number`, teamID);
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName
-        FROM StudentSkillset C, Skills S, Student T
+        FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
     const [project] = await pool.query(`
         SELECT projectID
@@ -375,4 +408,4 @@ module.exports.getAllSponsors = getAllSponsors;
 module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
-
+module.exports.getAllStudentPreferences = getAllStudentPreferences;

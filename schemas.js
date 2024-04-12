@@ -73,9 +73,19 @@ const addUser = Joi.object({
     adminPriv: Joi.string().valid('on', 'off')
 })
 
+const skillChange = Joi.object({
+    action: Joi.string()
+        .valid("add", "remove")
+        .required(),
+    skill: Joi.string()
+        .max(20)
+        .required(),
+});
+
 module.exports.preferences = preferences;
 module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
 module.exports.resumeContact = resumeContact;
 module.exports.clearProfile = clearProfile;
 module.exports.addUser = addUser;
+module.exports.skillChange = skillChange;

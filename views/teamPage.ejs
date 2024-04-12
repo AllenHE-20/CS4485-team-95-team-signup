@@ -4,6 +4,18 @@
 <body>
 <%- include('partials/header.ejs'); %>
 
+<div class="function-container">
+    <div class="function-item">
+        <button class="goback-button" onclick="goBack()">Previous Page</button>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+    window.history.back();
+}
+</script>
+
 <main class="teamPageContents">
     <div class="teamNumheader">
         <h1>Team <%= teamDataObj.id %></h1>

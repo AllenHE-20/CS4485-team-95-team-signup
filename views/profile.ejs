@@ -5,6 +5,20 @@
     <body>
         <%- include('partials/header.ejs'); %>
 
+        <% if (curr!==student.userID) { %>
+            <div class="function-container">
+                <div class="function-item">
+                    <button class="goback-button" onclick="goBack()">Previous Page</button>
+                </div>
+            </div>
+
+            <script>
+                function goBack() {
+                window.history.back();
+            }
+            </script>
+        <% } %>
+
             <main class="profile-page">
                 <div class = "profile-left-column">
                     <div class="profile-card">
@@ -26,28 +40,28 @@
 
                     <div class = "personal-info-card">
                         <h1>Personal Information</h1>
-                        <div class="add-info inline-list">
+                        <div class="add-info">
                             <h3>Contact Information</h3>
                             <ul>
                                 <h4>Email</h4>
                                 <% if (student.email) { %>
-                                    <li><%= student.email %></li>
+                                    <%= student.email %>
                                 <% } %>
                                 <h4>Phone Number</h4>
                                 <% if (student.phone) { %>
-                                    <li><%= student.phone %></li>
+                                    <%= student.phone %>
                                 <% } %>
                                 <h4>Discord</h4>
                                 <% if (student.discord) { %>
-                                    <li><%= student.discord %></li>
+                                    <%= student.discord %>
                                 <% } %>
                                 <h4>GroupMe</h4>
                                 <% if (student.groupme) { %>
-                                    <li><%= student.groupme %></li>
+                                    <%= student.groupme %>
                                 <% } %>
                                 <h4>Instagram</h4>
                                 <% if (student.instagram) { %>
-                                    <li>Instagram: <%= student.instagram %></li>
+                                    Instagram: <%= student.instagram %>
                                 <% } %>
                             </ul>
                         </div>
@@ -73,12 +87,20 @@
 
                 <div class="profile-right-column">
                     <div class ="myinfo-card">
-                        <h1>Project & Team Information</h1>
+                        <h1>Project Information</h1>
                         <div class ="myinfo-project">
-                            <h1>Your Project</h1>
+                            <% if (curr === student.userID) { %>
+                                <h1>Your Project</h1>
+                            <% } else { %>
+                                <h1>Project</h1>
+                            <% } %>
                         </div>
                         <div class="myinfo-team">
-                            <h1>Your Team</h1>
+                            <% if (curr === student.userID) { %>
+                                <h1>Your Team</h1>
+                            <% } else { %>
+                                <h1>Team</h1>
+                            <% } %>
                         </div>
                     </div>
 
@@ -106,14 +128,22 @@
                             <ul id="projectSkillsList">
                                 <!-- Existing project skills will be listed here -->
                             </ul>
+                            <% if (curr===student.userID) { %>
                             <div class="add-skill">
-                                <input type="text" id="newSkillInput" placeholder="Enter a skill to add">
-                                <button id="addSkillButton">Add Skill</button>
+                                <form method="post" action="/skills/change">
+                                    <input type="hidden" name="action" value="add" />
+                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to add" />
+                                    <input type="submit" id="addSkillButton" value="Add Skill" />
+                                </form>
                             </div>
                             <div class="remove-skill">
-                                <input type="text" id="newSkillInput" placeholder="Enter a skill to remove">
-                                <button id="addSkillButton">Remove Skill</button>
+                                <form method="post" action="/skills/change">
+                                    <input type="hidden" name="action" value="remove" />
+                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to remove" />
+                                    <input type="submit" id="addSkillButton" value="Remove Skill" />
+                                </form>
                             </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
