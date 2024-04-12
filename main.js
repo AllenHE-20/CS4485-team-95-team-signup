@@ -577,8 +577,9 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
 
 //Currently when giving someone user access Faculty privileges may need to be reworked since it involves using netID.
 //Maybe some kind of check box for UTD to make a student?
+// TODO: Handle faculty checkbutton
 app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { firstNameInput, middleNameInput, lastNameInput, emailInput, facultyPriv, adminPriv } = req.body;
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, netIdInput, facultyPriv, adminPriv } = req.body;
     const adminBool = adminPriv ? 1 : 0;
 
     const result = schemas.addUser.validate(req.body);
@@ -588,6 +589,9 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     const user = await database.getUserByEmail(emailInput);
     if (user)
         return res.status(httpStatus.BAD_REQUEST).send("A user with that email already exists");
+
+    if (adminPriv && !netIdInput)
+        return res.status(httpStatus.BAD_REQUEST).send("Faculty or admin must be UTD affiliated");
 
     const {token, hash} = password.createOneTimePasswordToken();
 
@@ -599,6 +603,18 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     await database.pool.query(`
         INSERT INTO login (userID, oneTimeTokenHash)
         VALUES (?, ?);`, [userID, hash])
+
+    if (netIdInput) {
+        await database.pool.query(`
+            INSERT INTO UTD (userID, netID)
+            VALUES (?, ?);`, [userID, netIdInput]);
+
+        if (!adminPriv) {
+            await database.pool.query(`
+            INSERT INTO student (netID)
+            VALUES (?)`, [netIdInput]);
+        }
+    }
 
     const registerUrl = `${req.protocol}://${req.get("host")}/register/${token}`;
     const message = `You have been registered into Team Sign-Up. Please use the below link to set your login information\n\n${registerUrl}`;
