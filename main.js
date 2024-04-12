@@ -53,6 +53,35 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Adds some information about the current user
+app.use(async (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        res.locals.user = null;
+        return next();
+    }
+
+    const user = await database.getUserByID(req.user.userID);
+    const student = await database.getStudentByUserID(req.user.userID);
+    const team = student ? await database.getTeam(student.team) : null;
+    const project = team ? await database.getProject(team.projectID) : null;
+    res.locals.user = {
+        userID: user.userID,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        email: user.email,
+        admin: user.admin,
+        student: {
+            // We can add more info if needed
+            avatar: student.avatar,
+            team: student.team,
+            project: project.projectID,
+        },
+    };
+    console.log(res.locals.user);
+    next();
+});
+
 app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
