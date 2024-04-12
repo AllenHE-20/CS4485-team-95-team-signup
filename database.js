@@ -410,7 +410,7 @@ async function getAllNotFullTeams(teamSize) {
 
 async function matchTeamsRandom(teamSize) {
     //gets array of student netIDs
-    let students = (await getAllStudentsWithoutTeam()).map(student => student.netID);
+    let students = (await getAllStudentsWithoutTeam());
     const teamNotFull = await getAllNotFullTeams(teamSize);
     let AddStudentToTeam = [];
 
@@ -441,11 +441,11 @@ async function matchTeamsRandom(teamSize) {
         }
     }
     //teams are newly made to be inserted into the teams table
-    console.log(teams);
-    //AddStudentToTeam contains the student's netID and the team to add them to.
+    //console.log(teams);
+    //AddStudentToTeam contains the student and the team to add them to.
     console.log(AddStudentToTeam);
     //These are are students that did not fit in anywhere.
-    console.log(leftOverStudents);
+    //console.log(leftOverStudents);
     return (teams, AddStudentToTeam, leftOverStudents)
 
 
