@@ -64,6 +64,7 @@ app.use(async (req, res, next) => {
     const student = await database.getStudentByUserID(req.user.userID);
     const team = student ? await database.getTeam(student.team) : null;
     const project = team ? await database.getProject(team.projectID) : null;
+    const projectID = project ? project.projectID : null;
     res.locals.user = {
         userID: user.userID,
         firstName: user.firstName,
@@ -75,7 +76,7 @@ app.use(async (req, res, next) => {
             // We can add more info if needed
             avatar: student.avatar,
             team: student.team,
-            project: project.projectID,
+            project: projectID,
         },
     };
     console.log(res.locals.user);
