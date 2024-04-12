@@ -66,6 +66,12 @@ app.use(async (req, res, next) => {
     const team = student ? await database.getTeam(student.team) : null;
     const project = team ? await database.getProject(team.projectID) : null;
     const projectID = project ? project.projectID : null;
+    const studentData = student ? {
+        // We can add more info if needed
+        avatar: student.avatar,
+        team: student.team,
+        project: projectID,
+    } : null;
     res.locals.user = {
         userID: user.userID,
         firstName: user.firstName,
@@ -73,12 +79,7 @@ app.use(async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
         admin: user.admin,
-        student: {
-            // We can add more info if needed
-            avatar: student.avatar,
-            team: student.team,
-            project: projectID,
-        },
+        student: studentData,
     };
     next();
 });
