@@ -228,6 +228,16 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
     });
 })
 
+app.get("/adminProjects", auth.isAdmin, async (req, res) => {
+    res.render("adminProjects.ejs",{
+        projects: await database.getAllProjects(),
+    });
+})
+
+app.get("/adminFormTeam", auth.isAdmin, (req, res) => {
+    res.render("adminFormTeam.ejs");
+})
+
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register", urlencodedParser, (req, res) => {

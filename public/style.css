@@ -891,7 +891,7 @@ input[type="submit"]{
 
 .teamCard{
     width: 400px;
-    height: 400px;
+    height: 450px;
     background: #fff;
     border-radius: 15px;
     color: #333;
@@ -901,7 +901,8 @@ input[type="submit"]{
 }
 
 .teamCard h2,
-.teamCard p{
+.teamCard p,
+.projSubmitButton{
     padding: 5px;    
 }
 
