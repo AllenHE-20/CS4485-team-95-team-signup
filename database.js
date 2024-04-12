@@ -422,7 +422,7 @@ async function matchTeamsRandom(teamSize) {
             teamID: teamNotFull[i].teamID
         }
         AddStudentToTeam.push(toAdd);
-
+        students.splice(studentIndex, 1);
     }
     const amtOfTeams = Math.floor(students.length / teamSize);
     const leftOverStudents = students.slice(students.length - (students.length % teamSize), students.length)
