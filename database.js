@@ -19,7 +19,7 @@ pool.query(`SELECT userID FROM user`).then(async ([users]) => {
         await pool.query(`
             INSERT INTO user (lastName, email, admin)
             VALUES ("admin", "admin@example.com", 1)`);
-        const {hash, salt} = password.genPassword(process.env.ADMIN_PASSWORD);
+        const { hash, salt } = password.genPassword(process.env.ADMIN_PASSWORD);
         await pool.query(`
             INSERT INTO login (userID, passwordHash, passwordSalt)
             VALUES (LAST_INSERT_ID(), ?, ?)`, [hash, salt]);
@@ -389,7 +389,67 @@ async function getInvites(userID) {
     });
     return await Promise.all(invites);
 }
+async function getAllStudentsWithoutTeam() {
+    const [students] = await pool.query(`
+        SELECT * FROM Student WHERE teamID IS NULL;
+    `)
+    return students;
+}
 
+//gets teams less than specific teamSize
+async function getAllNotFullTeams(teamSize) {
+    const [teams] = await pool.query(`
+    SELECT teamID, COUNT(*) AS teamSize
+    FROM student
+    WHERE teamID IS NOT NULL
+    GROUP BY teamID
+    HAVING teamSize < ?;
+    `, [teamSize]);
+    return teams;
+}
+
+async function matchTeamsRandom(teamSize) {
+    //gets array of student netIDs
+    let students = (await getAllStudentsWithoutTeam());
+    const teamNotFull = await getAllNotFullTeams(teamSize);
+    let AddStudentToTeam = [];
+
+    //we loop through all teams not full and fill them to designated teamSize.
+    for (var i = 0; i < teamNotFull.length; i++) {
+        studentIndex = Math.floor(Math.random() * students.length);
+        const toAdd = {
+            netID: students[studentIndex],
+            teamID: teamNotFull[i].teamID
+        }
+        AddStudentToTeam.push(toAdd);
+
+    }
+    const amtOfTeams = Math.floor(students.length / teamSize);
+    const leftOverStudents = students.slice(students.length - (students.length % teamSize), students.length)
+
+
+    //makes each teams initially start as empty
+    let teams = new Array(amtOfTeams);
+
+    //loops through all the potential teams and randomly fills them.
+    for (var i = 0; i < amtOfTeams; i++) {
+        teams[i] = [];
+        for (var j = 0; j < teamSize; j++) {
+            studentIndex = Math.floor(Math.random() * students.length);
+            teams[i].push(students[studentIndex])
+            students.splice(studentIndex, 1);
+        }
+    }
+    //teams are newly made to be inserted into the teams table
+    //console.log(teams);
+    //AddStudentToTeam contains the student and the team to add them to.
+    console.log(AddStudentToTeam);
+    //These are are students that did not fit in anywhere.
+    //console.log(leftOverStudents);
+    return (teams, AddStudentToTeam, leftOverStudents)
+
+
+}
 
 /*
 async function fetchUsers() {
@@ -418,3 +478,4 @@ module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
+module.exports.matchTeamsRandom = matchTeamsRandom;

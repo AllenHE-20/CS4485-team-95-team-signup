@@ -946,3 +946,51 @@ input[type="submit"]{
     cursor: pointer; 
     margin: 10px;
 }
+
+
+/* teamPage.ejs */
+
+.teamPageContents {
+    display: flex;
+    justify-content: center;
+}
+
+.teamNumheader {
+    width: 200px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamMembersList{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamProjectPrefsList{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.teamSkills{
+    width: 400px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}

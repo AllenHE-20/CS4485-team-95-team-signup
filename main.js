@@ -267,7 +267,7 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
 })
 
 app.get("/adminProjects", auth.isAdmin, async (req, res) => {
-    res.render("adminProjects.ejs",{
+    res.render("adminProjects.ejs", {
         projects: await database.getAllProjects(),
     });
 })
@@ -720,7 +720,7 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     if (adminPriv && !netIdInput)
         return res.status(httpStatus.BAD_REQUEST).send("Faculty or admin must be UTD affiliated");
 
-    const {token, hash} = password.createOneTimePasswordToken();
+    const { token, hash } = password.createOneTimePasswordToken();
 
     const [insert] = await database.pool.query(`
         INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
