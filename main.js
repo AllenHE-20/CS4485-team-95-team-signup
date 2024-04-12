@@ -790,5 +790,13 @@ app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res)
     res.redirect("/adminTeams");
 });
 
+app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
+    const {maxTeam} = req.query;
+    const generatedTeamUpdates = await database.matchTeamsRandom(maxTeam);
+    const {newTeams, studentToExistingTeam, leftOverStudents} = generatedTeamUpdates;
+
+    res.send(JSON.stringify(generatedTeamUpdates));
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
