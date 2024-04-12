@@ -16,11 +16,17 @@
     <% for (let i = 0; i < teams.length; i++) { %>    
         <div class="teamCard">               
             <h1>Team <%= teams[i].id %></h1>                    
-            <button class="deleteTeam" id="deleteTeam">Delete Team</button>
+            <form action="/admin/disband-team" method="post">
+                <input type="hidden" name="team" value="<%= teams[i].id %>" />
+                <input type="submit" class="deleteTeam" id="deleteTeam" value="Delete Team" />
+            </form>
             <% (teams[i].members).forEach(member => { %>           
                 <div class="teamMembers">
-                    <button class="deleteMember" id="deleteMember">-</button>
-                    <%= member %>
+                    <form action="/admin/drop-from-team" method="post">
+                        <input name="user" type="hidden" value="<%= member.userID %>" />
+                        <input type="submit" class="deleteMember" value="-" />
+                    </form>
+                    <p><%= member.firstName %> <%= member.lastName %></p>
                 </div>
             <% }) %> 
             

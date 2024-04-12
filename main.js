@@ -252,8 +252,16 @@ app.get("/adminDatabase", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminTeams", auth.isAdmin, async (req, res) => {
+    // HACK: We need user IDs
+    const teams = await database.getAllTeams();
+    teams.forEach(async (team) => {
+        [team.members] = await database.pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM user U, UTD D, student S
+            WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, team.id);
+    });
     res.render("adminTeams.ejs", {
-        teams: await database.getAllTeams(),
+        teams: teams,
         projects: await database.getAllProjects(),
     });
 })
@@ -617,7 +625,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
     const netID = await database.getNetID(req.user.userID);
     const student = await database.getStudentByNetID(netID);
     if (student.team === null) {
-        return res.status(httpStatus.BAD_REQUEST).message("You are not on a team");
+        return res.status(httpStatus.BAD_REQUEST).send("You are not on a team");
     }
     await Promise.all([
         database.pool.query(`
@@ -625,7 +633,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
             SET teamID = NULL
             WHERE netID = ?`, [netID]),
         database.pool.query(`
-            DELETE FROM team
+            DELETE FROM Team
             WHERE teamID NOT IN (
                 SELECT teamID
                 FROM student
@@ -749,6 +757,37 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     res.redirect("/adminAccess");
 });
 
+app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const userID = req.body.user;
+    console.log(userID);
+    const netID = await database.getNetID(userID);
+    const student = await database.getStudentByNetID(netID);
+    if (!student || !student.team) {
+        return res.status(httpStatus.BAD_REQUEST).send("That user is not on a team");
+    }
+    await Promise.all([
+        database.pool.query(`
+            UPDATE student
+            SET teamID = NULL
+            WHERE netID = ?`, [netID]),
+        database.pool.query(`
+            DELETE FROM Team
+            WHERE teamID NOT IN (
+                SELECT teamID
+                FROM student
+                WHERE teamID IS NOT NULL
+            )`),
+        res.redirect(`/adminTeams`),
+    ]);
+});
+
+app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const teamID = req.body.team;
+    await database.pool.query(`
+        DELETE FROM Team
+        WHERE teamID = ?`, [teamID]);
+    res.redirect("/adminTeams");
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
