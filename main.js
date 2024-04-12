@@ -79,7 +79,6 @@ app.use(async (req, res, next) => {
             project: projectID,
         },
     };
-    console.log(res.locals.user);
     next();
 });
 
@@ -87,7 +86,7 @@ app.get("/", (req, res) => {
     if (!req.isAuthenticated())
         return res.render("landing.ejs");
 
-    res.render("index.ejs", { isAdmin: req.user.admin });
+    res.render("index.ejs");
 })
 
 app.get("/register", (req, res) => {
@@ -658,6 +657,22 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
 });
 
 app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
+    const [files] = await database.pool.query(`
+        SELECT S.resumeFile, S.avatar
+        FROM Student S, UTD D, user U
+        WHERE U.userID = D.userID AND D.netID = U.netID AND NOT U.admin`);
+    files.forEach((resumeFile, avatar) => {
+        try {
+            fs.unlink(path.join("public/user-files", resumeFile));
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            fs.unlink(path.join("public/user-files", avatar));
+        } catch (err) {
+            console.error(err);
+        }
+    });
     await database.pool.query(`
         DELETE FROM user
         WHERE NOT admin`);
