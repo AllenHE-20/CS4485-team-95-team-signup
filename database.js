@@ -170,7 +170,7 @@ async function teamsPerProject(pID) {
 
 async function getAllProjects() {
     const [projects] = await pool.query(`
-        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, P.sponsor, O.affiliation
         FROM Project P, organizer O 
         WHERE O.userID = P.userID;
     `);

@@ -5,28 +5,42 @@
 
 <%- include('partials/header.ejs'); %>
     
-<main class="adminPage">
-    <h1>Manage Teams</h1>    
-
+<main class="adminTeamPage">
     <% for (let i = 0; i < teams.length; i++) { %>    
-        <div class="teamCard">    
-            <h1>Team <%= teams[i].id %></h1>        
-            <h2>Team Members</h2>
-            <% (teams[i].members).forEach(member => { %>
-                <p><%= member %></p>
-            <% }) %>                                            
-                
-            <h2>Assigned Project</h2>
+        <div class="teamCard">               
+            <h1>Team <%= teams[i].id %></h1>                    
+            <button class="deleteTeam" id="deleteTeam">Delete Team</button>
+            <% (teams[i].members).forEach(member => { %>           
+                <div class="teamMembers">
+                    <button class="deleteMember" id="deleteMember">-</button>
+                    <%= member %>
+                </div>
+            <% }) %> 
             
-            <% if (teams[i].projectID === null) { %>
-                <p>NULL</p>
-            <% } else { %>
+            <div class="searchContainer">
+                <input type="text" id="searchMember" placeholder="Add New Member">                                
+            </div>
+            
+                            
+            
+
+            <h2>Assigned Project</h2>            
+            <select name="assignProject" id="assignProject">
+                <option value="">Assign New Project</option>
+                <% for (let i=0; i < projects.length; i++) { %>
+                    <option value="<%= projects[i].projectID %>">
+                        <%= projects[i].projectname %>
+                    </option>
+                    <% } %>
+            </select>
+            <% if (teams[i].projectID != null) { %>                                            
                 <% console.log(projects[i]); %>
-                <p>Project <%= projects[i].id %> - <%= projects[i].title %><br><%= projects[i].sponsor %></p>
+                <p>Project <%= projects[i].projectID %> </p>
+                <p><%= projects[i].projectname %></p>
+                <p><%= projects[i].sponsor %></p>
             <% } %>
         </div>    
     <% } %>                 
-    
 </main>
 
 </body>

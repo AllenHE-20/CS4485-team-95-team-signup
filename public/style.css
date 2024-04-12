@@ -696,11 +696,63 @@ input[type="submit"]{
 
 .adminLinksList,
 .adminPage p{
-    padding: 10px;
+    padding: 5px;
 } 
 
 .adminBox{
     display:flex;
     justify-content: center;
     padding-top: 5px;
+}
+
+.teamCard{
+    width: 400px;
+    height: 400px;
+    background: #fff;
+    border-radius: 15px;
+    color: #333;
+    margin: 10px;
+    padding-top: 10px;  
+    
+}
+
+.teamCard h2,
+.teamCard p{
+    padding: 5px;    
+}
+
+.adminTeamPage{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.teamMembers{
+    padding: 3px;        
+    text-align: left;
+    margin-left: 120px;        
+}
+
+.deleteMember {
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none; 
+    padding: 2px 7px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.deleteMember:hover, 
+.deleteTeam:hover{
+    background-color: #cc0000; 
+}
+
+.deleteTeam {
+    background-color: #ff0000; /* Red background */
+    color: #ffffff; /* White text */
+    border: none; /* No border */
+    padding: 5px 10px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+    margin: 10px;
 }
