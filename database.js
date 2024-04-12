@@ -22,6 +22,14 @@ async function getUser(id) {
 }
 */
 
+async function getUserByID(userID) {
+    const [users] = await pool.query(`
+        SELECT userID, firstName, middleName, lastName, email, admin
+        FROM user
+        WHERE userID = ?`, [userID]);
+    return users[0];
+}
+
 async function getAllStudentPreferences() {
     const [preferences] = await pool.query(`
         SELECT SP.*, P.projectName
@@ -325,7 +333,7 @@ async function getTeam(teamID) {
         skills: skills.flatMap(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
-        projectID: project[0],
+        projectID: project[0].projectID,
     };
     return team;
 }
@@ -375,6 +383,7 @@ fetchUsers();
 */
 
 module.exports.pool = pool;
+module.exports.getUserByID = getUserByID;
 module.exports.getLoginByEmail = getLoginByEmail;
 module.exports.getUserByEmail = getUserByEmail;
 module.exports.addLogin = addLogin;
