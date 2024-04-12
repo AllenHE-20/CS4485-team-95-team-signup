@@ -16,7 +16,6 @@
                 <% if (!isAdmin) { %>
                     <li><a href="/profile">PROFILE</a></li>
                 <% } %>        
-                <li><a href="/logout">LOGOUT</a>
             </ul>
             <li class="user-pic-item">
                 <img src="/images/profile.png" class="user-pic" onclick="toggleMenu()">
@@ -43,7 +42,7 @@
                             <p>View Team</p>
                             <span>></span>
                         </a>
-                        <a href="#" class="sub-menu-link">
+                        <a href="/logout" class="sub-menu-link">
                             <img src="/images/logout.png">
                             <p>Logout</p>
                             <span>></span>
