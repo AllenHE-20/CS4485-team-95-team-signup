@@ -5,6 +5,20 @@
     <body>
         <%- include('partials/header.ejs'); %>
 
+        <% if (curr!==student.userID) { %>
+            <div class="function-container">
+                <div class="function-item">
+                    <button class="goback-button" onclick="goBack()">Previous Page</button>
+                </div>
+            </div>
+
+            <script>
+                function goBack() {
+                window.history.back();
+            }
+            </script>
+        <% } %>
+
             <main class="profile-page">
                 <div class = "profile-left-column">
                     <div class="profile-card">
