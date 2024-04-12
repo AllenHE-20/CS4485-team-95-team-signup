@@ -34,12 +34,12 @@ async function getAllStudentPreferences() {
 
 async function allStudents() {
     const [rows] = await pool.query(`
-        SELECT u.firstName, u.lastName, u.userID, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
-        JOIN student s on utd.netID = s.netID;`);
+        SELECT u.firstName, u.lastName, u.userID, s.avatar, s.netID FROM user u JOIN UTD on u.userID = UTD.userID
+        JOIN student s on UTD.netID = s.netID;`);
 
     const [skills] = await pool.query(`
     SELECT SS.netID, S.skillName
-    FROM studentSkillset SS
+    FROM StudentSkillset SS
     INNER JOIN Skills S ON SS.skillID = S.skillID;
     `);
     const skillsForStudent = [];
@@ -57,6 +57,9 @@ async function allStudents() {
             rows.skills = skillsForStudent[rows.netID] || [];
         }
     })
+
+    console.log(rows.avatar, '\n')
+
     return rows;
 }
 
@@ -170,7 +173,7 @@ async function teamsPerProject(pID) {
 
 async function getAllProjects() {
     const [projects] = await pool.query(`
-        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, O.affiliation
+        SELECT P.projectID, P.projectname, P.description, P.teamSize, P.maxTeams, P.avatar, P.sponsor, O.affiliation
         FROM Project P, organizer O 
         WHERE O.userID = P.userID;
     `);
@@ -282,7 +285,7 @@ async function getAllTeams() {
     prefs.forEach((pref) => teams[pref.teamID].interests.push(pref.projectName));
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName, T.teamID
-        FROM StudentSkillset C, Skills S, Student T
+        FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID IS NOT NULL`);
     skills.forEach((skill) => teams[skill.teamID].skills.push(skill.skillName));
     const [projects] = await pool.query(`
@@ -309,7 +312,7 @@ async function getTeam(teamID) {
         ORDER BY T.preference_number`, teamID);
     const [skills] = await pool.query(`
         SELECT DISTINCT S.skillName
-        FROM StudentSkillset C, Skills S, Student T
+        FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
     const [project] = await pool.query(`
         SELECT projectID

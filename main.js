@@ -91,7 +91,7 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 
             console.log(list, '\n')
-            console.log('\n', preferences)
+            //console.log('\n', preferences)
             res.render("allUsersList.ejs", { studentlist: list, preferences: preferences });
         })
     });
