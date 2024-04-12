@@ -126,7 +126,17 @@
                         <div class="project-skills">
                             <h1>Skills</h1>
                             <ul id="projectSkillsList">
-                                <!-- Existing project skills will be listed here -->
+                                <ul>
+                                    <% let counter2 = 1; %>
+                                    <% student.skills.forEach(skill => { %>
+                                        <div class="skill-bubble">
+                                            <li>
+                                                <%= counter2 %>. <%= skill%>
+                                            </li>
+                                        </div>
+                                        <% counter2++; %>
+                                    <% }); %>
+                                </ul>
                             </ul>
                             <% if (curr===student.userID) { %>
                             <div class="add-skill">
