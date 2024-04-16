@@ -795,7 +795,119 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     const generatedTeamUpdates = await database.matchTeamsRandom(maxTeam);
     const {newTeams, studentToExistingTeam, leftOverStudents} = generatedTeamUpdates;
 
-    res.send(JSON.stringify(generatedTeamUpdates));
+    const teamsToMake = newTeams.map(async team => {
+        const netIDs = team.map(member => member.netID);
+        const members = team.map(async member => {
+            const [[user]] = await database.pool.query(`
+                SELECT U.userID, U.firstName, U.lastName
+                FROM UTD D, user U
+                WHERE D.userID = U.userID AND D.netID = ?`, [member.netID]);
+            return user;
+        });
+        const skills = (await database.pool.query(`
+            SELECT DISTINCT Sk.skillName
+            FROM StudentSkillset SS, Skills Sk
+            WHERE SS.skillID = Sk.skillID AND SS.netID IN (?)`,
+            [netIDs],
+        ))[0].map(skill => skill.skillName);
+        // Give each preferred project a 1-5 score opposite the preference
+        // number (projects not in preferences still worth 0), and sum those
+        // scores to find the most well-liked projects in the team
+        const preferences = (await database.pool.query(`
+            SELECT SUM(6 - SP.preference_number) AS totalPreference, SP.projectID, P.projectName
+            FROM StudentPreferences SP, Project P
+            WHERE SP.netID in (?) AND SP.projectID = P.projectID
+            GROUP BY SP.projectID
+            ORDER BY totalPreference`,
+            [netIDs])
+        )[0].toReversed()
+            .map((project) => project.projectName /*{ return {id: projectID, name: projectName}; }*/)
+            .filter((_val, i, _arr) => i < 5);
+        return {
+            teamID: null,  // New team
+            currentMemberNames: [],
+            newMemberNames: (await Promise.all(members)).map(member => `${member.firstName} ${member.lastName}`),
+            newMemberIDs: (await Promise.all(members)).map(member => member.userID),
+            projectPreferences: preferences,
+            currentSkills: [],
+            newSkills: skills,
+        };
+    });
+
+    const teamsToUpdate = {};
+    const teamIDs = studentToExistingTeam.map(({teamID}) => teamID)
+        .toSorted()
+        .filter((val, i, arr) => val != arr[i - 1]);
+    for (var teamID of teamIDs) {
+        const team = await database.getTeam(teamID);
+        team.newMemberIDs = [],
+        team.newMemberNetIDs = [],
+        team.newMemberNames = [],
+        team.newSkills = [],
+        teamsToUpdate[teamID] = team;
+    }
+    for (var {student, teamID} of studentToExistingTeam) {
+        const team = teamsToUpdate[teamID];
+        const [[user]] = await database.pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM UTD D, user U
+            WHERE D.userID = U.userID AND D.netID = ?`, [student.netID]);
+        team.newMemberIDs.push(user.userID);
+        team.newMemberNetIDs.push(student.netID);
+        team.newMemberNames.push(`${user.firstName} ${user.lastName}`);
+    }
+    for (var team of Object.values(teamsToUpdate)) {
+        const [skills] = await database.pool.query(`
+            SELECT DISTINCT Sk.skillName
+            FROM StudentSkillset SS, Skills Sk, Student St
+            WHERE SS.skillID = Sk.skillID AND SS.netID = St.netID AND (St.teamID = ? OR St.netID IN (?))
+            EXCEPT
+            SELECT Sk.skillName
+            FROM StudentSkillset SS, Skills Sk, Student St
+            WHERE SS.skillID = Sk.skillID AND SS.netID = St.netID AND St.teamID = ?`,
+            [team.id, team.newMemberNetIDs, team.id],
+        );
+        team.newSkills = skills.map(skill => skill.skillName);
+    }
+    const updatedTeams = Object.values(teamsToUpdate)
+        .map((team) => { return {
+            teamID: team.id,
+            currentMemberNames: team.members,
+            newMemberNames: team.newMemberNames,
+            newMemberIDs: team.newMemberIDs,
+            projectPreferences: team.interests,
+            currentSkills: team.skills,
+            newSkills: team.newSkills,
+        }; });
+
+    const unsortedStudents = leftOverStudents.map(async (student) => {
+        const [[user]] = await database.pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM UTD D, user U
+            WHERE D.userID = U.userID AND D.netID = ?`, [student.netID]);
+        const [skills] = await database.pool.query(`
+            SELECT Sk.skillName
+            FROM StudentSkillset SS, Skills Sk
+            WHERE SS.skillID = Sk.skillID AND SS.netID = ?`, [student.netID]);
+        const [preferences] = await database.pool.query(`
+            SELECT P.projectName
+            FROM Project P, StudentPreferences W
+            WHERE W.netID = ? AND P.projectID = W.projectID
+            ORDER BY W.preference_number`, [student.netID]);
+        return {
+            userID: user.userID,
+            name: `${user.firstName} ${user.lastName}`,
+            skills: skills.map((skill) => skill.skillName),
+            preferences: preferences.map((pref) => (pref.projectName)),
+        };
+    });
+
+    const arrangement = {
+        teams: await Promise.all([...teamsToMake, ...updatedTeams]),
+        unsortedUsers: await(Promise.all(unsortedStudents)),
+    };
+
+    res.send(JSON.stringify(arrangement));
 });
 
 const port = process.env.PORT || 3000;

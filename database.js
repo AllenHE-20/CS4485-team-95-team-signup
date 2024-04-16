@@ -416,6 +416,7 @@ async function matchTeamsRandom(teamSize) {
 
     //we loop through all teams not full and fill them to designated teamSize.
     for (var i = 0; i < teamNotFull.length; i++) {
+        // BUG: Adds at most one member to each team
         studentIndex = Math.floor(Math.random() * students.length);
         const toAdd = {
             student: students[studentIndex],
