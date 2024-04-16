@@ -7,11 +7,13 @@
     
 <main class="adminPage">
     <h1>Random Team Formation</h1>        
-    <label for="maxTeam">Max Team Size</label>
-    <input type="text" name="maxTeam" id="maxTeam" />        
-    <div class="submitButton">
-        <input type="submit" value="Generate" />
-    </div>
+    <form action="/admin/generate-teams" method="get">
+        <label for="maxTeam">Max Team Size</label>
+        <input type="text" name="maxTeam" id="maxTeam" />
+        <div class="submitButton">
+            <input type="submit" value="Generate" />
+        </div>
+    </form>
 </main>
 
 </body>

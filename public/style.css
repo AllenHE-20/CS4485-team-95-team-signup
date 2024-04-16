@@ -240,6 +240,10 @@ main {
     font-size: 1.5em;
 }
 
+.myinfo-project {
+    margin-bottom: 25px;
+}
+
 .myinfo-card h1{
     text-align: left;
     margin-left: 45px;
@@ -290,7 +294,12 @@ main {
     margin-top: 30px;
 }
 
+.project-card h3{
+    margin-left: -5px;
+}
+
 .add-skill{
+    margin-top: 125px;
     width: 100%;
     font-size: 16px;
     box-sizing: border-box;
@@ -351,6 +360,10 @@ main {
     padding: 10px;
     text-align: left;
     margin-left: 50px;
+}
+
+.projectSkillsList{
+    margin: 50px;
 }
 
 .projects h3{
@@ -784,6 +797,19 @@ main {
 #sponsorDropdown {
     position: relative;
     display: inline-block;
+}
+
+.skill-bubble {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 20px; 
+    background-color: #007bff;
+    color: #ffffff;
+    font-family: Arial, sans-serif; 
+    font-size: 17px; 
+    line-height: 1.5; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .select-box {

@@ -416,13 +416,14 @@ async function matchTeamsRandom(teamSize) {
 
     //we loop through all teams not full and fill them to designated teamSize.
     for (var i = 0; i < teamNotFull.length; i++) {
+        // BUG: Adds at most one member to each team
         studentIndex = Math.floor(Math.random() * students.length);
         const toAdd = {
-            netID: students[studentIndex],
+            student: students[studentIndex],
             teamID: teamNotFull[i].teamID
         }
         AddStudentToTeam.push(toAdd);
-
+        students.splice(studentIndex, 1);
     }
     const amtOfTeams = Math.floor(students.length / teamSize);
     const leftOverStudents = students.slice(students.length - (students.length % teamSize), students.length)
@@ -443,12 +444,14 @@ async function matchTeamsRandom(teamSize) {
     //teams are newly made to be inserted into the teams table
     //console.log(teams);
     //AddStudentToTeam contains the student and the team to add them to.
-    console.log(AddStudentToTeam);
+    //console.log(AddStudentToTeam);
     //These are are students that did not fit in anywhere.
     //console.log(leftOverStudents);
-    return (teams, AddStudentToTeam, leftOverStudents)
-
-
+    return {
+        newTeams: teams,
+        studentToExistingTeam: AddStudentToTeam,
+        leftOverStudents: leftOverStudents,
+    }
 }
 
 /*
