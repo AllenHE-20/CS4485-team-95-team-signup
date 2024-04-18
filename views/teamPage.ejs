@@ -17,49 +17,64 @@
 </script>
 
 <main class="teamPageContents">
-
-    <div class="team-page-left-column">
-        <div class="teamNumheader">
-            <h1>Team <%= teamDataObj.id %></h1>
-        </div>
-    
-        <div class="teamMembersList">
-            <h2>Team Members</h2>
-            <% (teamDataObj.members).forEach(member => { %>
-                <p><%= member %></p>
-                <% }) %>
-        </div>
-
-        <% if (teamDataObj.id == yourTeam) { %>
-            <div class="leaveTeamButtonContainer">
-                <form action="/leave-team" method="post">
-                    <input class="leaveTeamButton" type="submit" value="Leave Team" />
-                </form>
+    <ul class="project-info" id="teamInfo">
+        <li class="team-page-container">
+            <div class="team-profile-card">
+                <div class="team-page-image">
+                    <img class="profile-image" src="<%= teamDataObj.avatar %>" />
+                    <script>
+                        console.log(teamDataObj);
+                    </script>
+                </div>
+                <div class="team-profile-card-container">
+                    <div class="team-page-name">
+                        <h1>Team <%= teamDataObj.id %></h1>
+                    </div>
+                    <div class="teamPageStatus">
+                        <p>
+                            Team Status:
+                            <% if (teamDataObj.open) { %>
+                                <span class="project-status-open">Open</span>
+                            <% } else { %>
+                                <span class="project-status-closed">Closed</span>
+                            <% } %>
+                        </p>
+                    </div>
+                    
+                    <% if (teamDataObj.id == yourTeam) { %>
+                        <div class="leaveTeamButtonContainer">
+                            <form action="/leave-team" method="post">
+                                <input class="leaveTeamButton" type="submit" value="Leave Team" />
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
             </div>
-        <% } %>
-    </div>
-    <div class="team-page-right-column">
-        <div class="teamProjectPrefsList">
-            <h2>Interested Projects</h2>
+            <hr>
+        </li>
+        <li>
+            <div class="team-page-members">
+                <h1>Team Members</h1>
+                <% (teamDataObj.members).forEach(member => { %>
+                    <p><%= member %><p>
+                <% }) %>
+            </div>
+            <hr>
+            <div class="team-page-projects">
+                <h1>Interested Projects</h1> 
+                <% let counter = 1; %>
                 <% (teamDataObj.interests).forEach(proj => { %>
-                    <p><%= proj %></p>
+                    <p><%= counter %>. <%= proj %><p>
+                        <% counter++; %>
                 <% }) %>
             </div>
-        
-            <div class="teamSkills">
-                <h2>Team Skills</h2>
+            <hr>
+            <div class="team-page-skills">
+                <h1>Skills</h1>
                 <% (teamDataObj.skills).forEach(skill => {%>
                     <p><%= skill %></p>
                 <% }) %>
             </div>
-    </div>
-    
-   
-
-    
-
-
+        </li>
+    </ul>
 </main>
-
-</body>
-</html>

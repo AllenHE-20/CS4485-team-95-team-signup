@@ -21,35 +21,45 @@
     <main>
         <article>
             <ul class="project-info" id="projectInfo">
-                <div class="projectPageImage">
-                    <img class="profile-image" src="/images/<%= project.avatar %>" />
-                </div>
-                <div class="projectPageName">
-                    <h1><%= project.projectName %></h1>
-                </div>
-                <div class="projectPageSponsor">
-                    <%= project.affiliation %>
-                </div>
-                <div class="projectPageDescription">
-                    <%= project.description %>
-                </div>
-                <div class="project-skills inline-list">
-                    <%- include("partials/labeled-list.ejs", { label: "Skills needed" , list:
-                        project.skills || []}); %>
-                </div>
-                <div class="projectPageStatus">
-                    <p>
-                        Project Status:
-                        <% if (!project.team_assigned) { %>
-                            <span class="project-status-open">Open</span>
-                        <% } else { %>
-                            <span class="project-status-closed">Closed</span>
-                        <% } %>
-                    </p>
-                </div>
+                <li class="project-profile-container">
+                    <div class="project-profile-card">
+                        <div class="project-page-image">
+                            <img class="profile-image" src="/images/<%= project.avatar %>" />
+                        </div>
+                        <div class="project-profile-card-container">
+                            <div class="project-page-name">
+                                <h1><%= project.projectname %></h1>
+                            </div>
+                            <div class="project-page-sponsor">
+                                <%= project.affiliation %>
+                            </div>
+                            <div class="projectPageStatus">
+                                <p>
+                                    Project Status:
+                                    <% if (!project.team_assigned) { %>
+                                        <span class="project-status-open">Open</span>
+                                    <% } else { %>
+                                        <span class="project-status-closed">Closed</span>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </li>
+                <li>
+                    <div class="project-page-description">
+                        <h1>Description</h1>
+                        <%= project.description %>
+                    </div>
+                    <hr>
+                    <div class="project-page-skills inline-list">
+                        <h1>Skills Needed</h1>
+                        <%- include("partials/labeled-list.ejs", { label: "Skills" , list: project.skills || []}); %>
+                    </div>
+                    <hr>
+                    <div class="project-page-files">
+                        <h1>Relevant Files & Supplemental Information</h1>
+                    </div>
+                </li>
             </ul>
-        </article>
-    </main>
-</body>
-
-</html>
