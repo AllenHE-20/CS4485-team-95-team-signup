@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<%- include("partials/doc-head.ejs", {title: "UT Dallas"}); %>
+
+<body>
+    <%- include('partials/header.ejs'); %>
+    
+    <main>
+        <h1>Add a new project:</h1>
+        <form action="" method="post" class="newProjectForm" enctype="multipart/form-data">
+
+            <div class="projName">
+                <label for="project-name">Project name (Max 50 characters):</label>
+                <input type="text" id="project-name" name="project-name" />
+            </div>
+
+            <div class="projSponsor">
+                <label for="project-sponsor">Project Sponsor (Max 255 characters):</label>
+                <input type="text" id="project-sponsor" name="project-sponsor" />
+            </div>
+
+            <div class="projDescription">
+                <label for="project-description">Project description (Max 500 characters):</label>
+                <input type="text" id="project-description" name="project-description" />
+            </div>
+
+            <div class="projTeamSize">
+                <label for="project-team-size">Project team size (4 - 6)</label>
+                <input type="number" id="project-team-size" name="project-team-size" min="4" max="6" step="1" />
+            </div>
+
+            <div class="projAvatar">
+                <label for="project-avatar">Project avatar (not supported):</label>
+                <input type="file" id="project-avatar" name="project-avatar" disabled="true" />
+            </div>
+
+            <div class="projMaxTeams">
+                <label for="project-max-teams">Maximum teams for this project (Must be at least 1)</label>
+                <input type="number" id="project-max-teams" name="project-max-teams" min="1" />
+            </div>
+
+            <div class="newTeamSubmitButton">
+                <input type="submit" value="Add New Project" />
+            </div>
+        
+        </form>
+    </main>
+    
+</body>
+
+</html>
