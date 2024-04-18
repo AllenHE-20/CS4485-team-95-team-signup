@@ -772,11 +772,20 @@ app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, r
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
     const {newMember, team} = result.value;
-    const netID = await database.getNetID(newMember);
-    await database.pool.query(`
+    var netID;
+    try {
+        netID = await database.getNetID(newMember);
+    } catch (err) {
+        return res.status(httpStatus.BAD_REQUEST).send(`Invalid user ID: ${newMember}`);
+    }
+    try {
+        await database.pool.query(`
         UPDATE Student
         SET teamID = ?
         WHERE netID = ?`, [team, netID]);
+    } catch (err) {
+        return res.status(httpStatus.BAD_REQUEST).send(err);
+    }
     return res.redirect("/adminTeams");
 })
 
@@ -809,6 +818,23 @@ app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res)
         DELETE FROM Team
         WHERE teamID = ?`, [teamID]);
     res.redirect("/adminTeams");
+});
+
+app.post("/admin/set-project", auth.isAdmin, urlencodedParser, async (req,res) => {
+    const result = schemas.adminSetProject.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {assignProject, team} = result.value;
+    try {
+        await database.pool.query(`
+            UPDATE Team
+            SET projectID = ?
+            WHERE teamID = ?`, [assignProject, team]);
+    } catch (err) {
+        return res.status(httpStatus.BAD_REQUEST).send(err)
+    }
+    return res.redirect("/adminTeams");
 });
 
 app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {

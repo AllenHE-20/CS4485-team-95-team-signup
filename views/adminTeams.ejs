@@ -44,20 +44,19 @@
             </div>                                                    
 
             <h2>Assigned Project</h2>            
-            <select name="assignProject" id="assignProject">
-                <option value="">Assign New Project</option>
-                <% for (let i=0; i < projects.length; i++) { %>
-                    <option value="<%= projects[i].projectID %>">
-                        <%= projects[i].projectname %>
-                    </option>
-                <% } %>                
-            </select>
-            <div class="projSubmitButton">
-                <input type="submit" value="Submit" />
-            </div>
-                
+            <form action="/admin/set-project" method="post">
+                <input type="hidden" name="team" value="<%= teams[i].id %>" />
+                <select name="assignProject" id="assignProject">
+                    <option value="">Assign New Project</option>
+                    <% for (let i=0; i < projects.length; i++) { %>
+                        <option value="<%= projects[i].projectID %>"><%= projects[i].projectname %></option>
+                    <% } %>
+                </select>
+                <div class="projSubmitButton">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
             <% if (teams[i].projectID != null) { %>                                            
-                <% console.log(projects[i]); %>
                 <% for (let j=0; j < projects.length; j++) { %>   
                     <% if (teams[i].projectID === projects[j].projectID) { %> 
                         <p>Project <%= projects[j].projectID %></p>
