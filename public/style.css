@@ -1,4 +1,4 @@
-*{
+﻿*{
     margin: 0;
     padding: 0;
     font-family: 'Helvetica Neue', sans-serif;
@@ -582,6 +582,28 @@ main {
 }
 
 .your-team {
+    color: #333;
+    margin-top: 5px;
+    margin-left: 8px;
+    justify-content: right;
+    font-size: 1.1em;
+}
+
+.inviteLinks{
+    display: flex;
+    margin-left: auto;
+    margin-right: 0px;
+}
+
+.inviteInboxLink {
+    color: #333;
+    margin-top: 5px;
+    margin-left: 8px;
+    justify-content: right;
+    font-size: 1.1em;
+}
+
+.newInviteLink {
     color: #333;
     margin-top: 5px;
     margin-left: 8px;
