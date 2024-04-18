@@ -1,4 +1,4 @@
-﻿*{
+*{
     margin: 0;
     padding: 0;
     font-family: 'Helvetica Neue', sans-serif;
@@ -521,6 +521,20 @@ main {
     display: inline;
 }
 
+.projectPageStatus {
+    text-align: left;
+    margin-left: 17px;
+    margin-top: 12px;
+}
+
+.project-page-skills {
+    margin-bottom: 20px;
+}
+
+.project-page-skills h1{
+    margin-bottom: 10px;    
+}
+
 .inline-list > ul > li:last-child:after {
     content: "";
 }
@@ -767,6 +781,165 @@ main {
 
 .goback-button:hover {
     background-color: #FF8C00;
+}
+
+.project-info {
+    width: 750px;
+    display: inline-block;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: #333;
+    list-style: none;
+}
+
+.project-profile-container {
+    padding: 10px;
+}
+
+.project-profile-card {
+    display: flex;
+    margin-left: 25px;
+    justify-content: left;
+    margin-bottom: 15px;
+}
+
+.project-page-description {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.project-page-skills {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.project-page-skills h1{
+    font-size: 1.3em;
+}
+
+.project-page-files {
+    text-align: left;
+}
+
+.project-page-files h1{
+    font-size: 1.3em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.project-page-description h1{
+    font-size: 1.3em;
+    margin-bottom: 10px;
+}
+
+.project-page-image {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+}
+
+.project-page-sponsor {
+    text-align: left;
+    margin-left: 15px;
+}
+
+.project-profile-card-container {
+    flex-direction: column;
+}
+
+.teamPageStatus {
+    margin-left: 15px;
+    margin-top: 20px;
+}
+
+.project-page-name {
+    flex: 1;
+    text-align: left;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.project-page-sponsor {
+    font-size: 1.2em;
+}
+
+.project-page-name h1{
+    font-size: 1.2em;
+}
+
+.teamPageContents {
+    width: 750px;
+    display: inline-block;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    color: #333;
+}
+
+.team-profile-card {
+    display: flex;
+    margin-left: 15px;
+    justify-content: left;
+    margin-bottom: 15px;
+}
+
+.team-page-name {
+    flex: 1;
+    text-align: left;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.team-page-members, .team-page-projects, .team-page-skills {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.team-page-members h1, .team-page-projects h1, .team-page-skills h1 {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.team-page-members p, .team-page-projects p, .team-page-skills p {
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.team-page-description {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.team-page-description h1 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.team-page-image {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+}
+
+.team-page-sponsor {
+    text-align: left;
+    margin-left: 15px;
+    font-size: 1.4em;
+}
+
+.team-profile-card-container {
+    flex-direction: column;
+}
+
+.team-page-name h1 {
+    font-size: 1.4em;
 }
 
 #sponsor {
