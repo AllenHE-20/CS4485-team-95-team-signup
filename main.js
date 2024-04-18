@@ -285,6 +285,10 @@ app.get("/adminFormTeam", auth.isAdmin, (req, res) => {
     res.render("adminFormTeam.ejs");
 })
 
+app.get("/adminAddProjectTest", auth.isAdmin, (req, res) => {
+    res.render("adminAddProject.ejs");
+})
+
 app.post("/login", urlencodedParser, passport.authenticate("local", { successRedirect: '/' }));
 
 app.post("/register/:token", urlencodedParser, async (req, res) => {
