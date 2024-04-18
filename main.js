@@ -907,7 +907,10 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         unsortedUsers: await(Promise.all(unsortedStudents)),
     };
 
-    res.send(JSON.stringify(arrangement));
+    res.render("adminGenTeam.ejs", {        
+        teams: arrangement.teams, 
+        unsortedUsers: arrangement.unsortedUsers 
+        });        
 });
 
 const port = process.env.PORT || 3000;

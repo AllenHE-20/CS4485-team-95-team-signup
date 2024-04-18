@@ -1032,3 +1032,21 @@ input[type="submit"]{
     text-decoration: none;    
     margin-block: 5px;  
 }
+
+.genCard {
+    display:flex;
+    flex-direction: column;
+    text-align: left;
+    background-color: #ebebeb;
+    padding: 1em;
+    list-style-type: none;
+    line-height: 1.8em;
+}
+
+#saveAllTeams{
+    width: 130px;
+}
+
+#save-item{
+    padding-top: 2px;    
+}
