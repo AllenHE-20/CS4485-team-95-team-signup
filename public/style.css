@@ -307,6 +307,40 @@ main {
     scale: 120%;
 }
 
+.skill-bubble {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 3px 5px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+.skill-bubble:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.add-skill-newproj {
+    margin-top: 60px;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+    scale: 100%;
+}
+
+.remove-skill-newproj {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+    scale: 100%;
+}
+
 .remove-skill{
     width: 100%;
     font-size: 16px;
@@ -799,6 +833,129 @@ main {
     margin: 1px 2px;
     cursor: pointer;
     border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.project-content {
+    margin-top: 10px;
+}
+
+.project-content label{
+    display: block;
+}
+
+.description-content {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#submitProjectButton {
+    background-color: #FFA500;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#submitProjectButton:hover {
+    background-color: #db8f03;
+}
+
+.newSkillButtons {
+    margin-right: 100px;
+    margin-top: -50px;
+}
+
+.description-content label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.description-content textarea {
+    width: 100%;
+    height: 100px;
+    padding: 5px;
+    resize: vertical;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.removeProjectButton {
+    display: inline-block;      
+    padding: 7px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;	
+    background: linear-gradient(90deg, #f24f4f 0%, #e24646 100%);
+    color:#fff; 
+    text-decoration: none;    
+    margin-block: 5px;  
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.editProjectButton {
+    display: inline-block;      
+    padding: 7px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;	
+    background: linear-gradient(90deg, #f28d4f 0%, #e28246 100%);
+    color:#fff; 
+    text-decoration: none;    
+    margin-block: 5px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.addteam-button {
+    background-color: #FFA500;
+    border: none;
+    color: white;
+    padding: 7px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 1px 2px;
+    margin-left: -15px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 
 .goback-button:hover {
@@ -1215,17 +1372,14 @@ input[type="submit"]{
     color: #000;
 }
 
-.editProject a{
-    display: inline-block;        
-    padding: 10px;
-    margin: 10px auto;
-    border-radius: 5px;
-    cursor: pointer;	
-    background: linear-gradient(90deg, #f26c4f 0%, #e26246 100%);
-    color:#fff;
-    font-weight: bold;
-    text-decoration: none;    
-    margin-block: 5px;  
+.adminEditButtons {
+    display: flex;
+    flex-direction: row;
+}
+
+.removeProject{
+    margin-left: 10px;
+    margin-top: 1px;
 }
 
 .genCard {

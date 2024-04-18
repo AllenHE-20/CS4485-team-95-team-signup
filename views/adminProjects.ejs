@@ -5,8 +5,16 @@
 
 <%- include('partials/header.ejs'); %>
 
+<div class="function-container">
+    <div class="function-item">
+        <button class="goback-button" onclick="goBack()">Previous Page</button>
+    </div>
+    <div class="function-item">
+        <button class="addteam-button" onclick="openAddProjectModal()">Add New Project</button>
+    </div>
+</div>
+
 <main class="adminPage">
-    <h1>Manage Projects</h1>
     <article>
         <ul class="profile-list" id="projectList">
             <% projects.forEach(project=> { %>
@@ -23,7 +31,7 @@
                                 <%= project.projectname %>
                             </h2>
                             <div class="project-sponsor">
-                                <%= project.affiliation %> - <%= project.sponsor %>                                
+                                <%= project.affiliation %> - <%= project.sponsor %>
                             </div>
                             <div class="project-description">
                                 Project <%= project.projectID %><br>
@@ -39,19 +47,24 @@
                                 <%- include("partials/labeled-list.ejs", { label: "Skills needed" , list:
                                     project.skills || []}); %>
                             </div>
-                            <div class="project-status-box">                                
+                            <div class="project-status-box">
                                 <script>
                                     console.log("<%= project.team_assigned %>");
                                 </script>
                                 Project Status:
                                 <% if (!project.team_assigned) { %>
-                                    <span class="project-status-open">Open</span>
+                                <span class="project-status-open">Open</span>
                                 <% } else { %>
-                                    <span class="project-status-closed">Closed</span>
-                                <% } %>                                                                                                                             
-                            </div>                                    
-                            <div class="editProject">                                
-                                <a href="/adminEditProject">Edit Project</a>                                
+                                <span class="project-status-closed">Closed</span>
+                                <% } %>
+                            </div>
+                            <div class="adminEditButtons">
+                                <div class="editProject">
+                                    <button class="editProjectButton" onclick="editProject()">Edit Project</button>
+                                </div>
+                                <div class="removeProject">
+                                    <button class="removeProjectButton" onclick="removeProject()">Remove Project</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,6 +73,87 @@
         </ul>
     </article>
 </main>
+
+<div id="addProjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddProjectModal()">&times;</span>
+        <h2>Add New Project</h2>
+        <form id="projectForm">
+            <div class="project-content">
+                <label for="newProjectName">Project Name</label>
+                <input type="text" id="projectName" name="projectName" required><br><br>
+
+                <label for="newProjectSponsor">Sponsor</label>
+                <input type="text" id="newSponsor" name="newSponsor" required><br><br>
+                
+                <label for="newMaxSize">Max Team Size</label>
+                <input type="text" id="newSize" name="newSize" required><br><br>
+
+                <label for="newProjectSkills">Skills</label>
+                <div class="skill-bubbles" id="skillBubbles"></div>
+                <div class="newSkillButtons">
+                    <div class="add-skill-newproj">
+                        <input type="text" id="newSkillInputAdd" name="skill" placeholder="Enter a skill to add" />
+                        <button type="button" id="addSkillButton" onclick="addSkillBubble()">Add Skill</button>
+                    </div>
+                    <div class="remove-skill-newproj">
+                        <input type="text" id="newSkillInputRemove" name="skill" placeholder="Enter a skill to remove" />
+                        <button type="button" id="removeSkillButton" onclick="removeSkillBubble(document.getElementById('newSkillInputRemove').value)">Remove Skill</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-content">
+                <label for="newProjectDescripton">Description</label>
+                <textarea id="newDescription" name="newDescription" rows="4" required></textarea><br><br>
+            </div>
+            <button type="submit" id="submitProjectButton" onclick="submitProject()">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    function openAddProjectModal() {
+        const modal = document.getElementById("addProjectModal");
+        modal.style.display = "block";
+    }
+
+    function closeAddProjectModal() {
+        const modal = document.getElementById("addProjectModal");
+        modal.style.display = "none";
+    }
+
+    function submitProject() {
+            
+        closeAddProjectModal();
+    }
+
+    function addSkillBubble() {
+        const skillInput = document.getElementById('newSkillInputAdd');
+        const skill = skillInput.value.trim();
+        if (skill !== '') {
+            const skillBubblesContainer = document.getElementById('skillBubbles');
+            const skillBubble = document.createElement('div');
+            skillBubble.classList.add('skill-bubble');
+            skillBubble.textContent = skill;
+            skillBubblesContainer.appendChild(skillBubble);
+            skillInput.value = '';
+        }
+}
+
+    function removeSkillBubble(skill) {
+        const skillBubbles = document.querySelectorAll('.skill-bubble');
+        skillBubbles.forEach(skillBubble => {
+            if (skillBubble.textContent === skill) {
+                skillBubble.remove();
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
