@@ -82,6 +82,13 @@ const skillChange = Joi.object({
         .required(),
 });
 
+const adminAddTeamMember = Joi.object({
+    newMember: Joi.number()
+        .required(),
+    team: Joi.number()
+        .required(),
+})
+
 module.exports.preferences = preferences;
 module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
@@ -89,3 +96,4 @@ module.exports.resumeContact = resumeContact;
 module.exports.clearProfile = clearProfile;
 module.exports.addUser = addUser;
 module.exports.skillChange = skillChange;
+module.exports.adminAddTeamMember = adminAddTeamMember;

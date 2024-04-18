@@ -261,8 +261,16 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
             FROM user U, UTD D, student S
             WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, team.id);
     });
+    const [teamlessUsers] = await database.pool.query(`
+        SELECT U.userID, U.firstName, U.lastName
+        FROM user U, UTD D, student S
+        WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID IS NULL`);
     res.render("adminTeams.ejs", {
         teams: teams,
+        singleUsers: teamlessUsers.map((user) => {return {
+            name: `${user.firstName} ${user.lastName}`,
+            userID: user.userID,
+        };}),
         projects: await database.getAllProjects(),
     });
 })
@@ -758,9 +766,22 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     res.redirect("/adminAccess");
 });
 
+app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = schemas.adminAddTeamMember.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {newMember, team} = result.value;
+    const netID = await database.getNetID(newMember);
+    await database.pool.query(`
+        UPDATE Student
+        SET teamID = ?
+        WHERE netID = ?`, [team, netID]);
+    return res.redirect("/adminTeams");
+})
+
 app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
     const userID = req.body.user;
-    console.log(userID);
     const netID = await database.getNetID(userID);
     const student = await database.getStudentByNetID(netID);
     if (!student || !student.team) {
@@ -907,10 +928,10 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         unsortedUsers: await(Promise.all(unsortedStudents)),
     };
 
-    res.render("adminGenTeam.ejs", {        
-        teams: arrangement.teams, 
-        unsortedUsers: arrangement.unsortedUsers 
-        });        
+    res.render("adminGenTeam.ejs", {
+        teams: arrangement.teams,
+        unsortedUsers: arrangement.unsortedUsers
+    });
 });
 
 const port = process.env.PORT || 3000;

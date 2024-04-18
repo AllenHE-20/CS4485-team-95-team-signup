@@ -31,8 +31,14 @@
             <% }) %> 
             
             <div class="searchContainer">                
-                <form action="" method="post">                                        
-                    <input type="text" id="searchMember" placeholder="Add New Member">          
+                <form action="/admin/add-team-member" method="post">
+                    <input type="hidden" name="team" value="<%= teams[i].id %>" />
+                    <select id="newMember" name="newMember">
+                        <option value=""></option>
+                        <% singleUsers.forEach(user => { %>
+                            <option value="<%= user.userID %>"><%= user.name %></option>
+                        <% }); %>
+                    </select>
                     <input type="submit" class="addMember" id="addMember" value="Add" />                    
                 </form>                                        
             </div>                                                    
