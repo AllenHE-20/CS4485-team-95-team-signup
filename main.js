@@ -960,5 +960,57 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     });
 });
 
+// Note: untested until team generation result endpoint is created
+app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({extended: true}), async (req, res) => {
+    const teams = req.body;
+    for (const team of teams) {
+        const [netIDs] = await database.pool.query(`
+            SELECT D.netID
+            FROM user U, UTD D, student S
+            WHERE U.userID = D.userID AND S.netID = D.netID AND U.userID IN (?)`, [team.newMemberIDs]);
+
+        if (!netIDs.length) {
+            console.warn(`Empty team: ${team}`);
+            continue;
+        }
+
+        if (team.id === null) {
+            const [result] = await database.pool.query(`
+                INSERT INTO Team ()
+                VALUES ()`);
+            team.id = result.insertId;
+            team.new = true;
+        } else {
+            team.new = false;
+        }
+
+        await database.pool.query(`
+            UPDATE student
+            SET teamID = ?
+            WHERE netID IN (?)`, [netIDs.map((o) => o.netID)]);
+
+        if (team.new) {
+            // Give each preferred project a 1-5 score opposite the preference
+            // number (projects not in preferences still worth 0), and sum those
+            // scores to find the most well-liked projects in the team
+            const preferences = (await database.pool.query(`
+                SELECT SUM(6 - SP.preference_number) AS totalPreference, SP.projectID, P.projectName
+                FROM StudentPreferences SP, Project P, student S
+                WHERE SP.netID = S.netID AND SP.projectID = P.projectID AND S.teamID = ?
+                GROUP BY SP.projectID
+                ORDER BY totalPreference`,
+                [team.id])
+            )[0].toReversed()
+                .map((project) => project.projectID)
+                .filter((_val, i, _arr) => i < 5);
+            await database.pool.query(`
+                INSERT INTO ProjectPreferences (teamID, projectID, preference_number)
+                VALUES ?`, preferences.map((pref, i) => [team.id, pref, i + 1]));
+        }
+    }
+
+    res.redirect("back");
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
