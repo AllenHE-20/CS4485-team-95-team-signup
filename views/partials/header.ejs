@@ -5,11 +5,7 @@
         </div>
         <div class="nav-links">
             <ul>
-                <% if (user.admin) { %>
-                    <li><a href="/adminHomepage">HOME</a></li>    
-                <% } else { %>
-                    <li><a href="/">HOME</a></li> 
-                <% } %>
+                <li><a href="/">HOME</a></li> 
                 <li><a href="/projects">PROJECT LIST</a></li>
                 <li><a href="/teams">TEAM LIST</a></li>
                 <li><a href="/users">STUDENT LIST</a></li>
@@ -30,7 +26,7 @@
                             <p>Profile</p>
                             <span>&gt;</span>
                         </a>
-                        <% if (user.student) { %>
+                        <% if (!user.admin) { %>
                             <% if (user.student.project) { %>
                                 <a href="/project/<%= user.student.project %>" class="sub-menu-link">
                                     <img src="/images/setting.png">
@@ -50,6 +46,15 @@
                                 <p>View Team Invites</p>
                                 <span>&gt;</span>
                             </a>
+                        <% } %>
+                        <% if (user.admin) { %>
+                            <% if (user.student.project) { %>
+                                <a href="/adminHomepage" class="sub-menu-link">
+                                    <img src="/images/setting.png">
+                                    <p>Admin Controls</p>
+                                    <span>&gt;</span>
+                                </a>
+                            <% } %>
                         <% } %>
                         <a href="/logout" class="sub-menu-link">
                             <img src="/images/logout.png">

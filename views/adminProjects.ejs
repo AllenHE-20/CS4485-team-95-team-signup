@@ -33,12 +33,14 @@
                             <div class="project-sponsor">
                                 <%= project.affiliation %> - <%= project.sponsor %>
                             </div>
-                            <div class="project-description">
+                            <div class="project-description-1">
                                 Project <%= project.projectID %><br>
-                                Team Size: <%= project.teamSize %>
-                                <% if (project.maxTeams > project.teamSize) { %>
-                                     - <%= project.maxTeams %>
-                                <% } %>
+                                <div class="project-teamsize">
+                                    Team Size: <%= project.teamSize %>
+                                    <% if (project.maxTeams > project.teamSize) { %>
+                                         - <%= project.maxTeams %>
+                                    <% } %>
+                                </div>
                             </div>
                             <div class="project-description">
                                 <%= project.description %>
@@ -60,10 +62,10 @@
                             </div>
                             <div class="adminEditButtons">
                                 <div class="editProject">
-                                    <button class="editProjectButton" onclick="editProject()">Edit Project</button>
+                                    <button class="editProjectButton" onclick="editProject('<%= project.projectID %>')">Edit Project</button>
                                 </div>
                                 <div class="removeProject">
-                                    <button class="removeProjectButton" onclick="removeProject()">Remove Project</button>
+                                    <button class="removeProjectButton" onclick="removeProject('<%= project.projectname %>')">Remove Project</button>
                                 </div>
                             </div>
                         </div>
@@ -107,8 +109,64 @@
                 <label for="newProjectDescripton">Description</label>
                 <textarea id="newDescription" name="newDescription" rows="4" required></textarea><br><br>
             </div>
-            <button type="submit" id="submitProjectButton" onclick="submitProject()">Submit</button>
+            <div class="button-container">
+                <button type="button" class="submit-button"onclick="submitProject()">Submit</button>
+                <button type="button" class="cancel-button"onclick="closeAddProjectModal()">Cancel</button>            
+            </div>
         </form>
+    </div>
+</div>
+
+<div id="editProjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditProjectModal()">&times;</span>
+        <h2>Edit Project</h2>
+        <form id="projectForm">
+            <div class="project-content">
+                <label for="editProjectName">Project Name</label>
+                <input type="text" id="editProjectName" name="editProjectName" required value="Example Project Name"><br><br>
+    
+                <label for="editSponsor">Sponsor</label>
+                <input type="text" id="editSponsor" name="editSponsor" required value="Example Sponsor"><br><br>
+                
+                <label for="editMaxSize">Max Team Size</label>
+                <input type="text" id="editMaxSize" name="editMaxSize" required value="5"><br><br>
+    
+                <label for="editProjectSkills">Skills</label>
+                <div class="skill-bubbles" id="editSkillBubbles">
+    
+                </div>
+                <div class="newSkillButtons">
+                    <div class="add-skill-newproj">
+                        <input type="text" id="newSkillInputAdd" name="skill" placeholder="Enter a skill to add" />
+                        <button type="button" id="addSkillButton" onclick="editSkillBubble()">Add Skill</button>
+                    </div>
+                    <div class="remove-skill-newproj">
+                        <input type="text" id="newSkillInputRemove" name="skill" placeholder="Enter a skill to remove" />
+                        <button type="button" id="removeSkillButton" onclick="editSkillBubble(document.getElementById('newSkillInputRemove').value)">Remove Skill</button>
+                    </div>
+                </div>
+            </div>
+            <div class="description-content">
+                <label for="editDescription">Description</label>
+                <textarea id="editDescription" name="editDescription" rows="4" required>Example Description</textarea><br><br>
+            </div>
+            <div class="button-container">
+                <button type="button" class="submit-button"onclick="submitEditedProject()">Submit</button>
+                <button type="button" class="cancel-button"onclick="closeEditProjectModal()">Cancel</button>            </div>
+        </form>
+    </div>
+</div>
+
+<div id="confirmDeleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeConfirmDeleteModal()">&times;</span>
+        <h2>Confirm Deletion</h2>
+        <p id="deleteMessage"></p>
+        <div class="button-container">
+            <button class="delete-button" type="button" onclick="deleteProject()">Delete</button>
+            <button class="cancel-button" type="button" onclick="closeConfirmDeleteModal()">Cancel</button>
+        </div>
     </div>
 </div>
 
@@ -116,6 +174,31 @@
     function goBack() {
         window.history.back();
     }
+
+    function editProject(projectID) {
+    const modal = document.getElementById("editProjectModal");
+    modal.style.display = "block";
+
+    const projectName = "Example Project";
+    const sponsor = "Example Sponsor";
+    const maxSize = 5;
+    const skills = ["Skill 1", "Skill 2"];
+    const description = "Example Description";
+
+    document.getElementById("editProjectName").value = projectName;
+    document.getElementById("editSponsor").value = sponsor;
+    document.getElementById("editMaxSize").value = maxSize;
+    document.getElementById("editDescription").value = description;
+
+    const skillBubblesContainer = document.getElementById('editSkillBubbles');
+    skillBubblesContainer.innerHTML = '';
+    skills.forEach(skill => {
+        const skillBubble = document.createElement('div');
+        skillBubble.classList.add('skill-bubble');
+        skillBubble.textContent = skill;
+        skillBubblesContainer.appendChild(skillBubble);
+    });
+}
 
     function openAddProjectModal() {
         const modal = document.getElementById("addProjectModal");
@@ -127,8 +210,34 @@
         modal.style.display = "none";
     }
 
+    function closeEditProjectModal() {
+        const modal = document.getElementById("editProjectModal");
+        modal.style.display = "none";
+    }
+
+    function closeConfirmDeleteModal() {
+        const modal = document.getElementById("confirmDeleteModal");
+        modal.style.display = "none";
+    }
+
+    function removeProject(projectName) {
+        const modal = document.getElementById("confirmDeleteModal");
+        const deleteMessage = document.getElementById("deleteMessage");
+        deleteMessage.textContent = `Are you sure you would like to delete Project (${projectName})?`;
+        modal.style.display = "block";
+    }
+
+    function deleteProject() {
+        // TODO: Delete project from database //
+        closeConfirmDeleteModal();
+    }
+
+    function submitEditedProject() {
+        // TODO: Update database by editing project //
+    }
+
     function submitProject() {
-            
+        // TODO: Update database by adding project //
         closeAddProjectModal();
     }
 
