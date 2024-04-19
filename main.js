@@ -523,7 +523,6 @@ app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, r
         SELECT skillID
         FROM Skills
         WHERE skillName = ?`, value.skill);
-    const netID = await database.getNetID(req.user.userID);
 
     if (value.action === "add") {
         var skillID;
@@ -538,8 +537,8 @@ app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, r
 
         try {
             await database.pool.query(`
-                INSERT INTO StudentSkillset (netID, skillID)
-                VALUES (?, ?)`, [netID, skillID])
+                INSERT INTO StudentSkillset (userID, skillID)
+                VALUES (?, ?)`, [req.user.userID, skillID])
         } catch (err) {
             if (err.code === 'ER_DUP_ENTRY')
                 console.log("Duplicate skill ignored");
@@ -555,7 +554,7 @@ app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, r
         const skillID = skills[0].skillID;
         await database.pool.query(`
             DELETE FROM StudentSkillset
-            WHERE netID = ? AND skillID = ?`, [netID, skillID]);
+            WHERE userID = ? AND skillID = ?`, [req.user.userID, skillID]);
     }
 
     res.redirect("/profile");
