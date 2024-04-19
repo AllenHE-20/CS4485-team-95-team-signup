@@ -18,7 +18,13 @@ CREATE TABLE login (
     passwordSalt VARCHAR(64) CHECK(passwordSalt REGEXP '^[0-9A-Za-z]{64}$'),
     oneTimeTokenHash VARCHAR(128) CHECK(oneTimeTokenHash REGEXP '^[0-9A-Za-z]{128}$') UNIQUE,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
-    CONSTRAINT newUser CHECK((passwordHash IS NOT NULL AND passwordSalt IS NOT NULL) OR oneTimeTokenHash IS NOT NULL)
+    CONSTRAINT newUser CHECK(
+        (
+            passwordHash IS NOT NULL
+            AND passwordSalt IS NOT NULL
+        )
+        OR oneTimeTokenHash IS NOT NULL
+    )
 );
 --
 CREATE TABLE organizer(
@@ -29,7 +35,7 @@ CREATE TABLE organizer(
 -- depending on how the SSO works we might be able to add email here and grab it
 -- then, we could put a seperate email into Organizer.
 CREATE TABLE UTD (
-    netID CHAR(9) CHECK(netID REGEXP '^[A-Za-z]{3}[0-9]{5}$') PRIMARY KEY UNIQUE,
+    netID CHAR(9) PRIMARY KEY UNIQUE,
     userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
 );

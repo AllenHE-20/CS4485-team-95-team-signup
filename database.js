@@ -531,7 +531,6 @@ async function matchTeamsPref(teamSize) {
         prefCount[project.projectID] = 0;
         maxStudents[project.projectID] = project.maxTeams * teamSize;
     });
-
     //ended up removing this implementation out as it became obsolete by the rest.
     // let change = true;
     // while (change) {
@@ -558,9 +557,10 @@ async function matchTeamsPref(teamSize) {
         for (var j = 0; j < students.length; j++) {
 
             let preference = await getStudentPreference(students[j].netID, i)
-            prefCount[preference[0].projectID] += 1;
-            prefStudent[preference[0].projectID].push(students[j]);
-
+            if (preference.length) {
+                prefCount[preference[0].projectID] += 1;
+                prefStudent[preference[0].projectID].push(students[j]);
+            }
             //if the size is greater than teamSize we form a random team and then take them out of prefStudent and students2
         }
 
@@ -592,7 +592,7 @@ async function matchTeamsPref(teamSize) {
                 }
                 const fullTeam = {
                     team: teamArr,
-                    projectID: k - 1
+                    projectID: k
                 }
                 finalTeams.push(fullTeam)
                 openSlots[k - 1].maxTeams--;

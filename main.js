@@ -145,8 +145,7 @@ app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
             else {
                 usersTeam = 'None'
             }
-            console.log(usersTeam)
-            console.log(usersProject)
+            console.log(database.matchTeamsPref(6));
             res.render("profile.ejs", { student: student, curr: req.user.userID, proj: usersProject, usersTeam: usersTeam });
         })
     });
