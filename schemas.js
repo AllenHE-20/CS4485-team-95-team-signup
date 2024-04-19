@@ -61,6 +61,7 @@ const resumeContact = Joi.object({
 
 const clearProfile = Joi.object({
     clearProfile: Joi.string()
+        .email()
         .required(),
 })
 
@@ -68,7 +69,7 @@ const addUser = Joi.object({
     firstNameInput: Joi.string().required(),
     middleNameInput: Joi.string().optional().empty(''),
     lastNameInput: Joi.string().required(),
-    emailInput: Joi.string().required(),
+    emailInput: Joi.string().email().required(),
     netIdInput: Joi.string().regex(/[A-Z]{3}[0-9]{5}/).empty(''),
     adminPriv: Joi.string().valid('on', 'off')
 })
@@ -87,7 +88,15 @@ const adminAddTeamMember = Joi.object({
         .required(),
     team: Joi.number()
         .required(),
-})
+});
+
+const adminRemoveTeamMember = Joi.object({
+    user: Joi.number().required(),
+});
+
+const adminDisbandTeam = Joi.object({
+    team: Joi.number().required(),
+});
 
 const adminSetProject = Joi.object({
     assignProject: Joi.number()
@@ -142,6 +151,18 @@ const adminDeleteProject = Joi.object({
         .required(),
 });
 
+const adminCommitTeams = Joi.object({
+    teams: Joi.array()
+        .items(Joi.object({
+            id: Joi.number()
+                .optional(),
+            newMemberIDs: Joi.array()
+                .items(Joi.number())
+                .required(),
+        }))
+        .required(),
+});
+
 module.exports.preferences = preferences;
 module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
@@ -150,7 +171,10 @@ module.exports.clearProfile = clearProfile;
 module.exports.addUser = addUser;
 module.exports.skillChange = skillChange;
 module.exports.adminAddTeamMember = adminAddTeamMember;
+module.exports.adminRemoveTeamMember = adminRemoveTeamMember;
+module.exports.adminDisbandTeam = adminDisbandTeam;
 module.exports.adminSetProject = adminSetProject;
 module.exports.adminAddProject = adminAddProject;
 module.exports.adminEditProject = adminEditProject;
 module.exports.adminDeleteProject = adminDeleteProject;
+module.exports.adminCommitTeams = adminCommitTeams;

@@ -7,6 +7,7 @@ const multer = require("multer");
 const session = require("express-session");
 const path = require("path");
 const passport = require("passport");
+const xssFilters = require("xss-filters");
 const MySqlStore = require("express-mysql-session")(session);
 
 const database = require('./database');
@@ -329,9 +330,10 @@ app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), 
     const contact = Object.fromEntries(
         Object.entries(result.value)
             .map(([key, val]) => {
+                const value = xssFilters.inHTMLData(val);
                 if (key === "contactByPhone")
-                    return ["phoneNumber", val];
-                return [key.substring("contactBy".length), val]
+                    return ["phoneNumber", value];
+                return [key.substring("contactBy".length), value]
             })
             .filter(([_, val]) => val)
     );
@@ -517,7 +519,7 @@ app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, r
         if (!skills.length) {
             const [result] = await database.pool.query(`
                 INSERT INTO Skills (skillName)
-                VALUES (?)`, [value.skill]);
+                VALUES (?)`, [xssFilters.inHTMLData(value.skill)]);
             skillID = result.insertId;
         } else {
             skillID = skills[0].skillID;
@@ -553,6 +555,8 @@ app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res)
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
+    const message = xssFilters.inHTMLData(value.message);
+
     if (value.target === "user") {
         const ourNetID = await database.getNetID(req.user.userID);
         const otherNetID = await database.getNetID(value.id);
@@ -582,7 +586,7 @@ app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res)
         await Promise.all([
             database.pool.query(`
                 INSERT INTO PendingInvites (sender, receiver, message)
-                VALUES (?, ?, ?)`, [ourNetID, otherNetID, value.message]),
+                VALUES (?, ?, ?)`, [ourNetID, otherNetID, message]),
             res.redirect("back"),
         ]);
     } else {
@@ -778,12 +782,15 @@ app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
 //Maybe some kind of check box for UTD to make a student?
 // TODO: Handle faculty checkbutton
 app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { firstNameInput, middleNameInput, lastNameInput, emailInput, netIdInput, facultyPriv, adminPriv } = req.body;
-    const adminBool = adminPriv ? 1 : 0;
-
     const result = schemas.addUser.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const { firstNameInput, middleNameInput, lastNameInput, emailInput, netIdInput, facultyPriv, adminPriv } = result.value;
+    const firstName = xssFilters.inHTMLData(firstNameInput);
+    const middleName = xssFilters.inHTMLData(middleNameInput);
+    const lastName = xssFilters.inHTMLData(lastNameInput);
+    const adminBool = adminPriv ? 1 : 0;
 
     const user = await database.getUserByEmail(emailInput);
     if (user)
@@ -797,7 +804,7 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     const [insert] = await database.pool.query(`
         INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
         (?,?,?,?,?)`,
-        [firstNameInput, middleNameInput, lastNameInput, emailInput, adminBool]);
+        [firstName, middleName, lastName, emailInput, adminBool]);
     const userID = insert.insertId;
     await database.pool.query(`
         INSERT INTO login (userID, oneTimeTokenHash)
@@ -836,9 +843,12 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
     const {projectName, newSponsor, newSize, newDescription} = result.value;
+    const name = xssFilters.inHTMLData(projectName);
+    const sponsor = xssFilters.inHTMLData(newSponsor);
+    const description = xssFilters.inHTMLData(newDescription);
     const [insert] = await database.pool.query(`
         INSERT INTO Project (projectName, sponsor, description, teamSize)
-        VALUES (?)`, [[projectName, newSponsor, newDescription, newSize]])
+        VALUES (?)`, [[name, sponsor, description, newSize]])
     const projectID = insert.insertId;
 
     // TODO: Skills required
@@ -853,11 +863,14 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
     const {editProjectID, editProjectName, editSponsor, editSize, editDescription} = result.value;
+    const name = xssFilters.inHTMLData(editProjectName);
+    const sponsor = xssFilters.inHTMLData(editSponsor);
+    const description = xssFilters.inHTMLData(editDescription);
     await database.pool.query(`
         UPDATE Project
         SET projectName = ?, sponsor = ?, description = ?, teamSize = ?
         WHERE projectID = ?`,
-        [editProjectName, editSponsor, editDescription, editSize, editProjectID])
+        [name, sponsor, description, editSize, editProjectID])
 
     // TODO: Skills required
 
@@ -902,7 +915,11 @@ app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, r
 })
 
 app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const userID = req.body.user;
+    const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const userID = value.user;
     const netID = await database.getNetID(userID);
     const student = await database.getStudentByNetID(netID);
     if (!student || !student.team) {
@@ -925,7 +942,11 @@ app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, re
 });
 
 app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const teamID = req.body.team;
+    const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const teamID = value.team;
     await database.pool.query(`
         DELETE FROM Team
         WHERE teamID = ?`, [teamID]);
@@ -951,7 +972,12 @@ app.post("/admin/set-project", auth.isAdmin, urlencodedParser, async (req, res) 
 
 app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     const { maxTeam } = req.query;
-    const generatedTeamUpdates = await database.matchTeamsRandom(maxTeam);
+    const maxTeamSize = maxTeam;
+    if (isNaN(maxTeamSize)) {
+        return res.status(httpStatus.BAD_REQUEST).send("Max team size must be a number");
+    }
+
+    const generatedTeamUpdates = await database.matchTeamsRandom(maxTeamSize);
     const { newTeams, studentToExistingTeam, leftOverStudents } = generatedTeamUpdates;
 
     const teamsToMake = newTeams.map(async team => {
@@ -1029,12 +1055,6 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         team.newSkills = skills.map(skill => skill.skillName);
     }
 
-//remove later - testing page
-    app.get("/adminTest", auth.isAdmin, (req, res) => {
-        res.render("adminGenTeam.ejs", {
-            teams: dummyData.adminTeam} );
-    })
-
     const updatedTeams = Object.values(teamsToUpdate)
         .map((team) => {
             return {
@@ -1081,9 +1101,19 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     });
 });
 
+//remove later - testing page
+app.get("/adminTest", auth.isAdmin, (req, res) => {
+    res.render("adminGenTeam.ejs", {
+        teams: dummyData.adminTeam} );
+})
+
 // Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
-    const teams = req.body;
+    const {value, error} = schemas.adminCommitTeams.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {teams} = value;
     for (const team of teams) {
         const [netIDs] = await database.pool.query(`
             SELECT D.netID
