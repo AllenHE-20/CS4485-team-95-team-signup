@@ -950,7 +950,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     const generatedTeamUpdates = await database.matchTeams(maxTeamSize);
     const { newTeams, studentToExistingTeam, leftOverStudents } = generatedTeamUpdates;
 
-    const teamsToMake = newTeams.map(async team => {
+    const teamsToMake = newTeams.map(async ({team}) => {
         const netIDs = team.map(member => member.netID);
         const members = team.map(async member => {
             const [[user]] = await database.pool.query(`
@@ -1080,6 +1080,8 @@ app.get("/adminTest", auth.isAdmin, (req, res) => {
 
 // Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
+    console.log("Save teams:", req.body.teams)
+
     const { value, error } = schemas.adminCommitTeams.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
