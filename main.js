@@ -134,7 +134,6 @@ app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
         if (!student) {
             return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
         }
-
         database.getUsersProject(student.netID).then((project) => {
             if (!project) {
                 usersProject = 'Not Assigned'
@@ -852,7 +851,7 @@ app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, r
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {deleteProjectID} = result.value;
+    const { deleteProjectID } = result.value;
     await database.pool.query(`
         DELETE FROM Project
         WHERE projectID = ?`, [deleteProjectID])
@@ -884,7 +883,7 @@ app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, r
 })
 
 app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
+    const { value, error } = schemas.adminRemoveTeamMember.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
@@ -911,7 +910,7 @@ app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, re
 });
 
 app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
+    const { value, error } = schemas.adminRemoveTeamMember.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
@@ -1073,16 +1072,17 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
 //remove later - testing page
 app.get("/adminTest", auth.isAdmin, (req, res) => {
     res.render("adminGenTeam.ejs", {
-        teams: dummyData.adminTeam} );
+        teams: dummyData.adminTeam
+    });
 })
 
 // Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
-    const {value, error} = schemas.adminCommitTeams.validate(req.body);
+    const { value, error } = schemas.adminCommitTeams.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
-    const {teams} = value;
+    const { teams } = value;
     for (const team of teams) {
         const [netIDs] = await database.pool.query(`
             SELECT D.netID
