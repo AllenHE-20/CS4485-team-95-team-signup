@@ -1080,7 +1080,7 @@ app.get("/adminTest", auth.isAdmin, (req, res) => {
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
     const {value, error} = schemas.adminCommitTeams.validate(req.body);
     if (error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
     const {teams} = value;
     for (const team of teams) {
