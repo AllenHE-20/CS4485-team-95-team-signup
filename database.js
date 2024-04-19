@@ -149,9 +149,45 @@ async function getUsersProject(netID) {
 }
 
 async function getStudentByUserID(userID) {
-    return await getStudentByNetID(await getNetID(userID));
+    if (!userID)
+        return null;
+
+    const [users] = await pool.query(`
+    SELECT * FROM student S, user U 
+    WHERE S.userID = U.userID AND S.userID = ?`, [userID]);
+    const dbUser = users[0];
+    if (!dbUser) {
+        return null;
+    }
+
+    const [skills] = await pool.query(`
+    SELECT S.skillName
+    FROM Skills S, StudentSkillset A
+    WHERE A.netID = ? AND S.skillID = A.skillID`, [dbUser.netID]);
+    const [preferences] = await pool.query(`
+    SELECT P.projectName
+    FROM Project P, StudentPreferences W
+    WHERE W.netID = ? AND P.projectID = W.projectID
+    ORDER BY W.preference_number`, [dbUser.netID]);
+    const user = {
+        userID: dbUser.userID,
+        teamID: dbUser.teamID,
+        name: `${dbUser.firstName} ${dbUser.lastName}`,
+        avatar: dbUser.avatar ? `/user-files/${dbUser.avatar}` : "/images/profile.png",
+        resume: dbUser.resumeFile ? `/user-files/${dbUser.resumeFile}` : null,
+        email: dbUser.email,
+        phone: dbUser.phoneNumber,
+        discord: dbUser.discord,
+        groupme: dbUser.groupme,
+        instagram: dbUser.instagram,
+        team: dbUser.teamID,
+        interests: preferences.map(({ projectName }) => projectName),
+        skills: skills.map(({ skillName }) => skillName),
+    }
+    return user;
 }
 
+//this is no longer needed, but I am leaving it to see what it gets triggered.
 async function getStudentByNetID(netid) {
     if (!netid)
         return null;

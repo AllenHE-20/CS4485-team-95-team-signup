@@ -1203,286 +1203,6 @@ insert into organizer (userID, affiliation)
 values (149, 'Jonson Controls');
 insert into organizer (userID, affiliation)
 values (150, 'Dr. Becker');
-insert into UTD (netID, userID)
-values ('BGO77836', 1);
-insert into UTD (netID, userID)
-values ('SJD74025', 2);
-insert into UTD (netID, userID)
-values ('DRZ36800', 3);
-insert into UTD (netID, userID)
-values ('WAC77069', 4);
-insert into UTD (netID, userID)
-values ('OEX79326', 5);
-insert into UTD (netID, userID)
-values ('EXX53026', 6);
-insert into UTD (netID, userID)
-values ('UIK89282', 7);
-insert into UTD (netID, userID)
-values ('POR81172', 8);
-insert into UTD (netID, userID)
-values ('TSC84017', 9);
-insert into UTD (netID, userID)
-values ('FFS33232', 10);
-insert into UTD (netID, userID)
-values ('DCD93581', 11);
-insert into UTD (netID, userID)
-values ('NZY34457', 12);
-insert into UTD (netID, userID)
-values ('VOX13251', 13);
-insert into UTD (netID, userID)
-values ('DOY24278', 14);
-insert into UTD (netID, userID)
-values ('CPW11708', 15);
-insert into UTD (netID, userID)
-values ('ZZW35871', 16);
-insert into UTD (netID, userID)
-values ('TVE65287', 17);
-insert into UTD (netID, userID)
-values ('JQV97981', 18);
-insert into UTD (netID, userID)
-values ('QWJ12261', 19);
-insert into UTD (netID, userID)
-values ('KTL13581', 20);
-insert into UTD (netID, userID)
-values ('YBN04550', 21);
-insert into UTD (netID, userID)
-values ('XUP53978', 22);
-insert into UTD (netID, userID)
-values ('KLF34087', 23);
-insert into UTD (netID, userID)
-values ('HUV78132', 24);
-insert into UTD (netID, userID)
-values ('BQY91558', 25);
-insert into UTD (netID, userID)
-values ('YXM93302', 26);
-insert into UTD (netID, userID)
-values ('FTM51717', 27);
-insert into UTD (netID, userID)
-values ('VLV83302', 28);
-insert into UTD (netID, userID)
-values ('RLS17209', 29);
-insert into UTD (netID, userID)
-values ('YVL19489', 30);
-insert into UTD (netID, userID)
-values ('CLF67449', 31);
-insert into UTD (netID, userID)
-values ('WHR19603', 32);
-insert into UTD (netID, userID)
-values ('CPN81392', 33);
-insert into UTD (netID, userID)
-values ('CHF92928', 34);
-insert into UTD (netID, userID)
-values ('HAA08603', 35);
-insert into UTD (netID, userID)
-values ('BWM56278', 36);
-insert into UTD (netID, userID)
-values ('ZMK29613', 37);
-insert into UTD (netID, userID)
-values ('PMF06543', 38);
-insert into UTD (netID, userID)
-values ('DNQ73252', 39);
-insert into UTD (netID, userID)
-values ('KDG41992', 40);
-insert into UTD (netID, userID)
-values ('YMV01193', 41);
-insert into UTD (netID, userID)
-values ('QSN35190', 42);
-insert into UTD (netID, userID)
-values ('ANU69121', 43);
-insert into UTD (netID, userID)
-values ('VWQ15246', 44);
-insert into UTD (netID, userID)
-values ('ENS24488', 45);
-insert into UTD (netID, userID)
-values ('PAE19704', 46);
-insert into UTD (netID, userID)
-values ('PMT78607', 47);
-insert into UTD (netID, userID)
-values ('LAA81265', 48);
-insert into UTD (netID, userID)
-values ('KDB39142', 49);
-insert into UTD (netID, userID)
-values ('XBC90544', 50);
-insert into UTD (netID, userID)
-values ('UEF80236', 51);
-insert into UTD (netID, userID)
-values ('ZTJ03727', 52);
-insert into UTD (netID, userID)
-values ('EXP55823', 53);
-insert into UTD (netID, userID)
-values ('RXT71819', 54);
-insert into UTD (netID, userID)
-values ('EAK80225', 55);
-insert into UTD (netID, userID)
-values ('IUL89875', 56);
-insert into UTD (netID, userID)
-values ('VHL37615', 57);
-insert into UTD (netID, userID)
-values ('BEA70645', 58);
-insert into UTD (netID, userID)
-values ('MRX91068', 59);
-insert into UTD (netID, userID)
-values ('WXQ49901', 60);
-insert into UTD (netID, userID)
-values ('XED20490', 61);
-insert into UTD (netID, userID)
-values ('QWE10943', 62);
-insert into UTD (netID, userID)
-values ('HQF17978', 63);
-insert into UTD (netID, userID)
-values ('QVR80506', 64);
-insert into UTD (netID, userID)
-values ('FMV61780', 65);
-insert into UTD (netID, userID)
-values ('OJZ70703', 66);
-insert into UTD (netID, userID)
-values ('TFS88609', 67);
-insert into UTD (netID, userID)
-values ('BIH98788', 68);
-insert into UTD (netID, userID)
-values ('YCS79074', 69);
-insert into UTD (netID, userID)
-values ('VFD71622', 70);
-insert into UTD (netID, userID)
-values ('ETJ31788', 71);
-insert into UTD (netID, userID)
-values ('JYU82583', 72);
-insert into UTD (netID, userID)
-values ('NNK98236', 73);
-insert into UTD (netID, userID)
-values ('KKR70126', 74);
-insert into UTD (netID, userID)
-values ('BZA91831', 75);
-insert into UTD (netID, userID)
-values ('NSM48973', 76);
-insert into UTD (netID, userID)
-values ('YNW03824', 77);
-insert into UTD (netID, userID)
-values ('FHX58547', 78);
-insert into UTD (netID, userID)
-values ('CTB12502', 79);
-insert into UTD (netID, userID)
-values ('WYX98834', 80);
-insert into UTD (netID, userID)
-values ('QZP32845', 81);
-insert into UTD (netID, userID)
-values ('MJX38172', 82);
-insert into UTD (netID, userID)
-values ('HKC46840', 83);
-insert into UTD (netID, userID)
-values ('IHH10043', 84);
-insert into UTD (netID, userID)
-values ('SFT16196', 85);
-insert into UTD (netID, userID)
-values ('LTH68913', 86);
-insert into UTD (netID, userID)
-values ('NMX41427', 87);
-insert into UTD (netID, userID)
-values ('YED55108', 88);
-insert into UTD (netID, userID)
-values ('TEY65161', 89);
-insert into UTD (netID, userID)
-values ('WDN58701', 90);
-insert into UTD (netID, userID)
-values ('MHZ88987', 91);
-insert into UTD (netID, userID)
-values ('WGJ38400', 92);
-insert into UTD (netID, userID)
-values ('UQB35811', 93);
-insert into UTD (netID, userID)
-values ('ECQ69181', 94);
-insert into UTD (netID, userID)
-values ('ZKO42985', 95);
-insert into UTD (netID, userID)
-values ('MKZ56744', 96);
-insert into UTD (netID, userID)
-values ('LSW17558', 97);
-insert into UTD (netID, userID)
-values ('XDR57002', 98);
-insert into UTD (netID, userID)
-values ('BCL94167', 99);
-insert into UTD (netID, userID)
-values ('NEX39327', 100);
-insert into UTD (netID, userID)
-values ('GVU01422', 101);
-insert into UTD (netID, userID)
-values ('OWD16323', 102);
-insert into UTD (netID, userID)
-values ('DRH14162', 103);
-insert into UTD (netID, userID)
-values ('YOB83358', 104);
-insert into UTD (netID, userID)
-values ('PEE93160', 105);
-insert into UTD (netID, userID)
-values ('WCK56677', 106);
-insert into UTD (netID, userID)
-values ('DWA71947', 107);
-insert into UTD (netID, userID)
-values ('LGK51704', 108);
-insert into UTD (netID, userID)
-values ('VJZ92259', 109);
-insert into UTD (netID, userID)
-values ('CNG38134', 110);
-insert into UTD (netID, userID)
-values ('PEZ34214', 111);
-insert into UTD (netID, userID)
-values ('JII54648', 112);
-insert into UTD (netID, userID)
-values ('WDT70496', 113);
-insert into UTD (netID, userID)
-values ('FGY06196', 114);
-insert into UTD (netID, userID)
-values ('XVN64826', 115);
-insert into UTD (netID, userID)
-values ('ZGV46393', 116);
-insert into UTD (netID, userID)
-values ('BFP18880', 117);
-insert into UTD (netID, userID)
-values ('BOY12818', 118);
-insert into UTD (netID, userID)
-values ('MMF16022', 119);
-insert into UTD (netID, userID)
-values ('XTF19592', 120);
-insert into UTD (netID, userID)
-values ('THP36337', 121);
-insert into UTD (netID, userID)
-values ('RHN05229', 122);
-insert into UTD (netID, userID)
-values ('XIQ85239', 123);
-insert into UTD (netID, userID)
-values ('QMF32656', 124);
-insert into UTD (netID, userID)
-values ('RNF83650', 125);
-insert into UTD (netID, userID)
-values ('TFF99125', 126);
-insert into UTD (netID, userID)
-values ('RJH94437', 127);
-insert into UTD (netID, userID)
-values ('AAL15883', 128);
-insert into UTD (netID, userID)
-values ('HIW08081', 129);
-insert into UTD (netID, userID)
-values ('MBG99231', 130);
-insert into UTD (netID, userID)
-values ('KGB24613', 131);
-insert into UTD (netID, userID)
-values ('HAQ51336', 132);
-insert into UTD (netID, userID)
-values ('JNG23787', 133);
-insert into UTD (netID, userID)
-values ('TUB32888', 134);
-insert into UTD (netID, userID)
-values ('QSW13450', 135);
-insert into UTD (netID, userID)
-values ('YOH52848', 136);
-insert into UTD (netID, userID)
-values ('QKQ14209', 137);
-insert into UTD (netID, userID)
-values ('CCV68537', 138);
-insert into UTD (netID, userID)
-values ('MDR17891', 139);
-insert into UTD (netID, userID)
-values ('NVB35927', 140);
 insert into Project (
         projectID,
         userID,
@@ -1712,444 +1432,1572 @@ values (3, 3);
 insert into Team (teamID, projectID)
 values (4, null);
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'BGO77836',
-        null,
-        '453-196-7608',
-        'aferreiro0@netvibes.com',
-        'dweatherdon0',
-        'plarne0',
-        'tbugbird0',
         3,
-        1
+        '699-142-8810',
+        'ddutton2@cam.ac.uk',
+        'llassey2',
+        'eburthom2',
+        'mgrave2'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'SJD74025',
-        null,
-        '976-776-1308',
-        'cnormanton1@sakura.ne.jp',
-        'ftremonte1',
-        'smcturk1',
-        'vserjent1',
-        3,
-        1
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'DRZ36800',
-        null,
-        '269-591-3030',
-        'mrableau2@java.com',
-        'tbeaudry2',
-        'nmacgarvey2',
-        'qabel2',
-        1,
-        2
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'WAC77069',
-        null,
-        '763-512-6421',
-        'dmacdermot3@yolasite.com',
-        'athorington3',
-        'lblaxland3',
-        'mrenault3',
-        3,
-        1
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'OEX79326',
-        null,
-        '306-907-4239',
-        'ckidman4@comsenz.com',
-        'shaighton4',
-        'ecooley4',
-        'zlevitt4',
-        3,
-        1
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'EXX53026',
-        null,
-        '587-477-5043',
-        'leaklee5@walmart.com',
-        'zjoanic5',
-        'agarrood5',
-        'fjosephi5',
-        2,
-        3
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'UIK89282',
-        null,
-        '452-359-9745',
-        'kwoolveridge6@who.int',
-        'nstorrier6',
-        'cthorntondewhirst6',
-        'fcockman6',
-        2,
-        3
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'POR81172',
-        null,
-        '775-549-4841',
-        'mpappin7@usgs.gov',
-        'ceggleston7',
-        'cmaxworthy7',
-        'plambird7',
-        3,
-        1
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'TSC84017',
-        null,
-        '465-584-8530',
-        'cgoare8@go.com',
-        'dbaythrop8',
-        'aglaves8',
-        'atalbot8',
-        1,
-        2
-    );
-insert into student (
-        netID,
-        resumeFile,
-        phoneNumber,
-        email,
-        discord,
-        groupme,
-        instagram,
-        teamID,
-        projectID
-    )
-values (
-        'FFS33232',
-        null,
-        '492-173-1133',
-        'ssquires9@chicagotribune.com',
-        'rcastanaga9',
-        'lyorke9',
-        'apfaffe9',
         4,
-        4
+        '923-747-9922',
+        'ilyptratt3@who.int',
+        'byakuntzov3',
+        'cpenkman3',
+        'iharrop3'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'DCD93581',
-        null,
-        '368-240-0186',
-        'aslemminga@samsung.com',
-        'cdagnalla',
-        'mbuckthoughta',
-        'gsmitha',
-        2,
-        3
+        5,
+        '294-684-3856',
+        'fjanas4@cargocollective.com',
+        'iaxford4',
+        'fdana4',
+        'bstewart4'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'NZY34457',
-        null,
-        '424-808-7018',
-        'lwrathallb@mysql.com',
-        'dgrzelakb',
-        'kkilmartinb',
-        'cweberb',
-        4,
-        4
+        6,
+        '709-937-7734',
+        'heynald5@xrea.com',
+        'sgillbard5',
+        'lsayton5',
+        'dsuttaby5'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'VOX13251',
-        null,
-        '489-962-2993',
-        'nbirchenoughc@amazon.de',
-        'rivashkovc',
-        'mmailesc',
-        'msmyliec',
-        4,
-        4
+        7,
+        '705-443-0946',
+        'lkondratowicz6@earthlink.net',
+        'dpeegrem6',
+        'vpennings6',
+        'eskews6'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'DOY24278',
-        null,
-        '774-486-9887',
-        'vsicilyd@tmall.com',
-        'cbaudouxd',
-        'smackimmd',
-        'pmerond',
-        4,
-        4
+        8,
+        '192-254-0808',
+        'pbotcherby7@wisc.edu',
+        'pmournian7',
+        'sseamon7',
+        'lverty7'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'CPW11708',
-        null,
-        '542-941-4397',
-        'jfoorde@sina.com.cn',
-        'rgurleye',
-        'anisiuse',
-        'eartise',
-        4,
-        4
+        9,
+        '157-886-3818',
+        'palabaster8@blinklist.com',
+        'hmurr8',
+        'cwoollcott8',
+        'cpersey8'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'ZZW35871',
-        null,
-        '620-682-5592',
-        'acattemullf@wikia.com',
-        'mcresswellf',
-        'kbodef',
-        'dcobellif',
-        1,
-        2
+        10,
+        '989-123-2757',
+        'smyrick9@amazon.com',
+        'pcracoe9',
+        'fredmille9',
+        'moldrey9'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'TVE65287',
-        null,
-        '146-729-0027',
-        'cbarnesg@narod.ru',
-        'kbamlingg',
-        'jkystong',
-        'kgoacherg',
-        2,
-        3
+        11,
+        '199-305-3981',
+        'tpinora@com.com',
+        'einga',
+        'gjanuszkiewicza',
+        'gallreda'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'JQV97981',
-        null,
-        '944-373-7551',
-        'cmcparlinh@ed.gov',
-        'dmeighanh',
-        'bkevaneh',
-        'ichaffinh',
-        1,
-        2
+        12,
+        '789-787-7103',
+        'rleadbetterb@furl.net',
+        'dfellosb',
+        'asteynorb',
+        'cdumphyb'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'QWJ12261',
-        null,
-        '218-206-0186',
-        'mpotburyi@google.ru',
-        'wcymperi',
-        'plingleyi',
-        'ksuddardsi',
-        1,
-        2
+        13,
+        '483-534-8880',
+        'abaistowc@twitpic.com',
+        'aoreganc',
+        'jerettc',
+        'twrayc'
     );
 insert into student (
-        netID,
-        resumeFile,
+        userID,
         phoneNumber,
         email,
         discord,
         groupme,
-        instagram,
-        teamID,
-        projectID
+        instagram
     )
 values (
-        'KTL13581',
-        null,
-        '788-778-1432',
-        'rpearnej@seesaa.net',
-        'glevyj',
-        'cepiletj',
-        'fsebbornj',
-        2,
-        3
+        14,
+        '443-316-6575',
+        'mdopplerd@springer.com',
+        'emenziesd',
+        'dwantd',
+        'jcathersidesd'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        15,
+        '434-928-5427',
+        'bfrangletone@nymag.com',
+        'mnevee',
+        'lpaleye',
+        'epetre'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        16,
+        '600-638-9499',
+        'dmactrustrief@youtube.com',
+        'sdiggf',
+        'handriessenf',
+        'bkeenf'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        17,
+        '170-490-3328',
+        'fflorig@addthis.com',
+        'blequesneg',
+        'tmerringtong',
+        'cgorussog'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        18,
+        '462-734-8921',
+        'sshouth@alexa.com',
+        'terbainh',
+        'hmcgheeh',
+        'egreystokeh'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        19,
+        '875-892-9329',
+        'wdalglieshi@amazon.co.jp',
+        'bbuxtoni',
+        'sweymani',
+        'bsimkoi'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        20,
+        '889-828-1098',
+        'naytoj@nbcnews.com',
+        'nnastj',
+        'mnorthernj',
+        'glattkaj'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        21,
+        '268-812-6422',
+        'rdrancek@mediafire.com',
+        'mmaphamk',
+        'dbocockk',
+        'sfoxenk'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        22,
+        '674-486-6799',
+        'centresl@yahoo.co.jp',
+        'gjahnkel',
+        'hbennsl',
+        'nbocklerl'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        23,
+        '197-115-4841',
+        'jcolnettm@icq.com',
+        'dharmesm',
+        'gclaypoolem',
+        'jmanilom'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        24,
+        '787-116-1631',
+        'spetworthn@edublogs.org',
+        'bswantonn',
+        'rcasacchian',
+        'zgotthardsfn'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        25,
+        '667-728-1450',
+        'lcovinoo@wikimedia.org',
+        'bschankelborgo',
+        'elillecropo',
+        'nseabrookeo'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        26,
+        '712-792-4233',
+        'mvannarp@redcross.org',
+        'eklugelp',
+        'taitchisonp',
+        'ajordinep'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        27,
+        '655-444-6218',
+        'jwhichelowq@parallels.com',
+        'jaddyq',
+        'edublinq',
+        'smintoffq'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        28,
+        '740-492-2746',
+        'fadaminir@whitehouse.gov',
+        'abransdonr',
+        'deayresr',
+        'hsankeyr'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        29,
+        '338-121-0746',
+        'amossmans@smugmug.com',
+        'bitzcaks',
+        'sgoulborns',
+        'cskocrofts'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        30,
+        '781-439-4572',
+        'kstretet@foxnews.com',
+        'awaint',
+        'lmellowst',
+        'rcleifet'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        31,
+        '687-900-5139',
+        'kdomeu@epa.gov',
+        'apeckhamu',
+        'ldargieu',
+        'lcossamu'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        32,
+        '465-228-1375',
+        'ccornockv@telegraph.co.uk',
+        'bwarcopv',
+        'cgaylev',
+        'astreetsv'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        33,
+        '298-203-9694',
+        'amacscheriew@mit.edu',
+        'toflahertyw',
+        'parmatagew',
+        'scolacow'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        34,
+        '104-504-5079',
+        'pwillshearx@nasa.gov',
+        'liblex',
+        'rtadgellx',
+        'sbuttwellx'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        35,
+        '514-884-1865',
+        'vcrutchery@angelfire.com',
+        'nbatcheldory',
+        'fjobey',
+        'kstobarty'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        36,
+        '676-789-4791',
+        'dfrailz@ustream.tv',
+        'mboorerz',
+        'aburgnez',
+        'bcollacombez'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        37,
+        '915-724-0475',
+        'ametheringham10@de.vu',
+        'cmaingot10',
+        'mminto10',
+        'bchaudron10'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        38,
+        '112-606-1042',
+        'sjolin11@loc.gov',
+        'hlidgey11',
+        'kdunsmuir11',
+        'gcalf11'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        39,
+        '499-288-2811',
+        'kgounard12@mayoclinic.com',
+        'kspaldin12',
+        'mloachhead12',
+        'ldono12'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        40,
+        '920-803-0173',
+        'yneeves13@ustream.tv',
+        'lbradtke13',
+        'hrosenau13',
+        'vprin13'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        41,
+        '331-900-5532',
+        'gwhitmell14@wikia.com',
+        'bchessell14',
+        'brodliff14',
+        'khullbrook14'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        42,
+        '962-551-7029',
+        'lorbine15@mit.edu',
+        'fjosephoff15',
+        'bgrunbaum15',
+        'abirkby15'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        43,
+        '358-963-8439',
+        'ddwane16@wiley.com',
+        'cportam16',
+        'dsmallshaw16',
+        'tcraske16'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        44,
+        '843-490-5648',
+        'gschurcke17@japanpost.jp',
+        'llow17',
+        'ebettleson17',
+        'nwarmisham17'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        45,
+        '496-768-2982',
+        'mcampaigne18@ted.com',
+        'mstrewthers18',
+        'sbeetlestone18',
+        'tmellmoth18'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        46,
+        '203-796-9882',
+        'jmachoste19@histats.com',
+        'nbroomfield19',
+        'gduell19',
+        'hdeatta19'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        47,
+        '460-572-0400',
+        'kgeistbeck1a@constantcontact.com',
+        'sreichardt1a',
+        'dslate1a',
+        'mbatistelli1a'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        48,
+        '994-250-4052',
+        'estare1b@hubpages.com',
+        'gspeaks1b',
+        'cmacgaffey1b',
+        'jlorkin1b'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        49,
+        '801-292-5377',
+        'rion1c@tiny.cc',
+        'ncaldero1c',
+        'hpetrolli1c',
+        'apurselow1c'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        50,
+        '940-452-5595',
+        'etelford1d@sciencedirect.com',
+        'dwhapples1d',
+        'rshirrell1d',
+        'dchadney1d'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        51,
+        '296-105-8058',
+        'jmcmurray1e@plala.or.jp',
+        'jclatworthy1e',
+        'rgrabbam1e',
+        'bhuffadine1e'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        52,
+        '782-359-2687',
+        'jkorejs1f@arizona.edu',
+        'ngoodchild1f',
+        'kconry1f',
+        'jkernermann1f'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        53,
+        '396-743-5044',
+        'tcherryholme1g@google.com.au',
+        'rjeenes1g',
+        'oeslemont1g',
+        'hgaffer1g'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        54,
+        '227-428-7321',
+        'jrawsthorn1h@youku.com',
+        'tdeller1h',
+        'mgrog1h',
+        'mgrandisson1h'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        55,
+        '637-293-7359',
+        'acharon1i@mlb.com',
+        'cmacsharry1i',
+        'eskuse1i',
+        'fholt1i'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        56,
+        '962-426-8243',
+        'afendlen1j@mozilla.com',
+        'ghembry1j',
+        'hspens1j',
+        'soliphand1j'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        57,
+        '446-549-6432',
+        'tmathey1k@ycombinator.com',
+        'gwalford1k',
+        'mrenvoise1k',
+        'jcastree1k'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        58,
+        '708-881-7900',
+        'bkingwell1l@ucoz.ru',
+        'pglowacha1l',
+        'awilloway1l',
+        'fdannohl1l'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        59,
+        '286-258-3241',
+        'shannon1m@va.gov',
+        'swickersham1m',
+        'llempke1m',
+        'abortolutti1m'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        60,
+        '763-419-3870',
+        'cmacourek1n@cornell.edu',
+        'cchamberlain1n',
+        'ftrynor1n',
+        'athorpe1n'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        61,
+        '177-619-6389',
+        'mdecristoforo1o@histats.com',
+        'bmuzzi1o',
+        'bsummerhayes1o',
+        'grunham1o'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        62,
+        '259-406-1943',
+        'lcrawshaw1p@cbc.ca',
+        'eomeara1p',
+        'ptompkiss1p',
+        'slafay1p'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        63,
+        '736-558-1248',
+        'larderne1q@comcast.net',
+        'togilvy1q',
+        'inannetti1q',
+        'cpadley1q'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        64,
+        '618-421-0746',
+        'mbasilotta1r@latimes.com',
+        'dlavigne1r',
+        'flief1r',
+        'gottewell1r'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        65,
+        '348-390-3046',
+        'nalbutt1s@mac.com',
+        'treith1s',
+        'acaizley1s',
+        'fmcclay1s'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        66,
+        '458-349-4075',
+        'vodunniom1t@csmonitor.com',
+        'butteridge1t',
+        'mhouson1t',
+        'cpoate1t'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        67,
+        '410-556-3212',
+        'grelton1u@skype.com',
+        'sdunston1u',
+        'klacroutz1u',
+        'vallabush1u'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        68,
+        '470-595-6074',
+        'sgislebert1v@usda.gov',
+        'hspirritt1v',
+        'cgowing1v',
+        'wpargeter1v'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        69,
+        '682-230-0913',
+        'acranmore1w@whitehouse.gov',
+        'rfinan1w',
+        'igrisdale1w',
+        'lpickton1w'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        70,
+        '525-112-5593',
+        'kmichelmore1x@webnode.com',
+        'rogorman1x',
+        'avosper1x',
+        'fiacivelli1x'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        71,
+        '360-917-4783',
+        'rudy1y@vkontakte.ru',
+        'jcobain1y',
+        'mlamberth1y',
+        'bgrigoliis1y'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        72,
+        '803-287-5175',
+        'kmowlam1z@alibaba.com',
+        'mtarbatt1z',
+        'rgoodliff1z',
+        'ncroston1z'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        73,
+        '782-763-3060',
+        'jbaird20@pagesperso-orange.fr',
+        'ejuliano20',
+        'kbrose20',
+        'sdulton20'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        74,
+        '920-253-0484',
+        'cweldrake21@cnn.com',
+        'bpadillo21',
+        'graun21',
+        'kbasley21'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        75,
+        '807-612-7494',
+        'hpattemore22@diigo.com',
+        'bledingham22',
+        'ltures22',
+        'aseaton22'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        76,
+        '344-560-8798',
+        'ffeldman23@sciencedaily.com',
+        'ihamlet23',
+        'ublowick23',
+        'sdebruyn23'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        77,
+        '856-107-7548',
+        'wdauncey24@ebay.com',
+        'dharnetty24',
+        'cberceros24',
+        'cainsbury24'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        78,
+        '592-738-9071',
+        'jcropton25@dagondesign.com',
+        'sconti25',
+        'jwakefield25',
+        'lsergent25'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        79,
+        '135-879-4547',
+        'btrigwell26@opera.com',
+        'mdelgua26',
+        'sbray26',
+        'nkilfether26'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        80,
+        '756-350-3649',
+        'lgoodday27@yahoo.co.jp',
+        'lschaumann27',
+        'abiffin27',
+        'ktwidle27'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        81,
+        '188-147-0539',
+        'etremellan28@sphinn.com',
+        'bharlett28',
+        'shuburn28',
+        'lhundley28'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        82,
+        '922-936-9178',
+        'rtollemache29@xrea.com',
+        'tlassen29',
+        'hrobben29',
+        'temptage29'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        83,
+        '733-185-8238',
+        'ktott2a@china.com.cn',
+        'tfyfe2a',
+        'oocorr2a',
+        'jmichelet2a'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        84,
+        '760-256-3067',
+        'rlebrun2b@ucoz.ru',
+        'nlearoid2b',
+        'splacide2b',
+        'jbirbeck2b'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        85,
+        '124-434-7158',
+        'ckinnon2c@cafepress.com',
+        'cvanni2c',
+        'dgobel2c',
+        'bdungey2c'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        86,
+        '772-394-0565',
+        'jborrott2d@tripod.com',
+        'wantognelli2d',
+        'thanbury2d',
+        'cvarlow2d'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        87,
+        '164-362-8668',
+        'hbritton2e@livejournal.com',
+        'tklaves2e',
+        'vsydry2e',
+        'dferriby2e'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        88,
+        '582-941-5294',
+        'msexstone2f@ca.gov',
+        'bdavenall2f',
+        'chayland2f',
+        'covenden2f'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        89,
+        '665-842-7528',
+        'lkilloran2g@tmall.com',
+        'mrealy2g',
+        'alamperti2g',
+        'tmcgillicuddy2g'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        90,
+        '913-215-3650',
+        'ematevushev2h@odnoklassniki.ru',
+        'jkirkwood2h',
+        'ccosins2h',
+        'kcowmeadow2h'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        91,
+        '706-102-8299',
+        'mgrioli2i@msu.edu',
+        'binsworth2i',
+        'rgodden2i',
+        'vdobbing2i'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        92,
+        '827-777-9574',
+        'acraydon2j@ucla.edu',
+        'rmerrikin2j',
+        'afairnie2j',
+        'astoving2j'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        93,
+        '952-757-2022',
+        'tfernan2k@google.ru',
+        'adohr2k',
+        'icaldero2k',
+        'egoldring2k'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        94,
+        '513-869-1490',
+        'bhanford2l@sakura.ne.jp',
+        'aovitts2l',
+        'apearde2l',
+        'dmcgeorge2l'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        95,
+        '533-809-0701',
+        'dhanley2m@miibeian.gov.cn',
+        'mcooley2m',
+        'dgillingwater2m',
+        'rpellingar2m'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        96,
+        '822-224-8593',
+        'cpierce2n@vistaprint.com',
+        'awyldes2n',
+        'gkegan2n',
+        'wbowra2n'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        97,
+        '983-963-7440',
+        'akirgan2o@army.mil',
+        'treyner2o',
+        'lravenscraft2o',
+        'rjancic2o'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        98,
+        '527-548-1625',
+        'lclarage2p@clickbank.net',
+        'fgreim2p',
+        'alawee2p',
+        'rsalliss2p'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        99,
+        '737-553-7087',
+        'vturnpenny2q@accuweather.com',
+        'bkliesl2q',
+        'apennings2q',
+        'iwhorton2q'
+    );
+insert into student (
+        userID,
+        phoneNumber,
+        email,
+        discord,
+        groupme,
+        instagram
+    )
+values (
+        100,
+        '706-349-6626',
+        'fplaskett2r@newsvine.com',
+        'mpagitt2r',
+        'dbudden2r',
+        'tmitskevich2r'
     );
 insert into Skills (
         skillName,
@@ -2175,28 +3023,28 @@ values (
         'Javascript',
         'programming language'
     );
-insert into StudentSkillset (netID, skillID)
-values ('OEX79326', 2);
-insert into StudentSkillset (netID, skillID)
-values ('DRZ36800', 3);
-insert into StudentSkillset (netID, skillID)
-values ('OEX79326', 3);
-insert into StudentSkillset (netID, skillID)
-values ('EXX53026', 3);
-insert into StudentSkillset (netID, skillID)
-values ('BGO77836', 2);
-insert into StudentSkillset (netID, skillID)
-values ('OEX79326', 1);
-insert into StudentSkillset (netID, skillID)
-values ('DRZ36800', 2);
-insert into StudentSkillset (netID, skillID)
-values ('DRZ36800', 1);
-insert into StudentSkillset (netID, skillID)
-values ('BGO77836', 3);
-insert into StudentSkillset (netID, skillID)
-values ('WAC77069', 2);
-insert into StudentSkillset (netID, skillID)
-values ('WAC77069', 1);
+insert into StudentSkillset (userID, skillID)
+values ('3', 2);
+insert into StudentSkillset (userID, skillID)
+values ('4', 3);
+insert into StudentSkillset (userID, skillID)
+values ('3', 3);
+insert into StudentSkillset (userID, skillID)
+values ('5', 3);
+insert into StudentSkillset (userID, skillID)
+values ('6', 2);
+insert into StudentSkillset (userID, skillID)
+values ('3', 1);
+insert into StudentSkillset (userID, skillID)
+values ('4', 2);
+insert into StudentSkillset (userID, skillID)
+values ('4', 1);
+insert into StudentSkillset (userID, skillID)
+values ('6', 3);
+insert into StudentSkillset (userID, skillID)
+values ('7', 2);
+insert into StudentSkillset (userID, skillID)
+values ('7', 1);
 insert into ProjectSkillset (projectID, skillID)
 values (1, 1);
 insert into ProjectSkillset (projectID, skillID)
@@ -2249,33 +3097,33 @@ insert into TeamPreferences (teamID, projectID, preference_number)
 values (3, 9, 4);
 insert into TeamPreferences (teamID, projectID, preference_number)
 values (3, 10, 5);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('BGO77836', 1, 1);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('BGO77836', 2, 2);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('BGO77836', 3, 3);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('BGO77836', 4, 4);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('BGO77836', 5, 5);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('SJD74025', 6, 1);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('SJD74025', 7, 2);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('SJD74025', 8, 3);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('SJD74025', 9, 4);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('SJD74025', 10, 5);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('DRZ36800', 3, 1);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('DRZ36800', 4, 2);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('DRZ36800', 8, 3);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('DRZ36800', 9, 4);
-insert into StudentPreferences (netID, projectID, preference_number)
-values ('DRZ36800', 10, 5);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('3', 1, 1);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('3', 2, 2);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('3', 3, 3);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('3', 4, 4);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('3', 5, 5);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('4', 6, 1);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('4', 7, 2);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('4', 8, 3);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('4', 9, 4);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('4', 10, 5);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('5', 3, 1);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('5', 4, 2);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('5', 8, 3);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('5', 9, 4);
+insert into StudentPreferences (userID, projectID, preference_number)
+values ('5', 10, 5);
