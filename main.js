@@ -1100,12 +1100,12 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
     const teams = req.body;
     for (const team of teams) {
-        const [netIDs] = await database.pool.query(`
-            SELECT D.netID
-            FROM user U, UTD D, student S
-            WHERE U.userID = D.userID AND S.netID = D.netID AND U.userID IN (?)`, [team.newMemberIDs]);
+        const [userIDs] = await database.pool.query(`
+            SELECT U.userID
+            FROM user U, student S
+            WHERE U.userID = S.userID AND U.userID IN (?)`, [team.newMemberIDs]);
 
-        if (!netIDs.length) {
+        if (!userIDs.length) {
             console.warn(`Empty team: ${team}`);
             continue;
         }
@@ -1123,7 +1123,7 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
         await database.pool.query(`
             UPDATE student
             SET teamID = ?
-            WHERE netID IN (?)`, [netIDs.map((o) => o.netID)]);
+            WHERE userID IN (?)`, [userIDs.map((o) => o.userID)]);
 
         if (team.new) {
             // Give each preferred project a 1-5 score opposite the preference
@@ -1132,7 +1132,7 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
             const preferences = (await database.pool.query(`
                 SELECT SUM(6 - SP.preference_number) AS totalPreference, SP.projectID, P.projectName
                 FROM StudentPreferences SP, Project P, student S
-                WHERE SP.netID = S.netID AND SP.projectID = P.projectID AND S.teamID = ?
+                WHERE SP.userID = S.userID AND SP.projectID = P.projectID AND S.teamID = ?
                 GROUP BY SP.projectID
                 ORDER BY totalPreference`,
                 [team.id])
