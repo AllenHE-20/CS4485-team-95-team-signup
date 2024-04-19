@@ -119,6 +119,8 @@ async function createUser(firstName, middleName, lastName) {
     return result;
 }
 
+
+//Delete at some point...
 async function getNetID(userID) {
     const [netIDs] = await pool.query(`
         SELECT D.netID

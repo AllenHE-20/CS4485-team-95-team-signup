@@ -408,10 +408,10 @@ app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, 
     database.pool.query(`
         UPDATE Student
         SET ?
-        WHERE netID IN (
-            SELECT D.netID
-            FROM user U, UTD D
-            WHERE D.userID = U.userID AND U.userID = ?
+        WHERE userID IN (
+            SELECT U.userID
+            FROM user U
+            WHERE U.userID = ?
         )
     `, [{ avatar: req.file.filename }, req.user.userID]).then(() => {
         // Send the browser to the user's own page to view new preferences
@@ -443,26 +443,26 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
                 return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
         }
 
-        database.getNetID(req.user.userID).then((netID) => {
-            const preferences = Object.entries(result.value).map(([field, projectID]) => {
-                return [
-                    netID,
-                    projectID,
-                    parseInt(field.charAt(field.length - 1)),
-                ];
-            });
-            database.pool.query(`
-                DELETE FROM StudentPreferences
-                WHERE netID = ?`, [netID])
-                .then(() => {
-                    database.pool.query(`
-                INSERT INTO StudentPreferences(netID, projectID, preference_number)
-                VALUES ?`, [preferences]).then(() => {
-                        // Send the browser to the user's own page to view new preferences
-                        res.redirect("/profile");
-                    });
-                });
+        //database.getNetID(req.user.userID).then((netID) => {
+        const preferences = Object.entries(result.value).map(([field, projectID]) => {
+            return [
+                req.user.userID,
+                projectID,
+                parseInt(field.charAt(field.length - 1)),
+            ];
         });
+        database.pool.query(`
+                DELETE FROM StudentPreferences
+                WHERE userID = ?`, [req.user.userID])
+            .then(() => {
+                database.pool.query(`
+                INSERT INTO StudentPreferences(userID, projectID, preference_number)
+                VALUES ?`, [preferences]).then(() => {
+                    // Send the browser to the user's own page to view new preferences
+                    res.redirect("/profile");
+                });
+            });
+        //});
     });
 });
 
