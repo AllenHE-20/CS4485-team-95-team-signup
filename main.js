@@ -195,6 +195,8 @@ app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
             team = student.team;
         }
         database.getTeam(req.params.teamid).then((teamDataObj) => {
+            if (!teamDataObj)
+                return res.status(httpStatus.BAD_REQUEST).send("That team does not exist");
             res.render("teamPage.ejs", { yourTeam: team, teamDataObj });
         });
     });
