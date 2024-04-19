@@ -17,10 +17,34 @@
     <div class="function-item" id="save-item">        
         <form action="/admin/save-teams" method="post">
             <% teams.forEach((team, index) => { %>                
-                <input type="hidden" name="teams[<%= index %>][id]" value="<%= team.id %>">                
+                <input type="hidden" name="teams[<%= index %>].teamID" value="<%= team.id %>">                
 
-            <% }); %>
+                <% (team.currentMemberNames).forEach((currName, currIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].currentMemberNames[currIndex]" value="<%= currName %>">                
+                <% }) %>
 
+                <% (team.newMemberNames).forEach((newName, newIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].newMemberNames[newIndex]" value="<%= newName %>">                
+                <% }) %>
+
+                <% (team.newMemberIDs).forEach((id, idIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].newMemberIDs[idIndex]" value="<%= id %>">                
+                <% }) %>
+
+                <% (team.projectPreferences).forEach((projPref, prefIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].projectPreferences[prefIndex]" value="<%= projPref %>">                
+                <% }) %>
+
+                <% (team.currentSkills).forEach((skill, skillIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].currentSkills[skillIndex]" value="<%= skill %>">                
+                <% }) %>
+
+                <% (team.newSkills).forEach((newSkill, newSkillIndex) => { %>                
+                    <input type="hidden" name="teams[<%= index %>].newSkills[newSkillIndex]" value="<%= newSkill %>">                
+                <% }) %>
+
+                <% console.log(teams[index]); %>
+            <% }) %>
             <input id="saveAllTeams" type="submit" value="Save All Teams" />
         </form>    
     </div>
