@@ -18,20 +18,19 @@ CREATE TABLE login (
     passwordSalt VARCHAR(64) CHECK(passwordSalt REGEXP '^[0-9A-Za-z]{64}$'),
     oneTimeTokenHash VARCHAR(128) CHECK(oneTimeTokenHash REGEXP '^[0-9A-Za-z]{128}$') UNIQUE,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
-    CONSTRAINT newUser CHECK((passwordHash IS NOT NULL AND passwordSalt IS NOT NULL) OR oneTimeTokenHash IS NOT NULL)
+    CONSTRAINT newUser CHECK(
+        (
+            passwordHash IS NOT NULL
+            AND passwordSalt IS NOT NULL
+        )
+        OR oneTimeTokenHash IS NOT NULL
+    )
 );
 --
 CREATE TABLE organizer(
     userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     affiliation VARCHAR(50)
-);
--- depending on how the SSO works we might be able to add email here and grab it
--- then, we could put a seperate email into Organizer.
-CREATE TABLE UTD (
-    netID CHAR(9) CHECK(netID REGEXP '^[A-Za-z]{3}[0-9]{5}$') PRIMARY KEY UNIQUE,
-    userID INT,
-    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
 );
 CREATE TABLE Project (
     projectID INT PRIMARY KEY AUTO_INCREMENT,
@@ -56,8 +55,8 @@ CREATE TABLE Team(
     SET NULL
 );
 CREATE TABLE student(
-    netID CHAR(9) PRIMARY KEY UNIQUE,
-    FOREIGN KEY(netID) REFERENCES UTD(netID) ON DELETE CASCADE,
+    userID INT PRIMARY KEY UNIQUE,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     resumeFile VARCHAR(255),
     phoneNumber VARCHAR(12),
     email VARCHAR(255),
@@ -69,7 +68,7 @@ CREATE TABLE student(
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
     SET NULL,
         projectID INT,
-        FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE
+        FOREIGN KEY (projectID) REFERENCES Team(teamID) ON DELETE
     SET NULL
 );
 CREATE TRIGGER fullTeam BEFORE
@@ -94,8 +93,8 @@ END IF;
 END IF;
 END;
 CREATE TABLE Faculty(
-    netID CHAR(8),
-    FOREIGN KEY(netID) REFERENCES UTD(netID) ON DELETE CASCADE
+    userID INT PRIMARY KEY UNIQUE,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE
 );
 CREATE TABLE ProjectFiles(
     projectID INT,
@@ -117,15 +116,15 @@ CREATE TABLE ProjectFiles(
  );
  */
 CREATE TABLE StudentPreferences(
-    netID CHAR(8),
-    FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
+    userID INT PRIMARY KEY UNIQUE,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
     preference_number INT CHECK (
         preference_number BETWEEN 1 AND 5
     ),
-    UNIQUE (netID, preference_number),
-    UNIQUE (netID, projectID)
+    UNIQUE (userID, preference_number),
+    UNIQUE (userID, projectID)
 );
 -- Skillcategory should be an enumrated list at some point.
 CREATE TABLE Skills(
@@ -134,12 +133,12 @@ CREATE TABLE Skills(
     skillCategory VARCHAR(20)
 );
 CREATE TABLE StudentSkillset(
-    netID CHAR(8),
-    FOREIGN KEY (netID) REFERENCES UTD(netID) ON DELETE CASCADE,
+    userID INT,
+    FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     skillID INT,
     FOREIGN KEY (skillID) REFERENCES Skills(skillID) ON DELETE CASCADE,
-    PRIMARY KEY (netID, skillID),
-    UNIQUE(netID, skillID)
+    PRIMARY KEY (userID, skillID),
+    UNIQUE(userID, skillID)
 );
 CREATE TABLE ProjectSkillset(
     projectID INT,
@@ -163,10 +162,10 @@ CREATE TABLE TeamPreferences(
     PRIMARY KEY (teamID, projectID)
 );
 CREATE TABLE PendingInvites(
-    sender CHAR(8),
-    FOREIGN KEY (sender) REFERENCES UTD(netID) ON DELETE CASCADE,
-    receiver CHAR(8),
-    FOREIGN KEY (receiver) REFERENCES UTD(netID) ON DELETE CASCADE,
+    sender INT,
+    FOREIGN KEY (sender) REFERENCES user(userID) ON DELETE CASCADE,
+    receiver INT,
+    FOREIGN KEY (receiver) REFERENCES user(userID) ON DELETE CASCADE,
     message VARCHAR(255),
     PRIMARY KEY (sender, receiver),
     CONSTRAINT invite_yourself CHECK (sender <> receiver)
