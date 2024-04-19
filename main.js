@@ -886,7 +886,7 @@ app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, r
 app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, res) => {
     const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
     if (error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
     const userID = value.user;
     const netID = await database.getNetID(userID);
@@ -913,7 +913,7 @@ app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, re
 app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
     const {value, error} = schemas.adminRemoveTeamMember.validate(req.body);
     if (error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
     const teamID = value.team;
     await database.pool.query(`
