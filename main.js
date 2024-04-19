@@ -971,6 +971,13 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         );
         team.newSkills = skills.map(skill => skill.skillName);
     }
+
+//remove later - testing page
+    app.get("/adminTest", auth.isAdmin, (req, res) => {
+        res.render("adminGenTeam.ejs", {
+            teams: dummyData.adminTeam} );
+    })
+
     const updatedTeams = Object.values(teamsToUpdate)
         .map((team) => {
             return {

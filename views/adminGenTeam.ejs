@@ -15,29 +15,49 @@
     </div>
 
     <div class="function-item" id="save-item">        
-        <form action="" method="post">
+        <form action="/admin/save-teams" method="post">
+            <% teams.forEach((team, index) => { %>                
+                <input type="hidden" name="teams[<%= index %>][id]" value="<%= team.id %>">                
+
+            <% }); %>
+
             <input id="saveAllTeams" type="submit" value="Save All Teams" />
         </form>    
     </div>
 </div>
-
+    
 <main class="adminPage">   
+    
     <article>
-        <ul class="profile-list" id="projectList">            
-            <li class="profile-item" style="display: block;">                                                                    
-                <div class="genCard">    
-                    <h1>team</h1>                    
-                    <p>Members</p>                     
-                    <p>Project Preferences</p>
-                    <p>Skills</p>
-                </div>                    
-            </li>          
+        <ul class="profile-list" id="projectList">    
+            <% for (let i = 0; i < teams.length; i++) { %>    
+                <li class="profile-item" style="display: block;">                                                                    
+                    <div class="genCard">    
+                        <h1>
+                            Team <%= teams[i].teamID %>                             
+                        </h1>                                            
+                        <p>Members: 
+                            <%= teams[i].currentMemberNames.join(', ') %>,
+                            <%= teams[i].newMemberNames.join(', ') %>                         
+                        </p>                     
+                        <p>Project Preferences:
+                            <%= teams[i].projectPreferences.join(', ') %>
+                        </p>
+                        <p>Skills:
+                            <%= teams[i].currentSkills.join(', ') %>,
+                            <%= teams[i].newSkills.join(', ') %>
+                        </p>
+
+                        <form action="" method="post">
+                            <input id="saveTeam<%= i %>" type="submit" value="Save Team" />
+                        </form>
+                    </div>                      
+                </li>          
+            <% } %>
         </ul>
     </article>                  
 </main>
 
-<% console.log(teams); %>
-<% console.log(unsortedUsers); %>    
 
 </body>
 </html>
