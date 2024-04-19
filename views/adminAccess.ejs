@@ -30,11 +30,6 @@
                         <input type="text" name="emailInput" id="emailInput" />
                     </div>
 
-                    <div class="contactRow">
-                        <label for="netIdInput">Net ID</label>
-                        <input type="text" name="netIdInput" id="netIdInput" />
-                    </div>
-
                     <div class="adminBox">
                         <input type="checkbox" id="facultyPriv" name="facultyPriv">
                         <label for="adminPriv">Faculty Privileges</label>
@@ -51,29 +46,29 @@
                 </form>
             </main>
 
-    <script>
-        function confirmMessage() {    
-        var newEmail = document.getElementById("emailInput").value;
-        var firstName = document.getElementById("firstNameInput").value;    
-        var lastName = document.getElementById("lastNameInput").value;
-        if (firstName.trim() === "") {
-            alert("No first name has been entered.");
-            return false;
-        }
-        else if (lastName.trim() === ""){
-            alert("No last name has been entered.")
-            return false;
-        }
-        else if (newEmail.trim() === ""){
-            alert("No email has been entered.");
-            return false;
-        }
-        else {
-            var message = firstName +" " + lastName + " has been given access. \nTheir email can now be used to register a new account.";
-            return alert(message);
-        }    
-    }
-    </script>
+            <script>
+                function confirmMessage() {
+                    var newEmail = document.getElementById("emailInput").value;
+                    var firstName = document.getElementById("firstNameInput").value;
+                    var lastName = document.getElementById("lastNameInput").value;
+                    if (firstName.trim() === "") {
+                        alert("No first name has been entered.");
+                        return false;
+                    }
+                    else if (lastName.trim() === "") {
+                        alert("No last name has been entered.")
+                        return false;
+                    }
+                    else if (newEmail.trim() === "") {
+                        alert("No email has been entered.");
+                        return false;
+                    }
+                    else {
+                        var message = firstName + " " + lastName + " has been given access. \nTheir email can now be used to register a new account.";
+                        return alert(message);
+                    }
+                }
+            </script>
 
     </body>
 
