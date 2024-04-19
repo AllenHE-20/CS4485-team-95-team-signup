@@ -67,6 +67,11 @@
                     <p><%= counter %>. <%= proj %><p>
                         <% counter++; %>
                 <% }) %>
+                <% if (teamDataObj.id == yourTeam) { %>
+                    <div class="setting-links">
+                        <a href="/submitTeamPreferences">Set Project Preferences</a>
+                    </div>
+                <% } %>
             </div>
             <hr>
             <div class="team-page-skills">

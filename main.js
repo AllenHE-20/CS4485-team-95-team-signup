@@ -145,15 +145,12 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
     res.render("resumeContactForm.ejs");
 })
 
-app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-
-    database.getAllProjects()
-        .then(projects => {
-            console.log(projects)
-            res.render("submitPreferences.ejs", {
-                projects: projects
-            });
-        })
+app.get("/submitPreferences", auth.isAuthenticated, async (req, res) => {
+    const projects = await database.getAllProjects();
+    res.render("submitPreferences.ejs", {
+        projects: projects,
+        endpoint: "/submitPreferences"
+    });
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -185,6 +182,18 @@ app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
         });
     });
 
+})
+
+app.get("/submitTeamPreferences", auth.isAuthenticated, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    const team = await database.getTeam(student.team)
+    if (!team)
+        return res.status(httpStatus.UNAUTHORIZED).message("You are not on a team");
+    const projects = await database.getAllProjects();
+    res.render("submitPreferences.ejs", {
+        projects: projects,
+        endpoint: "/submitTeamPreferences"
+    });
 })
 
 app.get("/projects", auth.isAuthenticated, (req, res) => {
@@ -442,6 +451,54 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
                 });
         });
     });
+});
+
+app.post("/submitTeamPreferences", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    const teamID = student.team;
+    const team = await database.getTeam(teamID)
+    if (!team)
+        return res.status(httpStatus.UNAUTHORIZED).message("You are not on a team");
+
+    const result = schemas.preferences.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    // Ensure no preferences are repeated
+    const prefs = Object.values(result.value);
+    prefs.sort();
+    for (var i = 1; i < prefs.length; i++) {
+        if (prefs[i - 1] === prefs[i])
+            return res.status(httpStatus.BAD_REQUEST).send("Preferences must be different projects");
+    }
+
+    const [projects] = await database.pool.query(`
+        SELECT projectID
+        FROM Project;`);
+    projectIDs = projects.map(Object.values).flat();
+
+    for (var pref of prefs) {
+        if (projectIDs.indexOf(pref) === -1)
+            return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
+    }
+
+    const preferences = Object.entries(result.value).map(([field, projectID]) => {
+        return [
+            teamID,
+            projectID,
+            parseInt(field.charAt(field.length - 1)),
+        ];
+    });
+
+    await database.pool.query(`
+        DELETE FROM TeamPreferences
+        WHERE teamID = ?`, [teamID]);
+    await database.pool.query(`
+        INSERT INTO TeamPreferences(teamID, projectID, preference_number)
+        VALUES ?`, [preferences]);
+
+    // Send the browser to the user's own page to view new preferences
+    res.redirect(`/team/${teamID}`);
 });
 
 app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
