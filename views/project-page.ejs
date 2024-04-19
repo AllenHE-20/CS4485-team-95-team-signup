@@ -58,6 +58,13 @@
                         <%- include("partials/labeled-list.ejs", { label: "Skills" , list: project.skills || []}); %>
                     </div>
                     <hr>
+                    <div class="project-page-team-constraints">
+                        <h1>Project team size:</h1>
+                        <%= project.teamSize %>
+                        <h1>Max teams assigned to this project: </h1>
+                        <%= project.maxTeams %>
+                    </div>
+                    <hr>
                     <div class="project-page-files">
                         <h1>Relevant Files & Supplemental Information</h1>
                     </div>

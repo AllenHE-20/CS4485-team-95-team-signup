@@ -131,25 +131,60 @@ const invites = {
 
 const adminTeam = [    
     {
-        id: 9,
-        members: [
-            "John Doe",
-            "Jane Doe",
-        ],        
-        projectID: null      
+        teamID: 1,
+        currentMemberNames: [
+            "Current", 
+            "Chris",
+        ],
+        newMemberNames: [
+            "New", 
+            "Nathan",
+        ],
+        newMemberIDs: [
+            1,
+            2,
+        ],
+        projectPreferences: [
+            "Proj 1",
+        ],
+        currentSkills: [
+            "Java",
+            "C++",
+        ],
+        newSkills: [
+            "CSS",
+            "HTML",
+        ],    
     },
     {
-        id: 12,
-        members: [
-            "Michael Pham",
-            "Allen Elledge",
-            "Nghia Nguyen",
-            "David Wilkinson",
-            "Justin Eggers",
+        teamID: 2,
+        currentMemberNames: [
+            "Current2", 
+            "Chris2",
         ],
-        projectID: 11
+        newMemberNames: [
+            "New2", 
+            "Nathan2",
+        ],
+        newMemberIDs: [
+            3,
+            4,
+        ],
+        projectPreferences: [
+            "Proj 1",
+            "Proj 2"
+        ],
+        currentSkills: [
+            "Java",
+            "C++",
+        ],
+        newSkills: [
+            "CSS",
+            "HTML",
+        ],  
     }
 ]
+
 
 module.exports.teams = teams;
 module.exports.teamList = teamList;
