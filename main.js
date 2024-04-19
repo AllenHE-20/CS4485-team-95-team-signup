@@ -772,6 +772,55 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     res.redirect("/adminAccess");
 });
 
+// Note: Untested
+app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = schemas.adminAddProject.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {projectName, newSponsor, newSize, newDescription} = result.value;
+    const [insert] = await database.pool.query(`
+        INSERT INTO Project (projectName, sponsor, description, teamSize)
+        VALUES (?)`, [[projectName, newSponsor, newDescription, newSize]])
+    const projectID = insert.insertId;
+
+    // TODO: Skills required
+
+    res.redirect("back");
+});
+
+// Note: Untested
+app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = schemas.adminEditProject.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {editProjectID, editProjectName, editSponsor, editSize, editDescription} = result.value;
+    await database.pool.query(`
+        UPDATE Project
+        SET projectName = ?, sponsor = ?, description = ?, teamSize = ?
+        WHERE projectID = ?`,
+        [editProjectName, editSponsor, editDescription, editSize, editProjectID])
+
+    // TODO: Skills required
+
+    res.redirect("back");
+});
+
+// Note: Untested
+app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = schemas.adminDeleteProject.validate(req.body);
+    if (result.error)
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+
+    const {deleteProjectID} = result.value;
+    await database.pool.query(`
+        DELETE FROM Project
+        WHERE projectID = ?`, [deleteProjectID])
+
+    res.redirect("back");
+});
+
 app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminAddTeamMember.validate(req.body);
     if (result.error)

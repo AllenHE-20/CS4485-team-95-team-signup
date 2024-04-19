@@ -96,6 +96,52 @@ const adminSetProject = Joi.object({
         .required(),
 })
 
+const adminAddProject = Joi.object({
+    projectName: Joi.string()
+        .required()
+        .max(50),
+
+    newSponsor: Joi.string()
+        .required()
+        .max(255),
+
+    newSize: Joi.number()
+        .required()
+        .min(4)
+        .max(6),
+
+    newDescription: Joi.string()
+        .required()
+        .max(500),
+});
+
+const adminEditProject = Joi.object({
+    editProjectID: Joi.number()
+        .required(),
+
+    editProjectName: Joi.string()
+        .required()
+        .max(50),
+
+    editSponsor: Joi.string()
+        .required()
+        .max(255),
+
+    editMaxSize: Joi.string()
+        .required()
+        .min(4)
+        .max(6),
+
+    editDescription: Joi.string()
+        .required()
+        .max(500),
+});
+
+const adminDeleteProject = Joi.object({
+    removeProjectID: Joi.number()
+        .required(),
+});
+
 module.exports.preferences = preferences;
 module.exports.invite = invite;
 module.exports.inviteResponse = inviteResponse;
@@ -105,3 +151,6 @@ module.exports.addUser = addUser;
 module.exports.skillChange = skillChange;
 module.exports.adminAddTeamMember = adminAddTeamMember;
 module.exports.adminSetProject = adminSetProject;
+module.exports.adminAddProject = adminAddProject;
+module.exports.adminEditProject = adminEditProject;
+module.exports.adminDeleteProject = adminDeleteProject;
