@@ -48,5 +48,33 @@
             </article>
         </main>
 
+        <script>
+            function filterStudents(){
+                //Based on filterProjects from project-list.ejs
+                var input, filter, ul, li;
+
+                input = document.getElementById('searchInput');
+                filter = input.value.toUpperCase();
+                
+                ul = document.getElementById("studentList");
+                li = ul.getElementsByClassName('profile-item');
+
+                for (var i = 0; i < li.length; i++) {
+                       var personNameElement = li[i].querySelector(".student-name");
+                       if(!personNameElement){
+                        console.error("Error: Participant name element not found for participant item ", li[i]);
+                        continue;
+                       }
+                       var participantName = personNameElement.textContent.trim();
+
+                       if(participantName.toUpperCase().indexOf(filter) > -1 || filter === ''){
+                        li[i].style.display = "block";
+                       }else{
+                        li[i].style.display = "none";
+                       }
+                    }
+            }
+        </script>
+
     </body>
 </html>
