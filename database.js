@@ -132,14 +132,14 @@ async function getNetID(userID) {
 }
 
 //only gets projectID but this could later be modified to grab more if needed.
-async function getUsersProject(netID) {
+async function getUsersProject(userID) {
     const [project] = await pool.query(`
     SELECT P.projectID, P.projectName
     FROM Project P
     INNER JOIN Team T ON P.projectID = T.projectID
     INNER JOIN student S ON T.teamID = S.teamID
-    WHERE S.netID = ?
-    `, [netID]);
+    WHERE S.userID = ?
+    `, [userID]);
     if (project.length > 0) {
         return project;
     }

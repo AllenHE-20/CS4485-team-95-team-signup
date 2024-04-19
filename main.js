@@ -374,10 +374,10 @@ app.post('/profile', auth.isAuthenticated, upload.single("resumeUploadButton"), 
     database.pool.query(`
         UPDATE Student
         SET ?
-        WHERE netID IN (
-            SELECT D.netID
-            FROM user U, UTD D
-            WHERE D.userID = U.userID AND U.userID = ?
+        WHERE userID IN (
+            SELECT U.userID
+            FROM user U
+            WHERE U.userID = ?
         )
     `, [contact, req.user.userID]).then(() => {
         // Send the browser to the user's own page to view new preferences

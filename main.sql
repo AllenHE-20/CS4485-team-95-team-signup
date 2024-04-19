@@ -116,7 +116,7 @@ CREATE TABLE ProjectFiles(
  );
  */
 CREATE TABLE StudentPreferences(
-    userID INT PRIMARY KEY UNIQUE,
+    userID INT,
     FOREIGN KEY(userID) REFERENCES user(userID) ON DELETE CASCADE,
     projectID INT,
     FOREIGN KEY (projectID) REFERENCES Project(projectID) ON DELETE CASCADE,
