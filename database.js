@@ -408,6 +408,202 @@ async function getAllNotFullTeams(teamSize) {
     return teams;
 }
 
+async function getStudentByProjectIDPreferenceID(PID, PNUM) {
+    const [ids] = await pool.query(`SELECT netID
+    FROM studentpreferences
+    WHERE netID IN (
+        SELECT netID
+        FROM Student
+        WHERE teamID IS NULL
+    ) AND preference_number = ? AND projectID = ?;`, [PNUM, PID]);
+    return ids;
+}
+
+async function getStudentPreference(netID, prefNum) {
+    const [preferences] = await pool.query(`
+    SELECT SP.*, P.projectName
+    FROM StudentPreferences SP
+    INNER JOIN Project P ON SP.projectID = P.projectID AND SP.netID = ? WHERE preference_number = ?
+    ;
+    `, [netID, prefNum])
+    return preferences;
+}
+
+async function getTeamPreferences(teamID) {
+    const [preferences] = await pool.query(`
+        SELECT TP.*, P.projectName
+        FROM TeamPreferences TP
+        INNER JOIN Project P ON TP.projectID = P.projectID AND TP.teamID = ?
+        ORDER BY TP.preference_number;
+    `, [teamID])
+    return preferences;
+}
+
+
+async function getAllOpenProjectSlots() {
+    const [size] = await pool.query(
+        'SELECT projectID, maxTeams FROM Project'
+    );
+    const [amt] = await pool.query(`
+        SELECT COUNT(tp.projectID) AS count, tp.projectID
+        FROM TeamPreferences tp
+        JOIN Team t ON tp.teamID = t.teamID
+        WHERE t.projectID IS NULL
+        AND tp.preference_number = 1
+        GROUP BY tp.projectID
+        ORDER BY tp.projectID;`);
+
+    const [teamsAssignedToProject] = await pool.query(`
+        SELECT COUNT(t.teamID) AS count, t.projectID
+        FROM Team t 
+        WHERE t.projectID IS NOT NULL
+        GROUP BY t.projectID;
+    `);
+    //we have the size of teams and the count of teams in a project, now we need to loop through each and subtract them and consider those who are already assigned a project.
+    //OR we could just use getOpenProjectSlots and make a for loop from a query getting all projectIDs.
+    let projects = new Array(size.length);
+    for (var i = 0; i < size.length; i++) {
+        let existsPref = amt.some(slot => slot.projectID === size[i].projectID)
+        let existsAssigned = teamsAssignedToProject.some(slot => slot.projectID === size[i].projectID);
+        occupied = 0;
+        if (existsPref) {
+            occupied += 1;
+        }
+        if (existsAssigned) {
+            occupied += 1;
+        }
+        const sizeUpdated = {
+            projectID: size[i].projectID,
+            maxTeams: size[i].maxTeams - occupied
+        }
+        projects[i] = sizeUpdated
+    }
+
+    return projects;
+}
+
+//it ends up being a mix of random and preference, while it goes off preference, there is no skills to decide best fit.
+async function matchTeamsPref(teamSize) {
+    let students = await getAllStudentsWithoutTeam();
+    let teamNotFull = await getAllNotFullTeams(teamSize);
+    let AddStudentToTeam = [];
+
+    //currently the algorithm does not take into account max amount of teams per a project.
+    for (var i = 0; i < teamNotFull.length; i++) {
+        const teamPreferences = await getTeamPreferences(teamNotFull[i].teamID);
+        for (var j = 0; j < teamPreferences.length; j++) {
+            while (teamNotFull[i].teamSize < teamSize) {
+                let potentialStudents = await getStudentByProjectIDPreferenceID(teamPreferences[j].projectID, teamPreferences[j].preference_number);
+                //note: we use random instead of anything else here since there are no relevant skills to compare.
+                if (potentialStudents.length > 0) {
+                    studentIndex = Math.floor(Math.random() * students.length);
+                    const toAdd = {
+                        student: students[studentIndex],
+                        teamID: teamNotFull[i].teamID,
+                        //This projectID is what the student matched with this team for.
+                        //We need to take this away from projectOpenSlots and add their top preference back to the pool.
+                        projectID: teamPreferences[j].projectID
+                    }
+                    AddStudentToTeam.push(toAdd);
+                    students.splice(studentIndex, 1);
+                    teamNotFull[i].teamSize += 1;
+                    console.log(teamNotFull[i].teamSize, "size");
+                }
+            }
+        }
+    }
+    let openSlots = await getAllOpenProjectSlots();
+
+    let finalTeams = [];
+    //Forming team object
+    let teams = {};
+    //We use prefCount to keep track of preferences.
+    let prefCount = {};
+    //We Store the netIDs of each student interested in each project
+    let prefStudent = {};
+    //Format: projectID: maxStudents. maxStudents is how many students we can assign to the project before we assign random teams.
+    let maxStudents = {};
+    openSlots.forEach(project => {
+        teams[project.projectID] = [];
+        prefStudent[project.projectID] = [];
+        prefCount[project.projectID] = 0;
+        maxStudents[project.projectID] = project.maxTeams * teamSize;
+    });
+
+    //ended up removing this implementation out as it became obsolete by the rest.
+    // let change = true;
+    // while (change) {
+    //     change = false;
+    //     if (students.length > 0) {
+    //         let student = students.shift();
+    //         let preferences = await getStudentPreferences(student.netID)
+    //         for (var i = 0; i < preferences.length; i++) {
+    //             let project = preferences[i].projectID;
+    //             //might need to change openSlots.maxTeams to instead get number of students we can do openSlots.maxTeams * teamSize to get the number of students total we can accept for the project.
+    //             //we can put all those students in an array and then, randomly select from there.
+    //             if (maxStudents[project] != teams[project].length) {
+    //                 teams[project].push(student);
+    //                 change = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+
+    //we loop to 5 due to amount of preferences
+    for (var i = 1; i < 6; i++) {
+        //loop through students
+        for (var j = 0; j < students.length; j++) {
+
+            let preference = await getStudentPreference(students[j].netID, i)
+            prefCount[preference[0].projectID] += 1;
+            prefStudent[preference[0].projectID].push(students[j]);
+
+            //if the size is greater than teamSize we form a random team and then take them out of prefStudent and students2
+        }
+
+        //loop through projects
+        for (var k = 1; k < Object.getOwnPropertyNames(openSlots).length; k++) {
+
+            //one downside of this is that projects with a smaller projectID are preferred
+            while (prefCount[k] >= teamSize && openSlots[k - 1].maxTeams > 0) {
+                //calculated teams to make and makes that many teams.
+                //We grab students at random from the list if there are more than teamSize since we do not have a true comparison based off skills which is a way this algo could be improved. 
+                //loops for teamSize to make a team.
+                teamArr = [];
+                for (var m = 0; m < teamSize; m++) {
+
+                    studentIndex = Math.floor(Math.random() * prefStudent[k].length);
+                    studentToAdd = prefStudent[k][studentIndex]
+                    teamArr.push(studentToAdd)
+
+                    //we grab the students preferences and loop up to i times since they will only have i preferences by the time we reach here in the code and we removed them from.
+                    for (var n = 1; n < i + 1; n++) {
+                        let removePreference = await getStudentPreference(studentToAdd.netID, n);
+
+                        //subtract their preferences to prevent them from effecting future teams.
+                        prefCount[removePreference[0].projectID]--;
+                        prefStudent[removePreference[0].projectID] = prefStudent[removePreference[0].projectID].filter(obj => obj != studentToAdd.netID);
+
+                    }
+                    students = students.filter(obj => obj.netID != studentToAdd.netID)
+                }
+                const fullTeam = {
+                    team: teamArr,
+                    projectID: k - 1
+                }
+                finalTeams.push(fullTeam)
+                openSlots[k - 1].maxTeams--;
+            }
+        }
+    }
+    return {
+        newTeams: finalTeams,
+        studentToExistingTeam: AddStudentToTeam,
+        leftOverStudents: students,
+    }
+}
+
 async function matchTeamsRandom(teamSize) {
     //gets array of student netIDs
     let students = (await getAllStudentsWithoutTeam());
@@ -454,6 +650,7 @@ async function matchTeamsRandom(teamSize) {
     }
 }
 
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
@@ -482,3 +679,4 @@ module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
 module.exports.matchTeamsRandom = matchTeamsRandom;
+module.exports.matchTeamsPref = matchTeamsPref;

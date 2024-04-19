@@ -267,10 +267,12 @@ app.get("/adminTeams", auth.isAdmin, async (req, res) => {
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID IS NULL`);
     res.render("adminTeams.ejs", {
         teams: teams,
-        singleUsers: teamlessUsers.map((user) => {return {
-            name: `${user.firstName} ${user.lastName}`,
-            userID: user.userID,
-        };}),
+        singleUsers: teamlessUsers.map((user) => {
+            return {
+                name: `${user.firstName} ${user.lastName}`,
+                userID: user.userID,
+            };
+        }),
         projects: await database.getAllProjects(),
     });
 })
@@ -775,7 +777,7 @@ app.post("/admin/add-team-member", auth.isAdmin, urlencodedParser, async (req, r
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {newMember, team} = result.value;
+    const { newMember, team } = result.value;
     var netID;
     try {
         netID = await database.getNetID(newMember);
@@ -824,12 +826,12 @@ app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res)
     res.redirect("/adminTeams");
 });
 
-app.post("/admin/set-project", auth.isAdmin, urlencodedParser, async (req,res) => {
+app.post("/admin/set-project", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminSetProject.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {assignProject, team} = result.value;
+    const { assignProject, team } = result.value;
     try {
         await database.pool.query(`
             UPDATE Team
@@ -842,9 +844,9 @@ app.post("/admin/set-project", auth.isAdmin, urlencodedParser, async (req,res) =
 });
 
 app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
-    const {maxTeam} = req.query;
+    const { maxTeam } = req.query;
     const generatedTeamUpdates = await database.matchTeamsRandom(maxTeam);
-    const {newTeams, studentToExistingTeam, leftOverStudents} = generatedTeamUpdates;
+    const { newTeams, studentToExistingTeam, leftOverStudents } = generatedTeamUpdates;
 
     const teamsToMake = newTeams.map(async team => {
         const netIDs = team.map(member => member.netID);
@@ -886,18 +888,18 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     });
 
     const teamsToUpdate = {};
-    const teamIDs = studentToExistingTeam.map(({teamID}) => teamID)
+    const teamIDs = studentToExistingTeam.map(({ teamID }) => teamID)
         .toSorted()
         .filter((val, i, arr) => val != arr[i - 1]);
     for (var teamID of teamIDs) {
         const team = await database.getTeam(teamID);
         team.newMemberIDs = [],
-        team.newMemberNetIDs = [],
-        team.newMemberNames = [],
-        team.newSkills = [],
-        teamsToUpdate[teamID] = team;
+            team.newMemberNetIDs = [],
+            team.newMemberNames = [],
+            team.newSkills = [],
+            teamsToUpdate[teamID] = team;
     }
-    for (var {student, teamID} of studentToExistingTeam) {
+    for (var { student, teamID } of studentToExistingTeam) {
         const team = teamsToUpdate[teamID];
         const [[user]] = await database.pool.query(`
             SELECT U.userID, U.firstName, U.lastName
@@ -921,15 +923,17 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         team.newSkills = skills.map(skill => skill.skillName);
     }
     const updatedTeams = Object.values(teamsToUpdate)
-        .map((team) => { return {
-            teamID: team.id,
-            currentMemberNames: team.members,
-            newMemberNames: team.newMemberNames,
-            newMemberIDs: team.newMemberIDs,
-            projectPreferences: team.interests,
-            currentSkills: team.skills,
-            newSkills: team.newSkills,
-        }; });
+        .map((team) => {
+            return {
+                teamID: team.id,
+                currentMemberNames: team.members,
+                newMemberNames: team.newMemberNames,
+                newMemberIDs: team.newMemberIDs,
+                projectPreferences: team.interests,
+                currentSkills: team.skills,
+                newSkills: team.newSkills,
+            };
+        });
 
     const unsortedStudents = leftOverStudents.map(async (student) => {
         const [[user]] = await database.pool.query(`
@@ -955,7 +959,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
 
     const arrangement = {
         teams: await Promise.all([...teamsToMake, ...updatedTeams]),
-        unsortedUsers: await(Promise.all(unsortedStudents)),
+        unsortedUsers: await (Promise.all(unsortedStudents)),
     };
 
     res.render("adminGenTeam.ejs", {
@@ -965,7 +969,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
 });
 
 // Note: untested until team generation result endpoint is created
-app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({extended: true}), async (req, res) => {
+app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
     const teams = req.body;
     for (const team of teams) {
         const [netIDs] = await database.pool.query(`
