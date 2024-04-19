@@ -282,29 +282,30 @@ async function getAllSponsors() {
 }
 
 async function getAllTeams() {
+    const [teamIDs] = await pool.query(`
+        SELECT teamID
+        FROM Team`);
+    const teams = {};
+    teamIDs.forEach((o) => teams[o.teamID] = {
+        id: o.teamID,
+        avatar: "/images/profile.png",
+        interests: [],
+        skills: [],
+        members: [],
+        open: true,
+        projectID: null,
+    });
+
     const [usersByTeam] = await pool.query(`
         SELECT U.userID, U.firstName, U.lastName, S.teamID
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID IS NOT NULL`);
-    const teams = usersByTeam.reduce((accumulator, dbUser) => {
+    usersByTeam.forEach((dbUser) => {
         const user = `${dbUser.firstName} ${dbUser.lastName}`;
-        if (dbUser.teamID in accumulator) {
-            const team = accumulator[dbUser.teamID];
-            team.members.push(user);
-            team.open = team.members.length < 6;
-        } else {
-            accumulator[dbUser.teamID] = {
-                id: dbUser.teamID,
-                avatar: "/images/profile.png",
-                interests: [],
-                skills: [],
-                members: [user],
-                open: true,
-                projectID: null,
-            }
-        }
-        return accumulator;
-    }, {});
+        const team = teams[dbUser.teamID];
+        team.members.push(user);
+        team.open = team.members.length < 6;
+    });
     const [prefs] = await pool.query(`
         SELECT T.teamID, P.projectName
         FROM TeamPreferences T, Project P
@@ -321,11 +322,18 @@ async function getAllTeams() {
         FROM Team`)
     projects.forEach((project) => teams[project.teamID].projectID = project.projectID);
 
-    return Object.values(teams);
+    return Object.values(teams).filter((team) => team.members.length);
 }
 
 async function getTeam(teamID) {
     if (!teamID)
+        return null;
+
+    const [[result]] = await pool.query(`
+        SELECT teamID, projectID
+        FROM Team
+        WHERE teamID = ?`, teamID);
+    if (!result)
         return null;
 
     const [members] = await pool.query(`
@@ -342,10 +350,6 @@ async function getTeam(teamID) {
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
-    const [project] = await pool.query(`
-        SELECT projectID
-        FROM Team
-        WHERE teamID = ?`, teamID);
     const team = {
         id: teamID,
         avatar: "/images/profile.png",
@@ -353,7 +357,7 @@ async function getTeam(teamID) {
         skills: skills.flatMap(Object.values),
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
-        projectID: project[0].projectID,
+        projectID: result.projectID,
     };
     return team;
 }
@@ -531,7 +535,6 @@ async function matchTeamsPref(teamSize) {
         prefCount[project.projectID] = 0;
         maxStudents[project.projectID] = project.maxTeams * teamSize;
     });
-
     //ended up removing this implementation out as it became obsolete by the rest.
     // let change = true;
     // while (change) {
@@ -558,9 +561,10 @@ async function matchTeamsPref(teamSize) {
         for (var j = 0; j < students.length; j++) {
 
             let preference = await getStudentPreference(students[j].netID, i)
-            prefCount[preference[0].projectID] += 1;
-            prefStudent[preference[0].projectID].push(students[j]);
-
+            if (preference.length) {
+                prefCount[preference[0].projectID] += 1;
+                prefStudent[preference[0].projectID].push(students[j]);
+            }
             //if the size is greater than teamSize we form a random team and then take them out of prefStudent and students2
         }
 
@@ -592,7 +596,7 @@ async function matchTeamsPref(teamSize) {
                 }
                 const fullTeam = {
                     team: teamArr,
-                    projectID: k - 1
+                    projectID: k
                 }
                 finalTeams.push(fullTeam)
                 openSlots[k - 1].maxTeams--;
@@ -680,5 +684,4 @@ module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
-module.exports.matchTeamsRandom = matchTeamsRandom;
-module.exports.matchTeamsPref = matchTeamsPref;
+module.exports.matchTeams = matchTeamsRandom;
