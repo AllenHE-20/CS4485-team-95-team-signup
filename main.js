@@ -131,10 +131,11 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.params.userid).then((student) => {
+        if (!student) {
+            return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
+        }
+
         database.getUsersProject(student.netID).then((project) => {
-            if (!student) {
-                return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
-            }
             if (!project) {
                 usersProject = 'Not Assigned'
             } else {
@@ -183,21 +184,20 @@ app.get("/teams", auth.isAuthenticated, (req, res) => {
     });
 })
 
-app.get("/team/:teamid", auth.isAuthenticated, (req, res) => {
+app.get("/team/:teamid", auth.isAuthenticated, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    var yourTeam;
+    if (!student) {
+        yourTeam = null;
+    } else {
+        yourTeam = student.team;
+    }
+    const team = await database.getTeam(req.params.teamid)
+    if (!team) {
+        return res.status(httpStatus.NOT_FOUND).send("That team doesn't exist");
+    }
 
-    //Duplicated from '/teams'
-    database.getStudentByUserID(req.user.userID).then((student) => {
-        var team;
-        if (!student) {
-            team = null;
-        } else {
-            team = student.team;
-        }
-        database.getTeam(req.params.teamid).then((teamDataObj) => {
-            res.render("teamPage.ejs", { yourTeam: team, teamDataObj });
-        });
-    });
-
+    res.render("teamPage.ejs", { yourTeam: yourTeam, teamDataObj: team });
 })
 
 app.get("/submitTeamPreferences", auth.isAuthenticated, async (req, res) => {
@@ -576,11 +576,11 @@ app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res)
         const ourNetID = await database.getNetID(req.user.userID);
         const otherNetID = await database.getNetID(value.id);
         if (!otherNetID)
-            return res.status(httpStatus.BAD_REQUEST).message("Invalid student ID");
+            return res.status(httpStatus.BAD_REQUEST).send("Invalid student ID");
 
         const ourTeam = (await database.getStudentByNetID(ourNetID)).team;
         const theirTeam = (await database.getStudentByNetID(otherNetID)).team;
-        if (ourTeam === theirTeam)
+        if (ourTeam === theirTeam && ourTeam !== null)
             return res.status(httpStatus.BAD_REQUEST).send("You and that user are on the same team");
 
         const [[existingInvites], [reverseInvites]] = await Promise.all([
@@ -610,7 +610,7 @@ app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res)
             return res.status(httpStatus.BAD_REQUEST).send("Cannot request to join a team: You are already on a team");
         const team = await database.getTeam(value.id);
         if (!team)
-            return res.status(httpStatus.BAD_REQUEST).message("Invalid team ID");
+            return res.status(httpStatus.BAD_REQUEST).send("Invalid team ID");
         const [[existingInvites], [reverseInvites]] = await Promise.all([
             database.pool.query(`
                 SELECT *
