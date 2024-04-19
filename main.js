@@ -131,10 +131,25 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.params.userid).then((student) => {
-        if (!student) {
-            return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
-        }
-        res.render("profile.ejs", { student: student, curr: req.user.userID });
+        database.getUsersProject(student.netID).then((project) => {
+            if (!student) {
+                return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
+            }
+            if (!project) {
+                usersProject = 'Not Assigned'
+            } else {
+                usersProject = project[0].projectName
+            }
+            if (student.teamID) {
+                usersTeam = ("team " + student.teamID)
+            }
+            else {
+                usersTeam = 'None'
+            }
+            console.log(usersTeam)
+            console.log(usersProject)
+            res.render("profile.ejs", { student: student, curr: req.user.userID, proj: usersProject, usersTeam: usersTeam });
+        })
     });
 })
 
@@ -842,7 +857,7 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {projectName, newSponsor, newSize, newDescription} = result.value;
+    const { projectName, newSponsor, newSize, newDescription } = result.value;
     const name = xssFilters.inHTMLData(projectName);
     const sponsor = xssFilters.inHTMLData(newSponsor);
     const description = xssFilters.inHTMLData(newDescription);
@@ -862,7 +877,7 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {editProjectID, editProjectName, editSponsor, editSize, editDescription} = result.value;
+    const { editProjectID, editProjectName, editSponsor, editSize, editDescription } = result.value;
     const name = xssFilters.inHTMLData(editProjectName);
     const sponsor = xssFilters.inHTMLData(editSponsor);
     const description = xssFilters.inHTMLData(editDescription);
@@ -883,7 +898,7 @@ app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, r
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {deleteProjectID} = result.value;
+    const { deleteProjectID } = result.value;
     await database.pool.query(`
         DELETE FROM Project
         WHERE projectID = ?`, [deleteProjectID])
