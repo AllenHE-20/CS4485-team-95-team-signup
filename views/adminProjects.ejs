@@ -135,17 +135,17 @@
                 <input type="text" id="editMaxSize" name="editMaxSize" required value="5"><br><br>
     
                 <label for="editProjectSkills">Skills</label>
-                <div class="skill-bubbles" id="editSkillBubbles">
+                <div class="edit-skill-bubbles" id="editSkillBubbles">
     
                 </div>
                 <div class="newSkillButtons">
                     <div class="add-skill-newproj">
-                        <input type="text" id="newSkillInputAdd" name="skill" placeholder="Enter a skill to add" />
+                        <input type="text" id="newSkillInputAddEdit" name="skill" placeholder="Enter a skill to add" />
                         <button type="button" id="addSkillButton" onclick="editSkillBubble()">Add Skill</button>
                     </div>
                     <div class="remove-skill-newproj">
-                        <input type="text" id="newSkillInputRemove" name="skill" placeholder="Enter a skill to remove" />
-                        <button type="button" id="removeSkillButton" onclick="editSkillBubble(document.getElementById('newSkillInputRemove').value)">Remove Skill</button>
+                        <input type="text" id="newSkillInputRemoveEdit" name="skill" placeholder="Enter a skill to remove" />
+                        <button type="button" id="removeSkillButton" onclick="removeSkillBubble(document.getElementById('newSkillInputRemoveEdit').value)">Remove Skill</button>
                     </div>
                 </div>
             </div>
@@ -255,6 +255,19 @@
             skillBubblesContainer.appendChild(skillBubble);
             skillInput.value = '';
         }
+}
+
+function editSkillBubble() {
+    const skillInput = document.getElementById('newSkillInputAddEdit');
+    const skill = skillInput.value.trim();
+    if (skill !== '') {
+        const skillBubblesContainer = document.getElementById('editSkillBubbles');
+        const skillBubble = document.createElement('div');
+        skillBubble.classList.add('skill-bubble');
+        skillBubble.textContent = skill;
+        skillBubblesContainer.appendChild(skillBubble);
+        skillInput.value = '';
+    }
 }
 
     function removeSkillBubble(skill) {
