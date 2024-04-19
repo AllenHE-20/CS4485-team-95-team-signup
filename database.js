@@ -494,12 +494,12 @@ async function matchTeamsPref(teamSize) {
     let teamNotFull = await getAllNotFullTeams(teamSize);
     let AddStudentToTeam = [];
 
-    //currently the algorithm does not take into account max amount of teams per a project.
     for (var i = 0; i < teamNotFull.length; i++) {
         const teamPreferences = await getTeamPreferences(teamNotFull[i].teamID);
         for (var j = 0; j < teamPreferences.length; j++) {
-            while (teamNotFull[i].teamSize < teamSize) {
-                let potentialStudents = await getStudentByProjectIDPreferenceID(teamPreferences[j].projectID, teamPreferences[j].preference_number);
+            let potentialStudents = await getStudentByProjectIDPreferenceID(teamPreferences[j].projectID, teamPreferences[j].preference_number);
+            while (teamNotFull[i].teamSize < teamSize && potentialStudents.length > 0) {
+
                 //note: we use random instead of anything else here since there are no relevant skills to compare.
                 if (potentialStudents.length > 0) {
                     studentIndex = Math.floor(Math.random() * students.length);
@@ -589,7 +589,7 @@ async function matchTeamsPref(teamSize) {
 
                         //subtract their preferences to prevent them from effecting future teams.
                         prefCount[removePreference[0].projectID]--;
-                        prefStudent[removePreference[0].projectID] = prefStudent[removePreference[0].projectID].filter(obj => obj != studentToAdd.netID);
+                        prefStudent[removePreference[0].projectID] = prefStudent[removePreference[0].projectID].filter(obj => obj !== studentToAdd.netID);
 
                     }
                     students = students.filter(obj => obj.netID != studentToAdd.netID)
@@ -684,4 +684,4 @@ module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
-module.exports.matchTeams = matchTeamsRandom;
+module.exports.matchTeams = matchTeamsPref;
