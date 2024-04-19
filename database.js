@@ -176,6 +176,8 @@ async function getStudentByNetID(netid) {
         ORDER BY W.preference_number`, [dbUser.netID]);
     const user = {
         userID: dbUser.userID,
+        netID: dbUser.netID,
+        teamID: dbUser.teamID,
         name: `${dbUser.firstName} ${dbUser.lastName}`,
         avatar: dbUser.avatar ? `/user-files/${dbUser.avatar}` : "/images/profile.png",
         resume: dbUser.resumeFile ? `/user-files/${dbUser.resumeFile}` : null,

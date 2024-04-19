@@ -5,187 +5,197 @@
     <body>
         <%- include('partials/header.ejs'); %>
 
-        <% if (curr!==student.userID) { %>
-            <div class="function-container">
-                <div class="function-item">
-                    <button class="goback-button" onclick="goBack()">Previous Page</button>
-                </div>
-            </div>
 
-            <script>
-                function goBack() {
-                window.history.back();
-            }
-            </script>
-        <% } %>
-
-            <main class="profile-page">
-                <div class = "profile-left-column">
-                    <div class="profile-card">
-                        <img src="<%= student.avatar %>" id="profile-pic">
-                        <h1>
-                            <%= student.name %>
-                        </h1>
-                        <% if (curr===student.userID) { %>
-                            <div class="image-link">
-                                <label for="input-file">Upload Image</label>
-                                <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
-                            </div>
-                            <form class="upload-picture" action="/upload-avatar" method="post" enctype="multipart/form-data">
-                                <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar" />
-                                <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
-                            </form>
-                            <% } %>
-                    </div>
-
-                    <div class = "personal-info-card">
-                        <h1>Personal Information</h1>
-                        <div class="add-info">
-                            <h3>Contact Information</h3>
-                            <ul>
-                                <h4>Email</h4>
-                                <% if (student.email) { %>
-                                    <%= student.email %>
-                                <% } %>
-                                <h4>Phone Number</h4>
-                                <% if (student.phone) { %>
-                                    <%= student.phone %>
-                                <% } %>
-                                <h4>Discord</h4>
-                                <% if (student.discord) { %>
-                                    <%= student.discord %>
-                                <% } %>
-                                <h4>GroupMe</h4>
-                                <% if (student.groupme) { %>
-                                    <%= student.groupme %>
-                                <% } %>
-                                <h4>Instagram</h4>
-                                <% if (student.instagram) { %>
-                                    Instagram: <%= student.instagram %>
-                                <% } %>
-                            </ul>
-                        </div>
-
-                        <h2>Resume</h2>
-                        <div class="resume-info">
-                            <% if (student.resume==null) {%>
-                                <h4>&times; Resume not found!</h4>
-                            <% } else { %>
-                                <a href="<%= student.resume %>" target="_blank" class="resume-link">
-                                    <img src="/images/resume.svg" width="50" height="auto">
-                                </a>
-                                <p>Resume</p>
-                            <% } %>
-                        </div>
-                        <div class="resume-setting-link">
-                            <div class="setting-links">
-                                <a href="/resumeContact">Upload Resume & Contact Information</a>
-                            </div>
-                        </div>
+            <% if (curr!==student.userID) { %>
+                <div class="function-container">
+                    <div class="function-item">
+                        <button class="goback-button" onclick="goBack()">Previous Page</button>
                     </div>
                 </div>
 
-                <div class="profile-right-column">
-                    <div class ="myinfo-card">
-                        <h1>Project Information</h1>
-                        <div class ="myinfo-project">
-                            <% if (curr === student.userID) { %>
-                                <h1>Your Project</h1>
-                            <% } else { %>
-                                <h1>Project</h1>
-                            <% } %>
-                            AI-ML-Driven RF Pulse Detection
-                        </div>
-                        <div class="myinfo-team">
-                            <% if (curr === student.userID) { %>
-                                <h1>Your Team</h1>
-                            <% } else { %>
-                                <h1>Team</h1>
-                            <% } %>
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+                </script>
+                <% } %>
 
-                            Team 3
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <h1>Project Preferences</h1>
-                        <div class="projects">
-                            <h3>Projects</h3>
-                            <ul>
-                                <% let counter = 1; %>
-                                <% student.interests.forEach(project => { %>
-                                    <div class="projects-pref-list">
-                                        <li>
-                                            <%= counter %>. <%= project %>
-                                        </li>
+                    <main class="profile-page">
+                        <div class="profile-left-column">
+                            <div class="profile-card">
+                                <img src="<%= student.avatar %>" id="profile-pic">
+                                <h1>
+                                    <%= student.name %>
+                                </h1>
+                                <% if (curr===student.userID) { %>
+                                    <div class="image-link">
+                                        <label for="input-file">Upload Image</label>
+                                        <label for="avatar-submit" id="avatar-submit-link">Submit Avatar</label>
                                     </div>
-                                    <% counter++; %>
-                                <% }); %>
-                            </ul>
+                                    <form class="upload-picture" action="/upload-avatar" method="post"
+                                        enctype="multipart/form-data">
+                                        <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file"
+                                            name="avatar" />
+                                        <input type="submit" value="Submit" name="avatar-submit" id="avatar-submit" />
+                                    </form>
+                                    <% } %>
+                            </div>
+
+                            <div class="personal-info-card">
+                                <h1>Personal Information</h1>
+                                <div class="add-info">
+                                    <h3>Contact Information</h3>
+                                    <ul>
+                                        <h4>Email</h4>
+                                        <% if (student.email) { %>
+                                            <%= student.email %>
+                                                <% } %>
+                                                    <h4>Phone Number</h4>
+                                                    <% if (student.phone) { %>
+                                                        <%= student.phone %>
+                                                            <% } %>
+                                                                <h4>Discord</h4>
+                                                                <% if (student.discord) { %>
+                                                                    <%= student.discord %>
+                                                                        <% } %>
+                                                                            <h4>GroupMe</h4>
+                                                                            <% if (student.groupme) { %>
+                                                                                <%= student.groupme %>
+                                                                                    <% } %>
+                                                                                        <h4>Instagram</h4>
+                                                                                        <% if (student.instagram) { %>
+                                                                                            Instagram: <%=
+                                                                                                student.instagram %>
+                                                                                                <% } %>
+                                    </ul>
+                                </div>
+
+                                <h2>Resume</h2>
+                                <div class="resume-info">
+                                    <% if (student.resume==null) {%>
+                                        <h4>&times; Resume not found!</h4>
+                                        <% } else { %>
+                                            <a href="<%= student.resume %>" target="_blank" class="resume-link">
+                                                <img src="/images/resume.svg" width="50" height="auto">
+                                            </a>
+                                            <p>Resume</p>
+                                            <% } %>
+                                </div>
+                                <div class="resume-setting-link">
+                                    <div class="setting-links">
+                                        <a href="/resumeContact">Upload Resume & Contact Information</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="setting-links">
-                            <a href="/submitPreferences">Set Project Preferences</a>
-                        </div>
-                        <div class="project-skills">
-                            <h1>Skills</h1>
-                            <ul id="projectSkillsList">
-                                <ul>
-                                    <% let counter2 = 1; %>
-                                    <% student.skills.forEach(skill => { %>
-                                        <div class="skill-bubble">
-                                            <li>
-                                                <%= counter2 %>. <%= skill%>
-                                            </li>
+
+                        <div class="profile-right-column">
+                            <div class="myinfo-card">
+                                <h1>Project Information</h1>
+                                <div class="myinfo-project">
+                                    <% if (curr===student.userID) { %>
+                                        <h1>Your Project</h1>
+                                        <% } else { %>
+                                            <h1>Project</h1>
+                                            <% } %>
+                                                <h3>
+                                                    <%= proj %>
+                                                </h3>
+                                </div>
+                                <div class="myinfo-team">
+                                    <% if (curr===student.userID) { %>
+                                        <h1>Your Team</h1>
+                                        <% } else { %>
+                                            <h1>Team</h1>
+                                            <% } %>
+
+                                                <h3>
+                                                    <%= usersTeam %>
+                                                </h3>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <h1>Project Preferences</h1>
+                                <div class="projects">
+                                    <h3>Projects</h3>
+                                    <ul>
+                                        <% let counter=1; %>
+                                            <% student.interests.forEach(project=> { %>
+                                                <div class="projects-pref-list">
+                                                    <li>
+                                                        <%= counter %>. <%= project %>
+                                                    </li>
+                                                </div>
+                                                <% counter++; %>
+                                                    <% }); %>
+                                    </ul>
+                                </div>
+                                <div class="setting-links">
+                                    <a href="/submitPreferences">Set Project Preferences</a>
+                                </div>
+                                <div class="project-skills">
+                                    <h1>Skills</h1>
+                                    <ul id="projectSkillsList">
+                                        <ul>
+                                            <% let counter2=1; %>
+                                                <% student.skills.forEach(skill=> { %>
+                                                    <div class="skill-bubble">
+                                                        <li>
+                                                            <%= counter2 %>. <%= skill%>
+                                                        </li>
+                                                    </div>
+                                                    <% counter2++; %>
+                                                        <% }); %>
+                                        </ul>
+                                    </ul>
+                                    <% if (curr===student.userID) { %>
+                                        <div class="add-skill">
+                                            <form method="post" action="/skills/change">
+                                                <input type="hidden" name="action" value="add" />
+                                                <input type="text" id="newSkillInput" name="skill"
+                                                    placeholder="Enter a skill to add" />
+                                                <input type="submit" id="addSkillButton" value="Add Skill" />
+                                            </form>
                                         </div>
-                                        <% counter2++; %>
-                                    <% }); %>
-                                </ul>
-                            </ul>
-                            <% if (curr===student.userID) { %>
-                            <div class="add-skill">
-                                <form method="post" action="/skills/change">
-                                    <input type="hidden" name="action" value="add" />
-                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to add" />
-                                    <input type="submit" id="addSkillButton" value="Add Skill" />
-                                </form>
+                                        <div class="remove-skill">
+                                            <form method="post" action="/skills/change">
+                                                <input type="hidden" name="action" value="remove" />
+                                                <input type="text" id="newSkillInput" name="skill"
+                                                    placeholder="Enter a skill to remove" />
+                                                <input type="submit" id="addSkillButton" value="Remove Skill" />
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                </div>
                             </div>
-                            <div class="remove-skill">
-                                <form method="post" action="/skills/change">
-                                    <input type="hidden" name="action" value="remove" />
-                                    <input type="text" id="newSkillInput" name="skill" placeholder="Enter a skill to remove" />
-                                    <input type="submit" id="addSkillButton" value="Remove Skill" />
-                                </form>
-                            </div>
-                            <% } %>
                         </div>
-                    </div>
-                </div>
-            </main>
+                    </main>
 
-            <script>
-                let profilePic = document.getElementById("profile-pic");
-                let inputFile = document.getElementById("input-file");
-                let avatarSubmit = document.getElementById("avatar-submit-link");
-                avatarSubmit.style.display = "none";
+                    <script>
+                        let profilePic = document.getElementById("profile-pic");
+                        let inputFile = document.getElementById("input-file");
+                        let avatarSubmit = document.getElementById("avatar-submit-link");
+                        avatarSubmit.style.display = "none";
 
-                inputFile.onchange = function () {
-                    profilePic.src = URL.createObjectURL(inputFile.files[0]);
-                    avatarSubmit.style.display = "block";
-                }
-            </script>
+                        inputFile.onchange = function () {
+                            profilePic.src = URL.createObjectURL(inputFile.files[0]);
+                            avatarSubmit.style.display = "block";
+                        }
+                    </script>
 
-            <script>
+                    <script>
 
-                let settingLinks = document.querySelectorAll(".setting-links");
-                function hideSettingLinks() {
-                    settingLinks.forEach(link => {
-                        link.style.display = "none";
-                    });
-                }
-                if ("<%= curr %>" !== "<%= student.userID %>") {
-                    hideSettingLinks();
-                }
-            </script>
+                        let settingLinks = document.querySelectorAll(".setting-links");
+                        function hideSettingLinks() {
+                            settingLinks.forEach(link => {
+                                link.style.display = "none";
+                            });
+                        }
+                        if ("<%= curr %>" !== "<%= student.userID %>") {
+                            hideSettingLinks();
+                        }
+                    </script>
     </body>
 
 </html>

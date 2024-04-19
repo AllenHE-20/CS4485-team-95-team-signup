@@ -140,12 +140,13 @@ app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
                 usersProject = project[0].projectName
             }
             if (student.teamID) {
-                usersTeam = ("team" + student.teamID)
+                usersTeam = ("team " + student.teamID)
             }
             else {
                 usersTeam = 'None'
             }
             console.log(usersTeam)
+            console.log(usersProject)
             res.render("profile.ejs", { student: student, curr: req.user.userID, proj: usersProject, usersTeam: usersTeam });
         })
     });
