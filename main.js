@@ -910,7 +910,7 @@ app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, re
 });
 
 app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const { value, error } = schemas.adminRemoveTeamMember.validate(req.body);
+    const { value, error } = schemas.adminDisbandTeam.validate(req.body);
     if (error)
         return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
