@@ -163,12 +163,12 @@ async function getStudentByUserID(userID) {
     const [skills] = await pool.query(`
     SELECT S.skillName
     FROM Skills S, StudentSkillset A
-    WHERE A.netID = ? AND S.skillID = A.skillID`, [dbUser.netID]);
+    WHERE A.userID = ? AND S.skillID = A.skillID`, [dbUser.userID]);
     const [preferences] = await pool.query(`
     SELECT P.projectName
     FROM Project P, StudentPreferences W
-    WHERE W.netID = ? AND P.projectID = W.projectID
-    ORDER BY W.preference_number`, [dbUser.netID]);
+    WHERE W.userID = ? AND P.projectID = W.projectID
+    ORDER BY W.preference_number`, [dbUser.userID]);
     const user = {
         userID: dbUser.userID,
         teamID: dbUser.teamID,
