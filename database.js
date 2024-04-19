@@ -603,6 +603,26 @@ async function matchTeamsPref(teamSize) {
             }
         }
     }
+
+    //Any student that is not yet in a team is randomly assigned into a team with the remaining leftoverstudents.
+    const amtOfTeams = Math.floor(students.length / teamSize);
+
+    //loops through all the potential teams and randomly fills them.
+    for (var i = 0; i < amtOfTeams; i++) {
+        let teamArr = [];
+        for (var j = 0; j < teamSize; j++) {
+            var studentIndex = Math.floor(Math.random() * students.length);
+            teamArr.push(students[studentIndex]); // Push student into teamArr
+            students.splice(studentIndex, 1);
+        }
+        const fullTeam = {
+            team: teamArr,
+            projectID: null
+        }
+        finalTeams.push(fullTeam);
+    }
+
+
     return {
         newTeams: finalTeams,
         studentToExistingTeam: AddStudentToTeam,
