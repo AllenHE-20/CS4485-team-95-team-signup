@@ -992,7 +992,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         return res.status(httpStatus.BAD_REQUEST).send("Max team size must be a number");
     }
 
-    const generatedTeamUpdates = await database.matchTeamsRandom(maxTeamSize);
+    const generatedTeamUpdates = await database.matchTeams(maxTeamSize);
     const { newTeams, studentToExistingTeam, leftOverStudents } = generatedTeamUpdates;
 
     const teamsToMake = newTeams.map(async team => {

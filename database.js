@@ -680,5 +680,4 @@ module.exports.getAllProjects = getAllProjects;
 module.exports.getUsersProject = getUsersProject;
 module.exports.getProject = getProject;
 module.exports.getAllStudentPreferences = getAllStudentPreferences;
-module.exports.matchTeamsRandom = matchTeamsRandom;
-module.exports.matchTeamsPref = matchTeamsPref;
+module.exports.matchTeams = matchTeamsRandom;
