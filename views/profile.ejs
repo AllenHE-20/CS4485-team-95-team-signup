@@ -70,12 +70,12 @@
                         <div class="resume-info">
                             <% if (student.resume==null) {%>
                                 <h4>&times; Resume not found!</h4>
-                                <% } else{ %>
-                                    <a href="#" class="resume-link">
-                                        <img src="/images/resume.svg" width="50" height="auto">
-                                    </a>
-                                    <p>Resume</p>
-                                    <% } %>
+                            <% } else { %>
+                                <a href="<%= student.resume %>" target="_blank" class="resume-link">
+                                    <img src="/images/resume.svg" width="50" height="auto">
+                                </a>
+                                <p>Resume</p>
+                            <% } %>
                         </div>
                         <div class="resume-setting-link">
                             <div class="setting-links">
