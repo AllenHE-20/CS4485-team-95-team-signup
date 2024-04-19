@@ -130,10 +130,24 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
     database.getStudentByUserID(req.params.userid).then((student) => {
-        if (!student) {
-            return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
-        }
-        res.render("profile.ejs", { student: student, curr: req.user.userID });
+        database.getUsersProject(student.netID).then((project) => {
+            if (!student) {
+                return res.status(httpStatus.NOT_FOUND).send("That user doesn't exist or has no profile");
+            }
+            if (!project) {
+                usersProject = 'Not Assigned'
+            } else {
+                usersProject = project[0].projectName
+            }
+            if (student.teamID) {
+                usersTeam = ("team" + student.teamID)
+            }
+            else {
+                usersTeam = 'None'
+            }
+            console.log(usersTeam)
+            res.render("profile.ejs", { student: student, curr: req.user.userID, proj: usersProject, usersTeam: usersTeam });
+        })
     });
 })
 
@@ -835,7 +849,7 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {projectName, newSponsor, newSize, newDescription} = result.value;
+    const { projectName, newSponsor, newSize, newDescription } = result.value;
     const [insert] = await database.pool.query(`
         INSERT INTO Project (projectName, sponsor, description, teamSize)
         VALUES (?)`, [[projectName, newSponsor, newDescription, newSize]])
@@ -852,7 +866,7 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {editProjectID, editProjectName, editSponsor, editSize, editDescription} = result.value;
+    const { editProjectID, editProjectName, editSponsor, editSize, editDescription } = result.value;
     await database.pool.query(`
         UPDATE Project
         SET projectName = ?, sponsor = ?, description = ?, teamSize = ?
@@ -870,7 +884,7 @@ app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, r
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const {deleteProjectID} = result.value;
+    const { deleteProjectID } = result.value;
     await database.pool.query(`
         DELETE FROM Project
         WHERE projectID = ?`, [deleteProjectID])
@@ -1029,10 +1043,11 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         team.newSkills = skills.map(skill => skill.skillName);
     }
 
-//remove later - testing page
+    //remove later - testing page
     app.get("/adminTest", auth.isAdmin, (req, res) => {
         res.render("adminGenTeam.ejs", {
-            teams: dummyData.adminTeam} );
+            teams: dummyData.adminTeam
+        });
     })
 
     const updatedTeams = Object.values(teamsToUpdate)
