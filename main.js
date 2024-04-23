@@ -1066,17 +1066,10 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     };
 
     res.render("adminGenTeam.ejs", {
-        teams: arrangement.teams,
+        genTeams: arrangement.teams,
         unsortedUsers: arrangement.unsortedUsers
     });
 });
-
-//remove later - testing page
-app.get("/adminTest", auth.isAdmin, (req, res) => {
-    res.render("adminGenTeam.ejs", {
-        teams: dummyData.adminTeam
-    });
-})
 
 // Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
@@ -1111,7 +1104,7 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
         await database.pool.query(`
             UPDATE student
             SET teamID = ?
-            WHERE netID IN (?)`, [netIDs.map((o) => o.netID)]);
+            WHERE netID IN (?)`, [team.id, netIDs.map((o) => o.netID)]);
 
         if (team.new) {
             // Give each preferred project a 1-5 score opposite the preference

@@ -13,38 +13,22 @@
             <input type="submit" value="Regenerate" />            
         </form>        
     </div>
+    
+    <div class="function-item" id="save-item">                
+        <form id="saveTeamsForm" action="/admin/save-teams" method="post">                                     
+            <% for (let i = 0; i < genTeams.length; i++) { %>
+                <% const team = {
+                    teamID: genTeams[i].teamID,
+                    newMemberIDs: []
+                }; %>
 
-    <div class="function-item" id="save-item">        
-        <form action="/admin/save-teams" method="post">
-            <% teams.forEach((team, index) => { %>                
-                <input type="hidden" name="teams[<%= index %>].teamID" value="<%= team.id %>">                
-
-                <% (team.currentMemberNames).forEach((currName, currIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].currentMemberNames[currIndex]" value="<%= currName %>">                
-                <% }) %>
-
-                <% (team.newMemberNames).forEach((newName, newIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].newMemberNames[newIndex]" value="<%= newName %>">                
-                <% }) %>
-
-                <% (team.newMemberIDs).forEach((id, idIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].newMemberIDs[idIndex]" value="<%= id %>">                
-                <% }) %>
-
-                <% (team.projectPreferences).forEach((projPref, prefIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].projectPreferences[prefIndex]" value="<%= projPref %>">                
-                <% }) %>
-
-                <% (team.currentSkills).forEach((skill, skillIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].currentSkills[skillIndex]" value="<%= skill %>">                
-                <% }) %>
-
-                <% (team.newSkills).forEach((newSkill, newSkillIndex) => { %>                
-                    <input type="hidden" name="teams[<%= index %>].newSkills[newSkillIndex]" value="<%= newSkill %>">                
-                <% }) %>
-
-                <% console.log(teams[index]); %>
-            <% }) %>
+                <input type="hidden" name="teams[<%= i %>][id]" value="<%= team.teamID %>">                                    
+            
+                <% for (let j = 0; j < genTeams[i].newMemberIDs.length; j++) { %>
+                    <% team.newMemberIDs.push(genTeams[i].newMemberIDs[j]); %>
+                    <input type="hidden" name="teams[<%= i %>][newMemberIDs][<%= j %>]" value="<%= team.newMemberIDs[j] %>">                    
+                <% } %>                                
+            <% } %>                                                                       
             <input id="saveAllTeams" type="submit" value="Save All Teams" />
         </form>    
     </div>
@@ -54,22 +38,37 @@
     
     <article>
         <ul class="profile-list" id="projectList">    
-            <% for (let i = 0; i < teams.length; i++) { %>    
+            <% for (let i = 0; i < genTeams.length; i++) { %>    
                 <li class="profile-item" style="display: block;">                                                                    
                     <div class="genCard">    
                         <h1>
-                            Team <%= teams[i].teamID %>                             
-                        </h1>                                            
+                            Team <%= genTeams[i].teamID %>                             
+                        </h1>   
+
                         <p>Members: 
-                            <%= teams[i].currentMemberNames.join(', ') %>,
-                            <%= teams[i].newMemberNames.join(', ') %>                         
-                        </p>                     
+                            <% if(genTeams[i].currentMemberNames.length > 0) { %>
+                                <%= genTeams[i].currentMemberNames.join(', ') %>,
+                            <% } %>
+                            <%= genTeams[i].newMemberNames.join(', ') %>                         
+                        </p>        
+
                         <p>Project Preferences:
-                            <%= teams[i].projectPreferences.join(', ') %>
+                            <% if(genTeams[i].projectPreferences.length === 0) { %>
+                                N/A
+                            <% } else { %>                                
+                                <%= genTeams[i].projectPreferences.join(', ') %>
+                            <% } %>
                         </p>
-                        <p>Skills:
-                            <%= teams[i].currentSkills.join(', ') %>,
-                            <%= teams[i].newSkills.join(', ') %>
+
+                        <p>Skills:  
+                            <% if((genTeams[i].currentSkills).length === 0 && (genTeams[i].newSkills).length === 0) { %>
+                                N/A
+                            <% } else { %>
+                                <% if(genTeams[i].currentSkills.length > 0) { %>
+                                    <%= genTeams[i].currentSkills.join(', ') %>,
+                                <% } %>
+                                <%= genTeams[i].newSkills.join(', ') %>
+                            <% } %>
                         </p>
 
                         <form action="" method="post">
@@ -81,6 +80,7 @@
         </ul>
     </article>                  
 </main>
+<% console.log(genTeams); %>
 
 
 </body>
