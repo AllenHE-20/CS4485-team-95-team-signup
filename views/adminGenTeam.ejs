@@ -45,7 +45,7 @@
                             Team <%= genTeams[i].teamID %>                             
                         </h1>   
 
-                        <p>Members: 
+                        <p>Members:                             
                             <% if(genTeams[i].currentMemberNames.length > 0) { %>
                                 <%= genTeams[i].currentMemberNames.join(', ') %>,
                             <% } %>
@@ -64,10 +64,17 @@
                             <% if((genTeams[i].currentSkills).length === 0 && (genTeams[i].newSkills).length === 0) { %>
                                 N/A
                             <% } else { %>
-                                <% if(genTeams[i].currentSkills.length > 0) { %>
-                                    <%= genTeams[i].currentSkills.join(', ') %>,
+                                <% if((genTeams[i].currentSkills).length > 0) { %>
+                                    <% if((genTeams[i].newSkills).length > 0) { %>                                        
+                                        <%= genTeams[i].currentSkills.join(', ') %>,
+                                        <%= genTeams[i].newSkills.join(', ') %>
+                                    <% } else { %>
+                                        <%= genTeams[i].currentSkills.join(', ') %>
+                                        <%= genTeams[i].newSkills.join(', ') %>
+                                    <% }%>     
+                                <% } else { %>
+                                    <%= genTeams[i].newSkills.join(', ') %>
                                 <% } %>
-                                <%= genTeams[i].newSkills.join(', ') %>
                             <% } %>
                         </p>
 
