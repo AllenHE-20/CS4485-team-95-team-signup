@@ -71,7 +71,18 @@
                             <% } %>
                         </p>
 
-                        <form action="" method="post">
+                        <form action="/admin/save-teams" method="post">                            
+                            <% const teams = {
+                                teamID: genTeams[i].teamID,
+                                newMemberIDs: []
+                            }; %>
+            
+                            <input type="hidden" name="teams[0][id]" value="<%= teams.teamID %>">                                    
+                        
+                            <% for (let j = 0; j < genTeams[i].newMemberIDs.length; j++) { %>
+                                <% teams.newMemberIDs.push(genTeams[i].newMemberIDs[j]); %>
+                                <input type="hidden" name="teams[0][newMemberIDs][<%= j %>]" value="<%= teams.newMemberIDs[j] %>">                    
+                            <% } %>                                                            
                             <input id="saveTeam<%= i %>" type="submit" value="Save Team" />
                         </form>
                     </div>                      
