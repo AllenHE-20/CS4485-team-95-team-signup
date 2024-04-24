@@ -999,9 +999,13 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             .filter((_val, i, _arr) => i < 5);
         return {
             teamID: null,  // New team
-            currentMemberNames: [],
-            newMemberNames: (await Promise.all(members)).map(member => `${member.firstName} ${member.lastName}`),
-            newMemberIDs: (await Promise.all(members)).map(member => member.userID),
+            currentMembers: [],
+            newMembers: (await Promise.all(members)).map(member => {
+                return {
+                    name: `${member.firstName} ${member.lastName}`,
+                    id: member.userID,
+                };
+            }),
             projectPreferences: preferences,
             currentSkills: [],
             newSkills: skills,
@@ -1014,11 +1018,19 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         .filter((val, i, arr) => val != arr[i - 1]);
     for (var teamID of teamIDs) {
         const team = await database.getTeam(teamID);
-        team.newMemberIDs = [],
-            team.newMemberNetIDs = [],
-            team.newMemberNames = [],
-            team.newSkills = [],
-            teamsToUpdate[teamID] = team;
+        const [existingMembers] = await pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM user U, UTD D, student S
+            WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
+        team.members = existingMembers.map(member => {
+            return {
+                name: `${member.firstName} ${member.lastName}`,
+                id: member.userID,
+            };
+        });
+        team.newMembers = [],
+        team.newSkills = [],
+        teamsToUpdate[teamID] = team;
     }
     for (var { student, teamID } of studentToExistingTeam) {
         const team = teamsToUpdate[teamID];
@@ -1026,9 +1038,11 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             SELECT U.userID, U.firstName, U.lastName
             FROM UTD D, user U
             WHERE D.userID = U.userID AND D.netID = ?`, [student.netID]);
-        team.newMemberIDs.push(user.userID);
-        team.newMemberNetIDs.push(student.netID);
-        team.newMemberNames.push(`${user.firstName} ${user.lastName}`);
+        team.newMembers.push({
+            id: user.userID,
+            netID: netID,
+            name: `${user.firstName} ${user.lastName}`,
+        });
     }
     for (var team of Object.values(teamsToUpdate)) {
         const [skills] = await database.pool.query(`
@@ -1039,7 +1053,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             SELECT Sk.skillName
             FROM StudentSkillset SS, Skills Sk, Student St
             WHERE SS.skillID = Sk.skillID AND SS.netID = St.netID AND St.teamID = ?`,
-            [team.id, team.newMemberNetIDs, team.id],
+            [team.id, team.newMembers.map(member => member.netID), team.id],
         );
         team.newSkills = skills.map(skill => skill.skillName);
     }
@@ -1048,9 +1062,8 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         .map((team) => {
             return {
                 teamID: team.id,
-                currentMemberNames: team.members,
-                newMemberNames: team.newMemberNames,
-                newMemberIDs: team.newMemberIDs,
+                currentMembers: team.members,
+                newMembers: team.newMembers,
                 projectPreferences: team.interests,
                 currentSkills: team.skills,
                 newSkills: team.newSkills,
@@ -1090,7 +1103,6 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     });
 });
 
-// Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
     console.log("Save teams:", req.body.teams)
 
