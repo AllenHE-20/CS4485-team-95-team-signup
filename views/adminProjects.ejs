@@ -62,7 +62,7 @@
                             </div>
                             <div class="adminEditButtons">
                                 <div class="editProject">
-                                    <button class="editProjectButton" onclick="editProject('<%= project.projectID %>')">Edit Project</button>
+                                    <button class="editProjectButton" onclick="editProject('<%= project.projectname %>', '<%= project.affiliation %>', '<%= project.maxTeams %>', '<%= project.description %>', '<%= project.skills %>')">Edit Project</button>
                                 </div>
                                 <div class="removeProject">
                                     <button class="removeProjectButton" onclick="removeProject('<%= project.projectname %>')">Remove Project</button>
@@ -80,7 +80,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeAddProjectModal()">&times;</span>
         <h2>Add New Project</h2>
-        <form id="projectForm">
+        <form id="projectForm" enctype="multipart/form-data">
             <!-- "/admin/projects/add" -->
             <div class="project-content">
                 <label for="newProjectName">Project Name</label>
@@ -110,6 +110,24 @@
                 <label for="newProjectDescripton">Description</label>
                 <textarea id="newDescription" name="newDescription" rows="4" required></textarea><br><br>
             </div>
+
+            <div class="file-upload-content" id="fileUploadContent">
+                <h2 class="upload-area-title">Drag & Drop Files</h2>
+                <form action="">
+                    <input type="file" id="upload" accept=".doc,.docx,.pdf" hidden>
+                    <label for="upload" class="uploadlabel">
+                        <img class="upload-img" src="/images/upload.png">
+                        <p>Click to Upload or Drag and Drop</p>
+                    </label>
+                </form>                    
+            </div>
+            
+            <div id="filewrapper">
+                <h3 class="uploaded">Uploaded Documents</h3>
+                <div class="showfilebox">
+                </div>
+            </div>
+
             <div class="button-container">
                 <button type="button" class="submit-button"onclick="submitProject()">Submit</button>
                 <button type="button" class="cancel-button"onclick="closeAddProjectModal()">Cancel</button>            
@@ -178,29 +196,26 @@
         window.history.back();
     }
 
-    function editProject(projectID) {
+    function editProject(projectName, affiliation, maxTeams, description, skills) {
     const modal = document.getElementById("editProjectModal");
     modal.style.display = "block";
 
-    const projectName = "Example Project";
-    const sponsor = "Example Sponsor";
-    const maxSize = 5;
-    const skills = ["Skill 1", "Skill 2"];
-    const description = "Example Description";
-
     document.getElementById("editProjectName").value = projectName;
-    document.getElementById("editSponsor").value = sponsor;
-    document.getElementById("editMaxSize").value = maxSize;
+    document.getElementById("editSponsor").value = affiliation;
+    document.getElementById("editMaxSize").value = maxTeams;
     document.getElementById("editDescription").value = description;
 
     const skillBubblesContainer = document.getElementById('editSkillBubbles');
     skillBubblesContainer.innerHTML = '';
-    skills.forEach(skill => {
-        const skillBubble = document.createElement('div');
-        skillBubble.classList.add('skill-bubble');
-        skillBubble.textContent = skill;
-        skillBubblesContainer.appendChild(skillBubble);
-    });
+
+    if (skills && skills.length > 0) {
+        skills.split(',').forEach(skill => {
+            const skillBubble = document.createElement('div');
+            skillBubble.classList.add('skill-bubble');
+            skillBubble.textContent = skill.trim();
+            skillBubblesContainer.appendChild(skillBubble);
+        });
+    }
 }
 
     function openAddProjectModal() {
@@ -240,7 +255,6 @@
     }
 
     function submitProject() {
-        // TODO: Update database by adding project //
         closeAddProjectModal();
     }
 
@@ -256,6 +270,44 @@
             skillInput.value = '';
         }
 }
+    const uploadInput = document.getElementById('upload');
+    const uploadLabel = document.getElementById('uploadLabel');
+    const showFileBox = document.getElementById('showFileBox');
+
+    uploadInput.addEventListener('change', handleFileSelect);
+    uploadLabel.addEventListener('dragover', handleDragOver, false);
+    uploadLabel.addEventListener('drop', handleFileSelect, false);
+
+    function handleDragOver(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy'; 
+    }
+
+    function handleFileSelect(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        const files = event.target.files || event.dataTransfer.files;
+
+        for (let i = 0, file; file = files[i]; i++) {
+            const reader = new FileReader();
+            reader.onload = (function(file) {
+                return function(event) {
+                    const fileItem = createFileItem(file.name);
+                    showFileBox.appendChild(fileItem);
+                };
+            })(file);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function createFileItem(fileName) {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.textContent = fileName;
+        return fileItem;
+    }
 
 function editSkillBubble() {
     const skillInput = document.getElementById('newSkillInputAddEdit');
