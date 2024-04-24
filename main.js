@@ -263,6 +263,7 @@ app.get("/adminHomepage", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
+    console.log("hi")
     res.render("adminClearProfile.ejs");
 })
 
@@ -708,7 +709,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
     ]);
 });
 
-app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
+app.post("/adminClearProfile", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.clearProfile.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -718,25 +719,10 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
     const netID = await database.getNetID(userID);
     if (!netID)
         return res.status(httpStatus.BAD_REQUEST).send("That user has no profile");
-    await Promise.all([
-        database.pool.query(`
-            UPDATE Student
-            SET ?
-            WHERE netID = ?`, [
-            {
-                resumeFile: null,
-                phoneNumber: null,
-                email: null,
-                discord: null,
-                groupme: null,
-                instagram: null,
-                avatar: null,
-            },
-            netID,
-        ]
-        ),
-        res.redirect("/adminClearProfile"),
-    ]);
+    else {
+        await database.clearProfile(netID)
+    }
+    res.redirect("/adminClearProfile")
 });
 
 app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {

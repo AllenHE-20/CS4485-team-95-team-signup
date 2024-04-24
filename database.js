@@ -677,6 +677,22 @@ async function matchTeamsRandom(teamSize) {
 }
 
 
+async function clearProfile(netID) {
+    await pool.query(`
+            UPDATE Student
+            SET resumeFile = null,
+            phoneNumber = null,
+            email = null,
+            discord = null,
+            groupme = null,
+            instagram = null,
+            avatar = null
+            WHERE netID = ?`, 
+            [netID]
+        
+    );
+}
+
 /*
 async function fetchUsers() {
     const users = await getUsers();
@@ -687,6 +703,7 @@ fetchUsers();
 */
 
 module.exports.pool = pool;
+module.exports.clearProfile = clearProfile;
 module.exports.getUserByID = getUserByID;
 module.exports.getLoginByEmail = getLoginByEmail;
 module.exports.getUserByEmail = getUserByEmail;
