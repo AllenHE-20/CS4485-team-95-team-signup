@@ -6,7 +6,7 @@
         <%- include('partials/header.ejs'); %>
 
             <main>
-                <form action="<%= endpoint %>" method="post" class="pref-form" onsubmit="prefFormLog()">
+                <form method="post" class="pref-form" onsubmit="prefFormLog()">
                     <div class="projectPrefs">
                         <h3>Enter your top 5 project preferences:</h3>
                         <% for (let i=0; i < 5; i++) { %>
