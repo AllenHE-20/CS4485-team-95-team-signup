@@ -1445,3 +1445,37 @@ input[type="submit"]{
 #save-item{
     padding-top: 2px;    
 }
+
+.invite-card{
+    display: inline-block;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;    
+}
+
+.invite-card h1,
+.invite-card p{
+    padding: 5px;
+}
+
+.invite-card div{
+    padding: 10px;
+}
+
+select#id{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px;
+}
+
+textarea#message{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 240px;
+    height: 100px;
+}

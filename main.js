@@ -250,7 +250,10 @@ app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
 
 app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
     const student = await database.getStudentByUserID(req.user.userID);
-    res.render("inviteUser.ejs", { yourTeam: student.team });
+    const allStudents = await database.allStudents();
+    res.render("inviteUser.ejs", { 
+        yourTeam: student.team, 
+        allStudents: allStudents});
 });
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {

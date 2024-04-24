@@ -8,27 +8,35 @@
     <%- include('partials/header.ejs'); %>
 
     <main>
-        <article>
-            <h1>Invite</h1>
+        <article class="invite-card">
+            <h1>Send Invite</h1>
 
             <%- include('partials/current-team.ejs'); %>
             
-            <!-- This is super internals-y and not pretty at all but I just need to test the endpoint -->
-            <form action="/invite/new" method="post" id="invite">
-                <p>
-                    <input type="radio" name="target" id="student" value="user">
+            <form action="/invite/new" method="post" id="invite">   
+                <p> Who do you want to send an invite to?<br>                
+                    <input type="radio" name="target" id="student" value="user" checked>
                     <label for="student">Student</label>
                     <input type="radio" name="target" id="team" value="team">
                     <label for="team">Team</label>
                 </p>
-                <p>
-                    <label for="id">ID: </label>
-                    <input type="number" name="id">
-                    <input type="submit" value="Submit">
-                </p>
-            </form>
-            <p><label for="message">Message:</label></p>
-            <p><textarea form="invite" id="message" name="message"></textarea></p>
+                
+                <div class="searchContainer" id="studentList">                                                        
+                    <select id="id" name="id">
+                        <option value="">Choose a Student</option>
+                        <% allStudents.forEach(student => { %>
+                            <option value="<%= student.userID %>"><%= student.firstName + ' ' + student.lastName %> </option>
+                        <% }); %>
+                    </select>                                     
+                </div> 
+
+                <div class="contactRow">
+                    <label for="message">Message</label>
+                    <textarea form="invite" id="message" name="message">Hello! Would you like to join my team?</textarea>
+                </div>
+
+                <input type="submit" value="Send Invite">
+            </form>            
 
         </article>
     </main>
