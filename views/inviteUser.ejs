@@ -14,22 +14,34 @@
             <%- include('partials/current-team.ejs'); %>
             
             <form action="/invite/new" method="post" id="invite">   
-                <p> Who do you want to send an invite to?<br>                
+                <p> Would you like to send an invite or request to join a team?<br>                
                     <input type="radio" name="target" id="student" value="user" checked>
                     <label for="student">Student</label>
                     <input type="radio" name="target" id="team" value="team">
                     <label for="team">Team</label>
                 </p>
                 
-                <div class="searchContainer" id="studentList">                                                        
+                <div class="searchContainer" id="inviteStudentList">                                                        
                     <select id="id" name="id">
-                        <option value="">Choose a Student</option>
+                        <option value="student" class="studentOption">Choose a Student</option>
                         <% allStudents.forEach(student => { %>
-                            <option value="<%= student.userID %>"><%= student.firstName + ' ' + student.lastName %> </option>
+                            <% if (student.userID != yourID) { %> 
+                                <option value="<%= student.userID %>" class="studentOption">
+                                    <%= student.firstName + ' ' + student.lastName %> </option>
+                            <% } %>
                         <% }); %>
+
+                        <option value="team" class="teamOption">Choose a Team</option>
+                        <% allTeams.forEach(team => { %>
+                            <% if (team.teamID != yourTeam) { %> 
+                                <option value="<%= team.teamID %>" class="teamOption">
+                                    Team <%= team.teamID %> </option>      
+                            <% } %>
+                        <% }); %>
+
                     </select>                                     
                 </div> 
-
+                
                 <div class="contactRow">
                     <label for="message">Message</label>
                     <textarea form="invite" id="message" name="message">Hello! Would you like to join my team?</textarea>
@@ -40,6 +52,38 @@
 
         </article>
     </main>
+
+    <script>
+        document.querySelectorAll('input[name="target"]').forEach((radio) => {
+            radio.addEventListener('change', function() {                
+                const selectElement = document.getElementById('id');
+                selectElement.querySelectorAll('option').forEach(option => {
+                    option.selected = false;
+                });                            
+
+                if (this.value === 'team') {         
+                    selectElement.value = "team";                                                                       
+                    document.querySelectorAll('.studentOption').forEach(option => {
+                        option.style.display = 'none';                                 
+                    });
+                    
+                    document.querySelectorAll('.teamOption').forEach(option => {
+                        option.style.display = "block";
+                    });
+
+                } else {
+                    selectElement.value = "student";
+                    document.querySelectorAll('.studentOption').forEach(option => {
+                        option.style.display = "";
+                    });
+                    
+                    document.querySelectorAll('.teamOption').forEach(option => {
+                        option.style.display = "none";
+                    });
+                }        
+            }); 
+        });
+    </script>
 </body>
 
 </html>
