@@ -19,7 +19,6 @@ const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
 const auth = require("./authMiddleware");
-const { preferences } = require('joi');
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -159,15 +158,11 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
     res.render("resumeContactForm.ejs");
 })
 
-app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-
-    database.getAllProjects()
-        .then(projects => {
-            console.log(projects)
-            res.render("submitPreferences.ejs", {
-                projects: projects
-            });
-        })
+app.get("/submitPreferences", auth.isAuthenticated, async (req, res) => {
+    const projects = await database.getAllProjects();
+    res.render("submitPreferences.ejs", {
+        projects: projects,
+    });
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -211,7 +206,6 @@ app.get("/submitTeamPreferences", auth.isAuthenticated, async (req, res) => {
     const projects = await database.getAllProjects();
     res.render("submitPreferences.ejs", {
         projects: projects,
-        endpoint: "/submitTeamPreferences"
     });
 })
 
@@ -250,7 +244,10 @@ app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
 
 app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
     const student = await database.getStudentByUserID(req.user.userID);
-    res.render("inviteUser.ejs", { yourTeam: student.team });
+    const allStudents = await database.allStudents();
+    res.render("inviteUser.ejs", { 
+        yourTeam: student.team, 
+        allStudents: allStudents});
 });
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
@@ -269,6 +266,7 @@ app.get("/adminHomepage", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
+    console.log("hi")
     res.render("adminClearProfile.ejs");
 })
 
@@ -426,7 +424,7 @@ app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, 
     });
 })
 
-app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
+async function validatePreferences(req, res, next) {
     const result = schemas.preferences.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -439,38 +437,63 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
             return res.status(httpStatus.BAD_REQUEST).send("Preferences must be different projects");
     }
 
-    database.pool.query(`
+    const [projects] = await database.pool.query(`
         SELECT projectID
-        FROM Project;
-    `).then(([projects]) => {
-        projectIDs = projects.map(Object.values).flat();
+        FROM Project;`);
+    const projectIDs = projects.map(Object.values).flat();
 
-        for (var pref of prefs) {
-            if (projectIDs.indexOf(pref) === -1)
-                return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
-        }
+    for (var pref of prefs) {
+        if (projectIDs.indexOf(pref) === -1)
+            return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
+    }
 
-        database.getNetID(req.user.userID).then((netID) => {
-            const preferences = Object.entries(result.value).map(([field, projectID]) => {
-                return [
-                    netID,
-                    projectID,
-                    parseInt(field.charAt(field.length - 1)),
-                ];
-            });
-            database.pool.query(`
-                DELETE FROM StudentPreferences
-                WHERE netID = ?`, [netID])
-                .then(() => {
-                    database.pool.query(`
-                INSERT INTO StudentPreferences(netID, projectID, preference_number)
-                VALUES ?`, [preferences]).then(() => {
-                        // Send the browser to the user's own page to view new preferences
-                        res.redirect("/profile");
-                    });
-                });
-        });
+    req.body = result.value;
+
+    next();
+}
+
+app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, validatePreferences, async (req, res) => {
+    const netID = await database.getNetID(req.user.userID);
+    const preferences = Object.entries(req.body).map(([field, projectID]) => {
+        return [
+            netID,
+            projectID,
+            parseInt(field.charAt(field.length - 1)),
+        ];
     });
+    await database.pool.query(`
+        DELETE FROM StudentPreferences
+        WHERE netID = ?`, [netID]);
+    await database.pool.query(`
+        INSERT INTO StudentPreferences(netID, projectID, preference_number)
+        VALUES ?`, [preferences]);
+
+    // Send the browser to the user's own page to view new preferences
+    res.redirect("/profile");
+});
+
+app.post("/submitTeamPreferences", auth.isAuthenticated, urlencodedParser, validatePreferences, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    const team = await database.getTeam(student.team)
+    if (!team)
+        return res.status(httpStatus.UNAUTHORIZED).message("You are not on a team");
+    const teamID = team.id;
+
+    const preferences = Object.entries(req.body).map(([field, projectID]) => {
+        return [
+            teamID,
+            projectID,
+            parseInt(field.charAt(field.length - 1)),
+        ];
+    });
+    await database.pool.query(`
+        DELETE FROM TeamPreferences
+        WHERE teamID = ?`, [teamID]);
+    await database.pool.query(`
+        INSERT INTO TeamPreferences(teamID, projectID, preference_number)
+        VALUES ?`, [preferences]);
+
+    res.redirect(`/team/${team.id}`);
 });
 
 app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
@@ -689,7 +712,7 @@ app.post("/leave-team", auth.isAuthenticated, async (req, res) => {
     ]);
 });
 
-app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res) => {
+app.post("/adminClearProfile", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.clearProfile.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -699,25 +722,10 @@ app.post("/admin/clear-profile", auth.isAdmin, urlencodedParser, async (req, res
     const netID = await database.getNetID(userID);
     if (!netID)
         return res.status(httpStatus.BAD_REQUEST).send("That user has no profile");
-    await Promise.all([
-        database.pool.query(`
-            UPDATE Student
-            SET ?
-            WHERE netID = ?`, [
-            {
-                resumeFile: null,
-                phoneNumber: null,
-                email: null,
-                discord: null,
-                groupme: null,
-                instagram: null,
-                avatar: null,
-            },
-            netID,
-        ]
-        ),
-        res.redirect("/adminClearProfile"),
-    ]);
+    else {
+        await database.clearProfile(netID)
+    }
+    res.redirect("/adminClearProfile")
 });
 
 app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
@@ -980,9 +988,13 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             .filter((_val, i, _arr) => i < 5);
         return {
             teamID: null,  // New team
-            currentMemberNames: [],
-            newMemberNames: (await Promise.all(members)).map(member => `${member.firstName} ${member.lastName}`),
-            newMemberIDs: (await Promise.all(members)).map(member => member.userID),
+            currentMembers: [],
+            newMembers: (await Promise.all(members)).map(member => {
+                return {
+                    name: `${member.firstName} ${member.lastName}`,
+                    id: member.userID,
+                };
+            }),
             projectPreferences: preferences,
             currentSkills: [],
             newSkills: skills,
@@ -995,11 +1007,19 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         .filter((val, i, arr) => val != arr[i - 1]);
     for (var teamID of teamIDs) {
         const team = await database.getTeam(teamID);
-        team.newMemberIDs = [],
-            team.newMemberNetIDs = [],
-            team.newMemberNames = [],
-            team.newSkills = [],
-            teamsToUpdate[teamID] = team;
+        const [existingMembers] = await pool.query(`
+            SELECT U.userID, U.firstName, U.lastName
+            FROM user U, UTD D, student S
+            WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
+        team.members = existingMembers.map(member => {
+            return {
+                name: `${member.firstName} ${member.lastName}`,
+                id: member.userID,
+            };
+        });
+        team.newMembers = [],
+        team.newSkills = [],
+        teamsToUpdate[teamID] = team;
     }
     for (var { student, teamID } of studentToExistingTeam) {
         const team = teamsToUpdate[teamID];
@@ -1007,9 +1027,11 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             SELECT U.userID, U.firstName, U.lastName
             FROM UTD D, user U
             WHERE D.userID = U.userID AND D.netID = ?`, [student.netID]);
-        team.newMemberIDs.push(user.userID);
-        team.newMemberNetIDs.push(student.netID);
-        team.newMemberNames.push(`${user.firstName} ${user.lastName}`);
+        team.newMembers.push({
+            id: user.userID,
+            netID: netID,
+            name: `${user.firstName} ${user.lastName}`,
+        });
     }
     for (var team of Object.values(teamsToUpdate)) {
         const [skills] = await database.pool.query(`
@@ -1020,7 +1042,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             SELECT Sk.skillName
             FROM StudentSkillset SS, Skills Sk, Student St
             WHERE SS.skillID = Sk.skillID AND SS.netID = St.netID AND St.teamID = ?`,
-            [team.id, team.newMemberNetIDs, team.id],
+            [team.id, team.newMembers.map(member => member.netID), team.id],
         );
         team.newSkills = skills.map(skill => skill.skillName);
     }
@@ -1029,9 +1051,8 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         .map((team) => {
             return {
                 teamID: team.id,
-                currentMemberNames: team.members,
-                newMemberNames: team.newMemberNames,
-                newMemberIDs: team.newMemberIDs,
+                currentMembers: team.members,
+                newMembers: team.newMembers,
                 projectPreferences: team.interests,
                 currentSkills: team.skills,
                 newSkills: team.newSkills,
@@ -1066,19 +1087,11 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     };
 
     res.render("adminGenTeam.ejs", {
-        teams: arrangement.teams,
+        genTeams: arrangement.teams,
         unsortedUsers: arrangement.unsortedUsers
     });
 });
 
-//remove later - testing page
-app.get("/adminTest", auth.isAdmin, (req, res) => {
-    res.render("adminGenTeam.ejs", {
-        teams: dummyData.adminTeam
-    });
-})
-
-// Note: untested until team generation result endpoint is created
 app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: true }), async (req, res) => {
     console.log("Save teams:", req.body.teams)
 
@@ -1111,7 +1124,7 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
         await database.pool.query(`
             UPDATE student
             SET teamID = ?
-            WHERE netID IN (?)`, [netIDs.map((o) => o.netID)]);
+            WHERE netID IN (?)`, [team.id, netIDs.map((o) => o.netID)]);
 
         if (team.new) {
             // Give each preferred project a 1-5 score opposite the preference
