@@ -19,7 +19,6 @@ const dummyData = require("./dummy_data");
 const password = require("./password");
 require("./passport-config")
 const auth = require("./authMiddleware");
-const { preferences } = require('joi');
 
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -159,15 +158,11 @@ app.get("/resumeContact", auth.isAuthenticated, (req, res) => {
     res.render("resumeContactForm.ejs");
 })
 
-app.get("/submitPreferences", auth.isAuthenticated, (req, res) => {
-
-    database.getAllProjects()
-        .then(projects => {
-            console.log(projects)
-            res.render("submitPreferences.ejs", {
-                projects: projects
-            });
-        })
+app.get("/submitPreferences", auth.isAuthenticated, async (req, res) => {
+    const projects = await database.getAllProjects();
+    res.render("submitPreferences.ejs", {
+        projects: projects,
+    });
 })
 
 app.get("/teams", auth.isAuthenticated, (req, res) => {
@@ -211,7 +206,6 @@ app.get("/submitTeamPreferences", auth.isAuthenticated, async (req, res) => {
     const projects = await database.getAllProjects();
     res.render("submitPreferences.ejs", {
         projects: projects,
-        endpoint: "/submitTeamPreferences"
     });
 })
 
@@ -426,7 +420,7 @@ app.post("/upload-avatar", auth.isAuthenticated, upload.single("avatar"), (req, 
     });
 })
 
-app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res) => {
+async function validatePreferences(req, res, next) {
     const result = schemas.preferences.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
@@ -439,38 +433,63 @@ app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, (req, res
             return res.status(httpStatus.BAD_REQUEST).send("Preferences must be different projects");
     }
 
-    database.pool.query(`
+    const [projects] = await database.pool.query(`
         SELECT projectID
-        FROM Project;
-    `).then(([projects]) => {
-        projectIDs = projects.map(Object.values).flat();
+        FROM Project;`);
+    const projectIDs = projects.map(Object.values).flat();
 
-        for (var pref of prefs) {
-            if (projectIDs.indexOf(pref) === -1)
-                return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
-        }
+    for (var pref of prefs) {
+        if (projectIDs.indexOf(pref) === -1)
+            return res.status(httpStatus.BAD_REQUEST).send(`Project ID ${pref} does not exist`);
+    }
 
-        database.getNetID(req.user.userID).then((netID) => {
-            const preferences = Object.entries(result.value).map(([field, projectID]) => {
-                return [
-                    netID,
-                    projectID,
-                    parseInt(field.charAt(field.length - 1)),
-                ];
-            });
-            database.pool.query(`
-                DELETE FROM StudentPreferences
-                WHERE netID = ?`, [netID])
-                .then(() => {
-                    database.pool.query(`
-                INSERT INTO StudentPreferences(netID, projectID, preference_number)
-                VALUES ?`, [preferences]).then(() => {
-                        // Send the browser to the user's own page to view new preferences
-                        res.redirect("/profile");
-                    });
-                });
-        });
+    req.body = result.value;
+
+    next();
+}
+
+app.post("/submitPreferences", auth.isAuthenticated, urlencodedParser, validatePreferences, async (req, res) => {
+    const netID = await database.getNetID(req.user.userID);
+    const preferences = Object.entries(req.body).map(([field, projectID]) => {
+        return [
+            netID,
+            projectID,
+            parseInt(field.charAt(field.length - 1)),
+        ];
     });
+    await database.pool.query(`
+        DELETE FROM StudentPreferences
+        WHERE netID = ?`, [netID]);
+    await database.pool.query(`
+        INSERT INTO StudentPreferences(netID, projectID, preference_number)
+        VALUES ?`, [preferences]);
+
+    // Send the browser to the user's own page to view new preferences
+    res.redirect("/profile");
+});
+
+app.post("/submitTeamPreferences", auth.isAuthenticated, urlencodedParser, validatePreferences, async (req, res) => {
+    const student = await database.getStudentByUserID(req.user.userID);
+    const team = await database.getTeam(student.team)
+    if (!team)
+        return res.status(httpStatus.UNAUTHORIZED).message("You are not on a team");
+    const teamID = team.id;
+
+    const preferences = Object.entries(req.body).map(([field, projectID]) => {
+        return [
+            teamID,
+            projectID,
+            parseInt(field.charAt(field.length - 1)),
+        ];
+    });
+    await database.pool.query(`
+        DELETE FROM TeamPreferences
+        WHERE teamID = ?`, [teamID]);
+    await database.pool.query(`
+        INSERT INTO TeamPreferences(teamID, projectID, preference_number)
+        VALUES ?`, [preferences]);
+
+    res.redirect(`/team/${team.id}`);
 });
 
 app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
