@@ -8,7 +8,7 @@
 <main class="adminPage">
     <h1>Clear User Profile</h1>
     <p>Enter a user's email to clear all public information associated with their profile.</p>
-    <form onsubmit="return confirmMessage()">    
+    <form onsubmit="return confirmMessage()" method = "POST">    
         <label for="clearProfile"></label>
         <input type="text" name="clearProfile" id="clearProfile" />
         <div class=submitButton>
