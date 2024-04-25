@@ -118,14 +118,7 @@ app.get("/logout", (req, res) => {
 //sends list with firstName, lastName, and userID.
 app.get("/users", auth.isAuthenticated, (req, res) => {
     database.allStudents().then((list) => {
-        database.getAllStudentPreferences().then((preferences) => {
-
-
-            console.log(list, '\n')
-            console.log(list[1].preferences[1])
-            //console.log('\n', preferences)
-            res.render("allUsersList.ejs", { studentlist: list, preferences: preferences });
-        })
+        res.render("allUsersList.ejs", { studentlist: list });
     });
 });
 
