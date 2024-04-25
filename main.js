@@ -1249,7 +1249,7 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
             continue;
         }
 
-        if (team.id === null) {
+        if (!team.id) {
             const [result] = await database.pool.query(`
                 INSERT INTO Team ()
                 VALUES ()`);
@@ -1278,9 +1278,10 @@ app.post("/admin/save-teams", auth.isAdmin, bodyParser.urlencoded({ extended: tr
             )[0].toReversed()
                 .map((project) => project.projectID)
                 .filter((_val, i, _arr) => i < 5);
-            await database.pool.query(`
-                INSERT INTO ProjectPreferences (teamID, projectID, preference_number)
-                VALUES ?`, preferences.map((pref, i) => [team.id, pref, i + 1]));
+            if (preferences.length)
+                await database.pool.query(`
+                    INSERT INTO TeamPreferences (teamID, projectID, preference_number)
+                    VALUES (?)`, preferences.map((pref, i) => [team.id, pref, i + 1]));
         }
     }
 

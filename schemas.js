@@ -164,7 +164,8 @@ const adminCommitTeams = Joi.object({
     teams: Joi.array()
         .items(Joi.object({
             id: Joi.number()
-                .optional(),
+                .optional()
+                .empty(""),
             newMemberIDs: Joi.array()
                 .items(Joi.number())
                 .required(),
