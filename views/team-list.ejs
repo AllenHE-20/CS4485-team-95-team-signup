@@ -14,15 +14,17 @@
             <%- include('partials/current-team.ejs'); %>
         </div>
 
-        <div class="inviteLinks">
-            <div class="inviteInboxLink">
-                <a href="/invites">Invite Inbox</a>
+        <% if (!user.admin) { %>
+            <div class="inviteLinks">
+                <div class="inviteInboxLink">
+                    <a href="/invites">Invite Inbox</a>
+                </div>
+        
+                <div class="newInviteLink">
+                    <a href="/invite/new">Send an Invite</a>
+                </div>
             </div>
-    
-            <div class="newInviteLink">
-                <a href="/invite/new">Send an Invite</a>
-            </div>
-        </div>
+        <% } %>
        
         
     </div>
