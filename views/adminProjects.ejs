@@ -31,7 +31,7 @@
                                 <%= project.projectname %>
                             </h2>
                             <div class="project-sponsor">
-                                <%= project.affiliation %> - <%= project.sponsor %>
+                                <%= project.sponsor %>
                             </div>
                             <div class="project-description-1">
                                 Project <%= project.projectID %><br>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="adminEditButtons">
                                 <div class="editProject">
-                                    <button class="editProjectButton" onclick="editProject('<%= project.projectname %>', '<%= project.affiliation %>', '<%= project.maxTeams %>', '<%= project.description %>', '<%= project.skills %>')">Edit Project</button>
+                                    <button class="editProjectButton" onclick="editProject('<%= project.projectname %>', '<%= project.affiliation %>', '<%= project.maxTeams %>', '<%= project.description %>', '<%= project.skills %>', '<%= project.projectID %>')">Edit Project</button>
                                 </div>
                                 <div class="removeProject">
                                     <button class="removeProjectButton" onclick="removeProject('<%= project.projectname %>', '<%=project.projectID%>')">Remove Project</button>
@@ -84,13 +84,16 @@
             <!-- "/admin/projects/add" -->
             <div class="project-content">
                 <label for="newProjectName">Project Name</label>
-                <input type="text" id="projectName" name="projectName" required><br><br>
+                <input type="text" id="newProjectName" name="newProjectName" required><br><br>
 
                 <label for="newProjectSponsor">Sponsor</label>
-                <input type="text" id="newSponsor" name="newSponsor" required><br><br>
+                <input type="text" id="newProjectSponsor" name="newProjectSponsor" required><br><br>
                 
-                <label for="newMaxSize">Max Team Size</label>
+                <label for="newSize">Max Team Size</label>
                 <input type="text" id="newSize" name="newSize" required><br><br>
+
+                <label for="newMaxSize">Maximum Amount of Teams</label>
+                <input type="text" id="newMaxSize" name="newMaxSize" required><br><br>
 
                 <label for="newProjectSkills">Skills</label>
                 <div class="skill-bubbles" id="skillBubbles"></div>
@@ -104,11 +107,11 @@
                         <button type="button" id="removeSkillButton" onclick="removeSkillBubble(document.getElementById('newSkillInputRemove').value)">Remove Skill</button>
                     </div>
                 </div>
-            </div>
+            </div> 
 
             <div class="description-content">
                 <label for="newProjectDescripton">Description</label>
-                <textarea id="newDescription" name="newDescription" rows="4" required></textarea><br><br>
+                <textarea id="newProjectDescription" name="newProjectDescription" rows="4" required></textarea><br><br>
             </div>
 
             <div class="file-upload-content" id="fileUploadContent">
@@ -127,7 +130,7 @@
             </div>
 
             <div class="button-container">
-                <button type="button" class="submit-button"onclick="submitProject()">Submit</button>
+                <button type="button" class="submit-button" onclick="submitProject()">Submit</button>
                 <button type="button" class="cancel-button"onclick="closeAddProjectModal()">Cancel</button>            
             </div>
         </form>
@@ -139,8 +142,9 @@
         <span class="close" onclick="closeEditProjectModal()">&times;</span>
         <h2>Edit Project</h2>
         <form id="projectForm">
-            <!-- "/admin/projects/edit" -->
             <div class="project-content">
+                <input type="hidden" id="editProjectID" name="editProjectID" value ="">
+
                 <label for="editProjectName">Project Name</label>
                 <input type="text" id="editProjectName" name="editProjectName" required value="Example Project Name"><br><br>
     
@@ -151,7 +155,7 @@
                 <input type="text" id="editMaxSize" name="editMaxSize" required value="5"><br><br>
     
                 <label for="editProjectSkills">Skills</label>
-                <div class="edit-skill-bubbles" id="editSkillBubbles">
+                <div class="skill-bubbles" id="editSkillBubbles">
     
                 </div>
                 <div class="newSkillButtons">
@@ -194,7 +198,6 @@
 </div>
 
 <div id="confirmDeleteModal" class="modal">
-    <!-- "/admin/projects/delete" -->
     <div class="modal-content">
         <span class="close" onclick="closeConfirmDeleteModal()">&times;</span>
         <h2>Confirm Deletion</h2>
@@ -214,7 +217,7 @@
         window.history.back();
     }
 
-    function editProject(projectName, affiliation, maxTeams, description, skills) {
+    function editProject(projectName, affiliation, maxTeams, description, skills, projectID) {
     const modal = document.getElementById("editProjectModal");
     modal.style.display = "block";
 
@@ -222,6 +225,7 @@
     document.getElementById("editSponsor").value = affiliation;
     document.getElementById("editMaxSize").value = maxTeams;
     document.getElementById("editDescription").value = description;
+    document.getElementById("editProjectID").value = projectID;
 
     const skillBubblesContainer = document.getElementById('editSkillBubbles');
     skillBubblesContainer.innerHTML = '';
@@ -263,11 +267,10 @@
     modal.setAttribute('data-project-id', projectID);
     modal.style.display = "block";
     
-    // Validate projectID
     const projectIDValue = parseInt(projectID);
     if (isNaN(projectIDValue)) {
         alert("Invalid project ID.");
-        return; // Do not proceed further if projectID is not a number
+        return;
     }
 
     document.getElementById("removeProjectID").value = projectID;
@@ -320,12 +323,84 @@
     }
 
     function submitEditedProject() {
-        // TODO: Update database by editing project //
+        const editProjectID = document.getElementById('editProjectID').value;
+        const editProjectName = document.getElementById('editProjectName').value;
+        const editSponsor = document.getElementById('editSponsor').value;
+        const editSize = document.getElementById('editMaxSize').value;
+        const editDescription = document.getElementById('editDescription').value;
+
+        const skillBubbles = document.querySelectorAll('#editSkillBubbles .skill-bubble');
+        const skills = Array.from(skillBubbles).map(skillBubble => skillBubble.textContent.trim()); 
+
+        const payload = {
+            editProjectID: editProjectID,
+            editProjectName: editProjectName,
+            editSponsor: editSponsor,
+            editSize: editSize,
+            editDescription: editDescription,
+            editSkills: skills
+        };
+
+        console.log(payload);
+
+        fetch('/admin/projects/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                closeEditProjectModal();
+            } else {
+                console.error('Failed to edit project:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('An unexpected error occurred:', error);
+        });
     }
 
     function submitProject() {
-        closeAddProjectModal();
-    }
+        const projectName = document.getElementById('newProjectName').value;
+        const sponsor = document.getElementById('newProjectSponsor').value;
+        const maxSize = document.getElementById('newSize').value;
+        const maxTeams = document.getElementById('newMaxSize').value;
+        const description = document.getElementById('newProjectDescription').value;
+        
+        const skillBubbles = document.querySelectorAll('#skillBubbles .skill-bubble');
+        const skills = Array.from(skillBubbles).map(skillBubble => skillBubble.textContent.trim());
+        
+        const payload = {
+            projectName: projectName,
+            newSponsor: sponsor,
+            newSize: maxSize,
+            newMaxSize: maxTeams,
+            newDescription: description,
+            newSkills: skills
+        };
+        
+        console.log(payload);
+
+        fetch('/admin/projects/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                closeAddProjectModal();
+            } else {
+                console.error('Failed to submit project:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('An unexpected error occurred:', error);
+        });
+}
 
     function addSkillBubble() {
         const skillInput = document.getElementById('newSkillInputAdd');

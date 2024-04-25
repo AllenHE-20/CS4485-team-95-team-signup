@@ -548,6 +548,54 @@ app.post("/skills/change", auth.isAuthenticated, urlencodedParser, async (req, r
     res.redirect("/profile");
 });
 
+app.post("admin/skills/change", auth.isAuthenticated, urlencodedParser, async (req, res) => {
+    const { value, error } = schemas.skillChange.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
+
+    const [skills] = await database.pool.query(`
+        SELECT skillID
+        FROM Skills
+        WHERE skillName = ?`, value.skill);
+    const projectID = await database.getNetID(req.project.projectID);
+
+    if (value.action === "add") {
+        var skillID;
+        if (!skills.length) {
+            const [result] = await database.pool.query(`
+                INSERT INTO Skills (skillName)
+                VALUES (?)`, [xssFilters.inHTMLData(value.skill)]);
+            skillID = result.insertId;
+        } else {
+            skillID = skills[0].skillID;
+        }
+
+        try {
+            await database.pool.query(`
+                INSERT INTO ProjectSkillset (projectID, skillID)
+                VALUES (?, ?)`, [netID, skillID])
+        } catch (err) {
+            if (err.code === 'ER_DUP_ENTRY')
+                console.log("Duplicate skill ignored");
+            else
+                throw err;
+        }
+    } else {
+        if (!skills.length) {
+            console.log("Non-existing skill ignored");
+            return res.redirect("/adminProjects");
+        }
+
+        const skillID = skills[0].skillID;
+        await database.pool.query(`
+            DELETE FROM ProjectSkillset
+            WHERE projectID = ? AND skillID = ?`, [projectID, skillID]);
+    }
+
+    res.redirect("/adminProjects");
+});
+
+
 app.post("/invite/new", auth.isAuthenticated, urlencodedParser, async (req, res) => {
     const { value, error } = schemas.invite.validate(req.body);
     if (error)
@@ -819,48 +867,133 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     res.redirect("/adminAccess");
 });
 
-// Note: Untested
-app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const result = schemas.adminAddProject.validate(req.body);
-    if (result.error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+app.use(express.json());
 
-    const { projectName, newSponsor, newSize, newDescription } = result.value;
+app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res) => {
+    const result = req.body;
+
+    const {
+        projectName = result.value.projectName,
+        newSponsor = result.value.newSponsor,
+        newDescription = result.value.newDescription,
+        newMaxSize = result.value.newMaxSize,
+        newSize = result.value.newSize,
+        newSkills = result.value.newSkills,
+        avatar = "/profile.png",
+        team_assigned = "Open"
+    } = req.body;
+
     const name = xssFilters.inHTMLData(projectName);
     const sponsor = xssFilters.inHTMLData(newSponsor);
     const description = xssFilters.inHTMLData(newDescription);
-    const [insert] = await database.pool.query(`
-        INSERT INTO Project (projectName, sponsor, description, teamSize)
-        VALUES (?)`, [[name, sponsor, description, newSize]])
-    const projectID = insert.insertId;
 
-    // TODO: Skills required
+    try {
+        const [insertProject] = await database.pool.query(`
+            INSERT INTO Project (projectName, sponsor, description, maxTeams, teamSize, team_assigned, avatar)
+            VALUES (?)`, [[name, sponsor, description, newMaxSize, newSize, team_assigned, avatar]]);
+        
+        const projectID = insertProject.insertId;
 
-    res.redirect("back");
+        if (newSkills && newSkills.length > 0) {
+            for (const skill of newSkills) {
+                const [existingSkills] = await database.pool.query(`
+                    SELECT skillID
+                    FROM Skills
+                    WHERE skillName = ?`, [xssFilters.inHTMLData(skill)]);
+
+                let skillID;
+                if (!existingSkills.length) {
+                    const [result] = await database.pool.query(`
+                        INSERT INTO Skills (skillName)
+                        VALUES (?)`, [xssFilters.inHTMLData(skill)]);
+                    skillID = result.insertId;
+                } else {
+                    skillID = existingSkills[0].skillID;
+                }
+
+                await database.pool.query(`
+                    INSERT INTO ProjectSkillset (projectID, skillID)
+                    VALUES (?, ?)`, [projectID, skillID]);
+            }
+        }
+
+        res.redirect("back");
+    } catch (error) {
+        console.error("Error adding project:", error);
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Error adding project");
+    }
 });
 
-// Note: Untested
 app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const result = schemas.adminEditProject.validate(req.body);
+    const result = req.body;
+
+    console.log(result);
+
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const { editProjectID, editProjectName, editSponsor, editSize, editDescription } = result.value;
+    const {
+        editProjectID = result.value.projectID,
+        editProjectName = result.value.editProjectName,
+        editSponsor = result.value.editSponsor,
+        editSize = result.value.editSize,
+        editDescription = result.value.editDescription,
+        editSkills = result.value.editSkills,
+    } = req.body;
+    
     const name = xssFilters.inHTMLData(editProjectName);
     const sponsor = xssFilters.inHTMLData(editSponsor);
     const description = xssFilters.inHTMLData(editDescription);
-    await database.pool.query(`
-        UPDATE Project
-        SET projectName = ?, sponsor = ?, description = ?, teamSize = ?
-        WHERE projectID = ?`,
-        [name, sponsor, description, editSize, editProjectID])
 
-    // TODO: Skills required
+    try {
+        // Start a database transaction
+        await database.pool.query('START TRANSACTION');
 
-    res.redirect("back");
+        // Update the project details
+        await database.pool.query(`
+            UPDATE Project
+            SET projectName = ?, sponsor = ?, description = ?, teamSize = ?
+            WHERE projectID = ?`,
+            [name, sponsor, description, editSize, editProjectID]);
+
+        await database.pool.query(`
+            DELETE FROM ProjectSkillset
+            WHERE projectID = ?`,
+            [editProjectID]);
+
+        if (editSkills && editSkills.length > 0) {
+            for (const skill of editSkills) {
+                const [existingSkills] = await database.pool.query(`
+                    SELECT skillID
+                    FROM Skills
+                    WHERE skillName = ?`, [xssFilters.inHTMLData(skill)]);
+
+                let skillID;
+                if (!existingSkills.length) {
+                    const [result] = await database.pool.query(`
+                        INSERT INTO Skills (skillName)
+                        VALUES (?)`, [xssFilters.inHTMLData(skill)]);
+                    skillID = result.insertId;
+                } else {
+                    skillID = existingSkills[0].skillID;
+                }
+
+                await database.pool.query(`
+                    INSERT INTO ProjectSkillset (projectID, skillID)
+                    VALUES (?, ?)`, [editProjectID, skillID]);
+            }
+        }
+
+        await database.pool.query('COMMIT');
+
+        res.redirect("back");
+    } catch (error) {
+        await database.pool.query('ROLLBACK');
+        console.error('An error occurred while updating project:', error);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send('An unexpected error occurred');
+    }
 });
 
-// Note: Untested
 app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminDeleteProject.validate(req.body);
     if (result.error)

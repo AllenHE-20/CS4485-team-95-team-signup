@@ -114,10 +114,19 @@ const adminAddProject = Joi.object({
         .required()
         .max(255),
 
+        newSkills: Joi.array()
+        .items(Joi.string()) 
+        .required(),
+
     newSize: Joi.number()
         .required()
         .min(4)
         .max(6),
+
+    newMaxSize: Joi.number()
+        .required()
+        .min(1)
+        .max(15),
 
     newDescription: Joi.string()
         .required()
