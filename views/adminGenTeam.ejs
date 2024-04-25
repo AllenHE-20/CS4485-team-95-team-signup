@@ -47,14 +47,19 @@
 
                         <p>Members:                             
                             <% if(genTeams[i].currentMembers.length > 0) { %>
-                                <%= (genTeams[i].currentMembers.name).join(', ') %>,
+                                <% for (let j=0; j < (genTeams[i].currentMembers).length; j++) { %>
+                                    <a class="genProfile" href="/users/<%= genTeams[i].currentMembers[j].id %>" target="_blank">
+                                        <%= genTeams[i].currentMembers[j].name %></a>,
+                                <% } %>                                
                             <% } %>
 
                             <% for (let j=0; j < genTeams[i].newMembers.length; j++) { %>
                                 <% if(j != (genTeams[i].newMembers.length)-1) { %>
-                                    <%= (genTeams[i].newMembers[j].name) %>,          
+                                    <a class="genProfile" href="/users/<%= genTeams[i].newMembers[j].id %>" target="_blank">
+                                        <%= (genTeams[i].newMembers[j].name) %></a>,
                                 <% } else { %>
-                                    <%= (genTeams[i].newMembers[j].name) %>
+                                    <a class="genProfile" href="/users/<%= genTeams[i].newMembers[j].id %>" target="_blank">
+                                        <%= (genTeams[i].newMembers[j].name) %></a>                                    
                                 <% } %>
                             <% } %>               
                         </p>        
