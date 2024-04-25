@@ -22,10 +22,10 @@
                     newMemberIDs: []
                 }; %>
 
-                <input type="hidden" name="teams[<%= i %>][id]" value="<%= team.teamID %>">                                    
-            
-                <% for (let j = 0; j < genTeams[i].newMemberIDs.length; j++) { %>
-                    <% team.newMemberIDs.push(genTeams[i].newMemberIDs[j]); %>
+                <input type="hidden" name="teams[<%= i %>][id]" value="<%= team.teamID %>">                                                
+                
+                <% for (let j = 0; j < (genTeams[i].newMembers).length; j++) { %>
+                    <% team.newMemberIDs.push(genTeams[i].newMembers[j].id); %>
                     <input type="hidden" name="teams[<%= i %>][newMemberIDs][<%= j %>]" value="<%= team.newMemberIDs[j] %>">                    
                 <% } %>                                
             <% } %>                                                                       
@@ -46,10 +46,17 @@
                         </h1>   
 
                         <p>Members:                             
-                            <% if(genTeams[i].currentMemberNames.length > 0) { %>
-                                <%= genTeams[i].currentMemberNames.join(', ') %>,
+                            <% if(genTeams[i].currentMembers.length > 0) { %>
+                                <%= (genTeams[i].currentMembers.name).join(', ') %>,
                             <% } %>
-                            <%= genTeams[i].newMemberNames.join(', ') %>                         
+
+                            <% for (let j=0; j < genTeams[i].newMembers.length; j++) { %>
+                                <% if(j != (genTeams[i].newMembers.length)-1) { %>
+                                    <%= (genTeams[i].newMembers[j].name) %>,          
+                                <% } else { %>
+                                    <%= (genTeams[i].newMembers[j].name) %>
+                                <% } %>
+                            <% } %>               
                         </p>        
 
                         <p>Project Preferences:
@@ -86,8 +93,8 @@
             
                             <input type="hidden" name="teams[0][id]" value="<%= teams.teamID %>">                                    
                         
-                            <% for (let j = 0; j < genTeams[i].newMemberIDs.length; j++) { %>
-                                <% teams.newMemberIDs.push(genTeams[i].newMemberIDs[j]); %>
+                            <% for (let j = 0; j < genTeams[i].newMembers.length; j++) { %>
+                                <% teams.newMemberIDs.push(genTeams[i].newMembers[j].id); %>
                                 <input type="hidden" name="teams[0][newMemberIDs][<%= j %>]" value="<%= teams.newMemberIDs[j] %>">                    
                             <% } %>                                                            
                             <input id="saveTeam<%= i %>" type="submit" value="Save Team" />
@@ -99,7 +106,8 @@
     </article>                  
 </main>
 <% console.log(genTeams); %>
-
+<% console.log(genTeams[0].newMembers); %>
+<% console.log(genTeams[0].currentMembers); %>
 
 </body>
 </html>

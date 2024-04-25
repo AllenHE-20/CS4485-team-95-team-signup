@@ -16,7 +16,7 @@
             <form action="/invite/new" method="post" id="invite">   
                 <p> Would you like to send an invite or request to join a team?<br>                
                     <input type="radio" name="target" id="student" value="user" checked>
-                    <label for="student">Student</label>
+                    <label for="student" id="studentInviteLabel">Student</label>
                     <input type="radio" name="target" id="team" value="team">
                     <label for="team">Team</label>
                 </p>
@@ -47,7 +47,7 @@
                     <textarea form="invite" id="message" name="message">Hello! Would you like to join my team?</textarea>
                 </div>
 
-                <input type="submit" value="Send Invite">
+                <input type="submit" value="Submit">
             </form>            
 
         </article>
@@ -61,6 +61,8 @@
                     option.selected = false;
                 });                            
 
+                const messageText = document.getElementById('message');
+
                 if (this.value === 'team') {         
                     selectElement.value = "team";                                                                       
                     document.querySelectorAll('.studentOption').forEach(option => {
@@ -71,6 +73,8 @@
                         option.style.display = "block";
                     });
 
+                    messageText.value = "Hello! I would like to join your team.";
+
                 } else {
                     selectElement.value = "student";
                     document.querySelectorAll('.studentOption').forEach(option => {
@@ -80,6 +84,8 @@
                     document.querySelectorAll('.teamOption').forEach(option => {
                         option.style.display = "none";
                     });
+
+                    messageText.value = "Hello! Would you like to join my team?";
                 }        
             }); 
         });

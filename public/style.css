@@ -1558,6 +1558,9 @@ textarea#message{
     display: none;
 }
 
+#studentInviteLabel{
+    padding-right: 10px;
+}
 
 .upload-area-title{
     text-align: left;
