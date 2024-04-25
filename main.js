@@ -859,12 +859,12 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
 app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminDeleteProject.validate(req.body);
     if (result.error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+            return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
-    const { deleteProjectID } = result.value;
+    const { removeProjectID } = result.value;
     await database.pool.query(`
         DELETE FROM Project
-        WHERE projectID = ?`, [deleteProjectID])
+        WHERE projectID = ?`, [removeProjectID])
 
     res.redirect("back");
 });

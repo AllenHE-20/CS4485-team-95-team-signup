@@ -65,7 +65,7 @@
                                     <button class="editProjectButton" onclick="editProject('<%= project.projectname %>', '<%= project.affiliation %>', '<%= project.maxTeams %>', '<%= project.description %>', '<%= project.skills %>')">Edit Project</button>
                                 </div>
                                 <div class="removeProject">
-                                    <button class="removeProjectButton" onclick="removeProject('<%= project.projectname %>')">Remove Project</button>
+                                    <button class="removeProjectButton" onclick="removeProject('<%= project.projectname %>', '<%=project.projectID%>')">Remove Project</button>
                                 </div>
                             </div>
                         </div>
@@ -112,20 +112,18 @@
             </div>
 
             <div class="file-upload-content" id="fileUploadContent">
-                <h2 class="upload-area-title">Drag & Drop Files</h2>
+                <h2 class="upload-area-title">Upload Files</h2>
                 <form action="">
                     <input type="file" id="upload" accept=".doc,.docx,.pdf" hidden>
                     <label for="upload" class="uploadlabel">
                         <img class="upload-img" src="/images/upload.png">
-                        <p>Click to Upload or Drag and Drop</p>
+                        <p>Click to Upload</p>
                     </label>
                 </form>                    
             </div>
             
             <div id="filewrapper">
                 <h3 class="uploaded">Uploaded Documents</h3>
-                <div class="showfilebox">
-                </div>
             </div>
 
             <div class="button-container">
@@ -171,9 +169,26 @@
                 <label for="editDescription">Description</label>
                 <textarea id="editDescription" name="editDescription" rows="4" required>Example Description</textarea><br><br>
             </div>
+
+            <div class="file-upload-content" id="fileUploadContent">
+                <h2 class="upload-area-title">Upload Files</h2>
+                <form action="">
+                    <input type="file" id="upload" accept=".doc,.docx,.pdf" hidden>
+                    <label for="upload" class="uploadlabel">
+                        <img class="upload-img" src="/images/upload.png">
+                        <p>Click to Upload</p>
+                    </label>
+                </form>                    
+            </div>
+            
+            <div id="filewrapper">
+                <h3 class="uploaded">Uploaded Documents</h3>
+            </div>
+
             <div class="button-container">
                 <button type="button" class="submit-button"onclick="submitEditedProject()">Submit</button>
-                <button type="button" class="cancel-button"onclick="closeEditProjectModal()">Cancel</button>            </div>
+                <button type="button" class="cancel-button"onclick="closeEditProjectModal()">Cancel</button>            
+            </div>
         </form>
     </div>
 </div>
@@ -185,7 +200,10 @@
         <h2>Confirm Deletion</h2>
         <p id="deleteMessage"></p>
         <div class="button-container">
-            <button class="delete-button" type="button" onclick="deleteProject()">Delete</button>
+            <form action="/admin/projects/delete" method="post">
+                <input type="hidden" name="removeProjectID" id="removeProjectID" value="" />
+                <button type="submit" class="delete-button" id="delete-button" onclick="deleteProject()">Delete</button>
+            </form>
             <button class="cancel-button" type="button" onclick="closeConfirmDeleteModal()">Cancel</button>
         </div>
     </div>
@@ -238,15 +256,66 @@
         modal.style.display = "none";
     }
 
-    function removeProject(projectName) {
-        const modal = document.getElementById("confirmDeleteModal");
-        const deleteMessage = document.getElementById("deleteMessage");
-        deleteMessage.textContent = `Are you sure you would like to delete Project (${projectName})?`;
-        modal.style.display = "block";
+    function removeProject(projectName, projectID) {
+    const modal = document.getElementById("confirmDeleteModal");
+    const deleteMessage = document.getElementById("deleteMessage");
+    deleteMessage.textContent = `Are you sure you would like to delete Project (${projectName})?`;
+    modal.setAttribute('data-project-id', projectID);
+    modal.style.display = "block";
+    
+    // Validate projectID
+    const projectIDValue = parseInt(projectID);
+    if (isNaN(projectIDValue)) {
+        alert("Invalid project ID.");
+        return; // Do not proceed further if projectID is not a number
     }
 
+    document.getElementById("removeProjectID").value = projectID;
+}
+
+    window.addEventListener("load",()=>{
+    const input = document.getElementById("upload");
+    const filewrapper = document.getElementById("filewrapper");
+
+    input.addEventListener("change",(e)=>{
+        let fileName = e.target.files[0].name;
+        let fileType = e.target.value.split(".").pop();
+        fileshow(fileName, fileType);
+    });
+
+    const fileshow = (fileName, fileType) => {
+        const showfileboxElem = document.createElement("div");
+        showfileboxElem.classList.add("showfilebox");
+        const leftElem = document.createElement("div");
+        leftElem.classList.add("left");
+        showfileboxElem.append(leftElem);
+        const filetitleElem = document.createElement("h3");
+        filetitleElem.innerHTML = fileName;
+        leftElem.append(filetitleElem);
+        showfileboxElem.append(leftElem);
+        const rightElem = document.createElement("div");
+        rightElem.classList.add("right");
+        showfileboxElem.append(rightElem);
+        const crossElem = document.createElement("span");
+        crossElem.innerHTML = "&#215;";
+        rightElem.append(crossElem);
+        filewrapper.append(showfileboxElem);
+
+        crossElem.addEventListener("click", () => {
+            filewrapper.removeChild(showfileboxElem);
+        });
+    };
+});
+
     function deleteProject() {
-        // TODO: Delete project from database //
+        const modal = document.getElementById("confirmDeleteModal");
+        const projectID = modal.getAttribute('data-project-id');
+
+        document.getElementById("removeProjectID").value = projectID;
+
+        const form = document.querySelector("form[action='/admin/projects/delete']");
+        form.submit();
+
         closeConfirmDeleteModal();
     }
 
@@ -270,44 +339,6 @@
             skillInput.value = '';
         }
 }
-    const uploadInput = document.getElementById('upload');
-    const uploadLabel = document.getElementById('uploadLabel');
-    const showFileBox = document.getElementById('showFileBox');
-
-    uploadInput.addEventListener('change', handleFileSelect);
-    uploadLabel.addEventListener('dragover', handleDragOver, false);
-    uploadLabel.addEventListener('drop', handleFileSelect, false);
-
-    function handleDragOver(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'copy'; 
-    }
-
-    function handleFileSelect(event) {
-        event.stopPropagation();
-        event.preventDefault();
-
-        const files = event.target.files || event.dataTransfer.files;
-
-        for (let i = 0, file; file = files[i]; i++) {
-            const reader = new FileReader();
-            reader.onload = (function(file) {
-                return function(event) {
-                    const fileItem = createFileItem(file.name);
-                    showFileBox.appendChild(fileItem);
-                };
-            })(file);
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function createFileItem(fileName) {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-        fileItem.textContent = fileName;
-        return fileItem;
-    }
 
 function editSkillBubble() {
     const skillInput = document.getElementById('newSkillInputAddEdit');
