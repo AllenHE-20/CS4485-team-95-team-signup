@@ -1167,7 +1167,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             WHERE D.userID = U.userID AND D.netID = ?`, [student.netID]);
         team.newMembers.push({
             id: user.userID,
-            netID: netID,
+            netID: student.netID,
             name: `${user.firstName} ${user.lastName}`,
         });
     }
