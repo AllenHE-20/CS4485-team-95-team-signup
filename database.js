@@ -331,21 +331,35 @@ async function getAllTeams() {
 }
 
 async function getTeam(teamID) {
-    if (!teamID)
+    if (!teamID) {
         return null;
-
+    }
+    
     const [[result]] = await pool.query(`
         SELECT teamID, projectID
         FROM Team
         WHERE teamID = ?`, teamID);
-    if (!result)
+    
+    if (!result) {
         return null;
-
+    }
+    
+    let resultProject = null;
+    
+    if (result.projectID) {
+        const [[projectResult]] = await pool.query(`
+            SELECT projectName
+            FROM Project P
+            WHERE projectID = ?`, result.projectID);
+    
+        resultProject = projectResult ? projectResult.projectName : null;
+    }
+    
     const [members] = await pool.query(`
         SELECT U.userID, U.firstName, U.lastName
         FROM user U, UTD D, student S
         WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
-
+    
     const [prefs] = await pool.query(`
         SELECT P.projectName
         FROM TeamPreferences T, Project P
@@ -355,6 +369,7 @@ async function getTeam(teamID) {
         SELECT DISTINCT S.skillName
         FROM StudentSkillset C, Skills S, student T
         WHERE S.skillID = C.skillID AND C.netID = T.netID AND T.teamID = ?`, teamID);
+    
     const team = {
         id: teamID,
         avatar: "/images/profile.png",
@@ -363,7 +378,9 @@ async function getTeam(teamID) {
         members: members.map(member => `${member.firstName} ${member.lastName}`),
         open: members.length <= 6,
         projectID: result.projectID,
-    };
+        project: resultProject 
+    }
+    
     return team;
 }
 

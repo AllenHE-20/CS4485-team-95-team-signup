@@ -53,6 +53,15 @@
             <hr>
         </li>
         <li>
+            <div class="team-page-project-assigned">
+                <h1>Project Information</h1>
+                <% if (teamDataObj.project == null) { %>
+                    <p>No Project Assigned</p>
+                <% } else { %>
+                    <p>Project Assigned: <%= teamDataObj.project %></p>
+                <% } %>
+            </div>
+            <hr>
             <div class="team-page-members">
                 <h1>Team Members</h1>
                 <% (teamDataObj.members).forEach(member => { %>

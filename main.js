@@ -134,7 +134,7 @@ app.get("/users/:userid", auth.isAuthenticated, (req, res) => {
                 usersProject = project[0].projectName
             }
             if (student.teamID) {
-                usersTeam = ("team " + student.teamID)
+                usersTeam = ("Team " + student.teamID)
             }
             else {
                 usersTeam = 'None'
