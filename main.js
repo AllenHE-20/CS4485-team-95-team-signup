@@ -1047,9 +1047,10 @@ app.post("/admin/drop-from-team", auth.isAdmin, urlencodedParser, async (req, re
                 SELECT teamID
                 FROM student
                 WHERE teamID IS NOT NULL
-            )`),
-        res.redirect(`/adminTeams`),
+            )`),        
     ]);
+
+    return res.redirect(`/adminTeams`);
 });
 
 app.post("/admin/disband-team", auth.isAdmin, urlencodedParser, async (req, res) => {
