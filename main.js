@@ -1145,7 +1145,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
         .filter((val, i, arr) => val != arr[i - 1]);
     for (var teamID of teamIDs) {
         const team = await database.getTeam(teamID);
-        const [existingMembers] = await pool.query(`
+        const [existingMembers] = await database.pool.query(`
             SELECT U.userID, U.firstName, U.lastName
             FROM user U, UTD D, student S
             WHERE D.userID = U.userID AND D.netID = S.netID AND S.teamID = ?`, teamID);
