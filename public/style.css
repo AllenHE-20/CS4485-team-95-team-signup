@@ -1658,3 +1658,35 @@ textarea#message{
     font-weight: bold; /* Apply bold font weight */
     color: inherit; /* Inherit the text color from the parent */
 }
+
+.profile-image-modal {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;     
+}
+
+.new-profile-pic-modal {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;     
+}
+
+.upload-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#new-profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.upload-picture-new {
+    display: none;
+}
+
+.upload-picture-new input[file]{
+    display: none;
+}

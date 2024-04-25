@@ -863,8 +863,7 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
 });
 
 app.use(express.json());
-
-app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res) => {
+app.post("/admin/projects/add", auth.isAdmin, upload.single('avatar'), async (req, res) => {
     const result = req.body;
 
     const {
@@ -874,7 +873,6 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
         newMaxSize = result.value.newMaxSize,
         newSize = result.value.newSize,
         newSkills = result.value.newSkills,
-        avatar = "/profile.png",
         team_assigned = "Open"
     } = req.body;
 
@@ -882,6 +880,8 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
     const sponsor = xssFilters.inHTMLData(newSponsor);
     const description = xssFilters.inHTMLData(newDescription);
 
+    const avatar = req.file.path; 
+    
     try {
         const [insertProject] = await database.pool.query(`
             INSERT INTO Project (projectName, sponsor, description, maxTeams, teamSize, team_assigned, avatar)

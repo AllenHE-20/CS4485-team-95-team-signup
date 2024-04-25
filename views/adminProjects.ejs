@@ -83,6 +83,17 @@
         <form id="projectForm" enctype="multipart/form-data">
             <!-- "/admin/projects/add" -->
             <div class="project-content">
+                <div class="upload-container">
+                    <img class="profile-image-modal" id="new-profile-pic-modal" src="/images/profile.png" />                    <div class="image-link">
+                        <label for="input-file">Upload Image</label>
+                    </div>
+                    <form class="upload-picture-new"
+                        enctype="multipart/form-data">
+                        <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file"
+                            name="avatar" />
+                </form>
+                </div>
+
                 <label for="newProjectName">Project Name</label>
                 <input type="text" id="newProjectName" name="newProjectName" required><br><br>
 
@@ -307,6 +318,9 @@
         crossElem.addEventListener("click", () => {
             filewrapper.removeChild(showfileboxElem);
         });
+
+        const avatarImg = document.getElementById("new-profile-pic-modal");
+        avatarImg.src = URL.createObjectURL(input.files[0]);
     };
 });
 
@@ -363,6 +377,7 @@
     }
 
     function submitProject() {
+        const avatar = document.getElementById('input-file').files[0];
         const projectName = document.getElementById('newProjectName').value;
         const sponsor = document.getElementById('newProjectSponsor').value;
         const maxSize = document.getElementById('newSize').value;
@@ -378,7 +393,8 @@
             newSize: maxSize,
             newMaxSize: maxTeams,
             newDescription: description,
-            newSkills: skills
+            newSkills: skills,
+            avatar: avatar
         };
         
         console.log(payload);
@@ -436,6 +452,16 @@ function editSkillBubble() {
             }
         });
     }
+
+    let profilePic = document.getElementById("profile-pic");
+    let inputFile = document.getElementById("input-file");
+    inputFile.style.display ="none";
+
+    inputFile.onchange = function () {
+        let avatarImg = document.getElementById("new-profile-pic-modal");
+        avatarImg.src = URL.createObjectURL(inputFile.files[0]);
+    }
+
 </script>
 
 </body>
