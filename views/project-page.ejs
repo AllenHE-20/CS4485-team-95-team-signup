@@ -24,7 +24,7 @@
                 <li class="project-profile-container">
                     <div class="project-profile-card">
                         <div class="project-page-image">
-                            <img class="profile-image" src="/images/<%= project.avatar %>" />
+                            <img class="page-profile-image" src="/images/<%= project.avatar %>" />
                         </div>
                         <div class="project-profile-card-container">
                             <div class="project-page-name">
@@ -59,10 +59,16 @@
                     </div>
                     <hr>
                     <div class="project-page-team-constraints">
-                        <h1>Project team size:</h1>
-                        <%= project.teamSize %>
-                        <h1>Max teams assigned to this project: </h1>
-                        <%= project.maxTeams %>
+                        <h1>Team Information</h1>
+                        <div>
+                            <h2 style="display: inline;">Project Team Size: </h2> <%= project.teamSize %>
+                        </div>
+                        <div>
+                            <h3> </h3>
+                        </div>
+                        <div>
+                            <h3 style="display: inline;">Max Teams Assigned: </h3> <%= project.maxTeams %>
+                        </div>
                     </div>
                     <hr>
                     <div class="project-page-files">

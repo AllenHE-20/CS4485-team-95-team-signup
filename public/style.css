@@ -482,7 +482,7 @@ main {
 }
 .student-project-preferences {
     font-size: 1.4rem;
-    font-weight: bold;
+    font-weight: normal;
     margin-top: 5px;
 }
 
@@ -503,7 +503,6 @@ main {
     height: 12rem;
     width: 12rem;
     margin-right: 2em;
-    float: left;
     flex-grow: 0;
     display: flex;
     justify-content: center;
@@ -516,8 +515,6 @@ main {
 }
 
 .profile-image {
-    max-width: 100%;
-    max-height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -1064,6 +1061,30 @@ main {
     flex: 0 0 auto;
     width: 100px;
     height: 100px;
+    margin-left: -23px;
+}
+
+.project-page-team-constraints {
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.project-page-team-constraints h1{
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.project-page-team-constraints h2{
+    font-weight: normal;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.project-page-team-constraints h3{
+    font-weight: normal;
+    font-size: 1em;
+    margin-top: 10px;
 }
 
 .project-page-sponsor {
@@ -1151,6 +1172,13 @@ main {
     flex: 0 0 auto;
     width: 100px;
     height: 100px;
+    margin-left: -13px;
+}
+
+.page-profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
 }
 
 .team-page-sponsor {
@@ -1180,8 +1208,12 @@ main {
     appearance: none;
     border: none;
     outline: none;
-    color: #000;
+    color: transparent;
     transition: transform 0.3s ease;
+}
+
+#sponsor option {
+    color: black;
 }
 
 .inline-list > ul > li:after {
