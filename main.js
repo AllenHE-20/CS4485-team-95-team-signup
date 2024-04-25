@@ -245,9 +245,15 @@ app.get("/project/:projectid", auth.isAuthenticated, (req, res) => {
 app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
     const student = await database.getStudentByUserID(req.user.userID);
     const allStudents = await database.allStudents();
+    const [teamIDs] = await database.pool.query(`
+        SELECT teamID
+        FROM Team`);
+    
     res.render("inviteUser.ejs", { 
         yourTeam: student.team, 
-        allStudents: allStudents});
+        yourID: student.userID,
+        allStudents: allStudents,
+        allTeams: teamIDs});
 });
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
@@ -266,7 +272,6 @@ app.get("/adminHomepage", auth.isAdmin, (req, res) => {
 })
 
 app.get("/adminClearProfile", auth.isAdmin, (req, res) => {
-    console.log("hi")
     res.render("adminClearProfile.ejs");
 })
 
