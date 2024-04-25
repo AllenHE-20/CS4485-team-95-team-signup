@@ -6,75 +6,80 @@
 
         <%- include('partials/header.ejs'); %>
 
-        <div class="function-container">
-            <div class="function-item">
-                <input type="text" id="searchInput" placeholder="Search students" onkeyup="filterStudents()">
+            <div class="function-container">
+                <div class="function-item">
+                    <input type="text" id="searchInput" placeholder="Search students" onkeyup="filterStudents()">
+                </div>
             </div>
-        </div>
 
-        <main>
-            <article>
-                <ul class="profile-list" id="studentList">
-                    <% studentlist.forEach(student => { %>
-                        <script>
-                            console.log("<%= student.name %>");
-                        </script>
-                        <li class="profile-item" style="display: block;">
-                            <a href="/users/<%= student.userID %>">
-                                <div class="profile-image-box">
-                                    <img class="profile-image" src="/user-files/<%= student.avatar %>" />
-                                </div>
-                                <div class="profile-box">
-                                    <h2 class="student-name">
-                                        <%= student.firstName %> <%= student.lastName %>
-                                    </h2>
-                                    <div class="student-project-preferences">
-                                        Project Preferences
+            <main>
+                <article>
+                    <ul class="profile-list" id="studentList">
+                        <% studentlist.forEach(student=> { %>
+                            <script>
+                                console.log("<%= student.name %>");
+                            </script>
+                            <li class="profile-item" style="display: block;">
+                                <a href="/users/<%= student.userID %>">
+                                    <div class="profile-image-box">
+                                        <img class="profile-image" src="/user-files/<%= student.avatar %>" />
                                     </div>
-                                    <div class="profile-skills inline-list">
-                                        <%- include("partials/labeled-list.ejs", { label: "Skills" , list:
-                                            student.skills || []}); %>
+                                    <div class="profile-box">
+                                        <h2 class="student-name">
+                                            <%= student.firstName %>
+                                                <%= student.lastName %>
+                                        </h2>
+                                        <div class="student-project-preferences inline-list">
+
+                                            <%- include("partials/labeled-list.ejs", { label: "Project Preferences" ,
+                                                list: student.preferences.map(pref=> pref.projectName)
+                                                }); %>
+                                        </div>
+                                        <div class="profile-skills inline-list">
+                                            <%- include("partials/labeled-list.ejs", { label: "Skills" , list:
+                                                student.skills || []}); %>
+                                        </div>
+                                        <div class="team-status-box">
+                                            <p>
+                                                Team Status:
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="team-status-box">
-                                        <p>
-                                            Team Status:
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    <% }) %>
-                </ul>
-            </article>
-        </main>
+                                </a>
+                            </li>
+                            <% }) %>
+                    </ul>
+                </article>
+            </main>
 
-        <script>
-            function filterStudents(){
-                //Based on filterProjects from project-list.ejs
-                var input, filter, ul, li;
+            <script>
+                function filterStudents() {
+                    //Based on filterProjects from project-list.ejs
+                    var input, filter, ul, li;
 
-                input = document.getElementById('searchInput');
-                filter = input.value.toUpperCase();
-                
-                ul = document.getElementById("studentList");
-                li = ul.getElementsByClassName('profile-item');
+                    input = document.getElementById('searchInput');
+                    filter = input.value.toUpperCase();
 
-                for (var i = 0; i < li.length; i++) {
-                       var personNameElement = li[i].querySelector(".student-name");
-                       if(!personNameElement){
-                        console.error("Error: Participant name element not found for participant item ", li[i]);
-                        continue;
-                       }
-                       var participantName = personNameElement.textContent.trim();
+                    ul = document.getElementById("studentList");
+                    li = ul.getElementsByClassName('profile-item');
 
-                       if(participantName.toUpperCase().indexOf(filter) > -1 || filter === ''){
-                        li[i].style.display = "block";
-                       }else{
-                        li[i].style.display = "none";
-                       }
+                    for (var i = 0; i < li.length; i++) {
+                        var personNameElement = li[i].querySelector(".student-name");
+                        if (!personNameElement) {
+                            console.error("Error: Participant name element not found for participant item ", li[i]);
+                            continue;
+                        }
+                        var participantName = personNameElement.textContent.trim();
+
+                        if (participantName.toUpperCase().indexOf(filter) > -1 || filter === '') {
+                            li[i].style.display = "block";
+                        } else {
+                            li[i].style.display = "none";
+                        }
                     }
-            }
-        </script>
+                }
+            </script>
 
     </body>
+
 </html>

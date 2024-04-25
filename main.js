@@ -122,6 +122,7 @@ app.get("/users", auth.isAuthenticated, (req, res) => {
 
 
             console.log(list, '\n')
+            console.log(list[1].preferences[1])
             //console.log('\n', preferences)
             res.render("allUsersList.ejs", { studentlist: list, preferences: preferences });
         })
@@ -248,12 +249,13 @@ app.get("/invite/new", auth.isAuthenticated, async (req, res) => {
     const [teamIDs] = await database.pool.query(`
         SELECT teamID
         FROM Team`);
-    
-    res.render("inviteUser.ejs", { 
-        yourTeam: student.team, 
+
+    res.render("inviteUser.ejs", {
+        yourTeam: student.team,
         yourID: student.userID,
         allStudents: allStudents,
-        allTeams: teamIDs});
+        allTeams: teamIDs
+    });
 });
 
 app.get("/invites", auth.isAuthenticated, (req, res) => {
@@ -891,7 +893,7 @@ app.post("/admin/projects/add", auth.isAdmin, urlencodedParser, async (req, res)
         const [insertProject] = await database.pool.query(`
             INSERT INTO Project (projectName, sponsor, description, maxTeams, teamSize, team_assigned, avatar)
             VALUES (?)`, [[name, sponsor, description, newMaxSize, newSize, team_assigned, avatar]]);
-        
+
         const projectID = insertProject.insertId;
 
         if (newSkills && newSkills.length > 0) {
@@ -940,7 +942,7 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
         editDescription = result.value.editDescription,
         editSkills = result.value.editSkills,
     } = req.body;
-    
+
     const name = xssFilters.inHTMLData(editProjectName);
     const sponsor = xssFilters.inHTMLData(editSponsor);
     const description = xssFilters.inHTMLData(editDescription);
@@ -997,7 +999,7 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
 app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminDeleteProject.validate(req.body);
     if (result.error)
-            return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
+        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
 
     const { removeProjectID } = result.value;
     await database.pool.query(`
@@ -1096,7 +1098,7 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
     const generatedTeamUpdates = await database.matchTeams(maxTeamSize);
     const { newTeams, studentToExistingTeam, leftOverStudents } = generatedTeamUpdates;
 
-    const teamsToMake = newTeams.map(async ({team}) => {
+    const teamsToMake = newTeams.map(async ({ team }) => {
         const netIDs = team.map(member => member.netID);
         const members = team.map(async member => {
             const [[user]] = await database.pool.query(`
@@ -1156,8 +1158,8 @@ app.get("/admin/generate-teams", auth.isAdmin, async (req, res) => {
             };
         });
         team.newMembers = [],
-        team.newSkills = [],
-        teamsToUpdate[teamID] = team;
+            team.newSkills = [],
+            teamsToUpdate[teamID] = team;
     }
     for (var { student, teamID } of studentToExistingTeam) {
         const team = teamsToUpdate[teamID];

@@ -77,14 +77,19 @@ async function allStudents() {
         }
     });
 
-    rows.forEach((rows, i) => {
-        if (skillsForStudent[i] = rows.netID) {
-            rows.skills = skillsForStudent[rows.netID] || [];
+    for (const row of rows) {
+
+        const [preferences] = await pool.query(`
+        SELECT P.projectName
+        FROM StudentPreferences SP
+        INNER JOIN Project P ON SP.projectID = P.projectID AND SP.netID = ?
+        ;`, [row.netID]);
+        if (skillsForStudent[row.netID]) {
+            row.skills = skillsForStudent[row.netID];
         }
-    })
+        row.preferences = preferences;
 
-    console.log(rows.avatar, '\n')
-
+    }
     return rows;
 }
 
@@ -687,9 +692,9 @@ async function clearProfile(netID) {
             groupme = null,
             instagram = null,
             avatar = null
-            WHERE netID = ?`, 
-            [netID]
-        
+            WHERE netID = ?`,
+        [netID]
+
     );
 }
 
