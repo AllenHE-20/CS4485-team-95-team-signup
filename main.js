@@ -862,30 +862,41 @@ app.post("/admin/adminAccess", auth.isAdmin, urlencodedParser, async (req, res) 
     res.redirect("/adminAccess");
 });
 
-app.use(express.json());
-app.post("/admin/projects/add", auth.isAdmin, upload.single('avatar'), async (req, res) => {
-    const result = req.body;
+app.post("/admin/projects/add", auth.isAdmin, upload.single('avatar'), express.json(), async (req, res) => {
+    const {value, error} = schemas.adminAddProject.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
-    const {
-        projectName = result.value.projectName,
-        newSponsor = result.value.newSponsor,
-        newDescription = result.value.newDescription,
-        newMaxSize = result.value.newMaxSize,
-        newSize = result.value.newSize,
-        newSkills = result.value.newSkills,
-        team_assigned = "Open"
-    } = req.body;
+    const { projectName, newSponsor, newSkills, newSize, newMaxSize, newDescription } = value;
 
     const name = xssFilters.inHTMLData(projectName);
     const sponsor = xssFilters.inHTMLData(newSponsor);
     const description = xssFilters.inHTMLData(newDescription);
+    const team_assigned = "Open";
 
-    const avatar = req.file.path; 
-    
+    // HACK: Just decouple sponsors from userIDs already
+    const sponsors = await database.getAllSponsors();
+    var userID;
+    const foundSponsor = sponsors.find((value) => value.affiliation === sponsor);
+    if (!foundSponsor) {
+        const [insert] = await database.pool.query(`
+            INSERT INTO user (firstName, middleName, lastName, email, admin) VALUES
+            (?,?,?,?,?)`,
+            [null, null, null, "null@example.com", false]);
+        userID = insert.insertId;
+        await database.pool.query(`
+            INSERT INTO organizer (userID, affiliation) VALUES
+            (?, ?)`, [userID, sponsor]);
+    } else {
+        userID = foundSponsor.userID;
+    }
+
+    const avatar = req.file ? req.file.path : "/profile.png";
+
     try {
         const [insertProject] = await database.pool.query(`
-            INSERT INTO Project (projectName, sponsor, description, maxTeams, teamSize, team_assigned, avatar)
-            VALUES (?)`, [[name, sponsor, description, newMaxSize, newSize, team_assigned, avatar]]);
+            INSERT INTO Project (projectName, sponsor, description, maxTeams, teamSize, team_assigned, avatar, userID)
+            VALUES (?)`, [[name, sponsor, description, newMaxSize, newSize, team_assigned, avatar, userID]]);
 
         const projectID = insertProject.insertId;
 
@@ -919,22 +930,12 @@ app.post("/admin/projects/add", auth.isAdmin, upload.single('avatar'), async (re
     }
 });
 
-app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res) => {
-    const result = req.body;
+app.post("/admin/projects/edit", auth.isAdmin, express.json(), async (req, res) => {
+    const {value, error} = schemas.adminEditProject.validate(req.body);
+    if (error)
+        return res.status(httpStatus.BAD_REQUEST).send(error.details[0].message);
 
-    console.log(result);
-
-    if (result.error)
-        return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
-
-    const {
-        editProjectID = result.value.projectID,
-        editProjectName = result.value.editProjectName,
-        editSponsor = result.value.editSponsor,
-        editSize = result.value.editSize,
-        editDescription = result.value.editDescription,
-        editSkills = result.value.editSkills,
-    } = req.body;
+    const { editProjectID, editProjectName, editSponsor, editSize, editDescription, editSkills } = value;
 
     const name = xssFilters.inHTMLData(editProjectName);
     const sponsor = xssFilters.inHTMLData(editSponsor);
@@ -989,7 +990,7 @@ app.post("/admin/projects/edit", auth.isAdmin, urlencodedParser, async (req, res
     }
 });
 
-app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
+app.post("/admin/projects/delete", auth.isAdmin, express.json(), async (req, res) => {
     const result = schemas.adminDeleteProject.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);

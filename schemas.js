@@ -114,8 +114,8 @@ const adminAddProject = Joi.object({
         .required()
         .max(255),
 
-        newSkills: Joi.array()
-        .items(Joi.string()) 
+    newSkills: Joi.array()
+        .items(Joi.string())
         .required(),
 
     newSize: Joi.number()
@@ -145,7 +145,7 @@ const adminEditProject = Joi.object({
         .required()
         .max(255),
 
-    editMaxSize: Joi.string()
+    editSize: Joi.number()
         .required()
         .min(4)
         .max(6),
@@ -153,6 +153,10 @@ const adminEditProject = Joi.object({
     editDescription: Joi.string()
         .required()
         .max(500),
+
+    editSkills: Joi.array()
+        .items(Joi.string())
+        .required(),
 });
 
 const adminDeleteProject = Joi.object({
