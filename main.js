@@ -705,7 +705,7 @@ app.post("/invites/:index/respond", auth.isAuthenticated, urlencodedParser, asyn
         // They don't have team but we do: switch their team
         if (!ourTeam.open)
             return res.status(httpStatus.BAD_REQUEST).send(`Your team is closed`);
-        newTeam = ourTeam.teamID;
+        newTeam = ourTeam.id;
         await database.pool.query(`
             UPDATE student
             SET teamID = ?
