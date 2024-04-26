@@ -4,7 +4,13 @@
 <body>
 
 <%- include('partials/header.ejs'); %>
-    
+
+<div class="function-container">
+    <div class="function-item">
+        <button class="goback-button" onclick="goBack()">Previous Page</button>
+    </div>
+</div>
+
 <main class="adminPage">
     <h1>Clear User Profile</h1>
     <p>Enter a user's email to clear all public information associated with their profile.</p>
@@ -18,17 +24,21 @@
 </main>   
 
 <script>
-    function confirmMessage() {    
-    var userEmail = document.getElementById("clearProfile").value;    
-    if (userEmail.trim() === "") {
-        alert("No email has been entered.");
-        return false;
+    function goBack() {
+        window.history.back();
     }
-    else {
-        var message = "Are you sure you want to clear this user\'s profile? \nThis action cannot be undone.";
-        return alert(message);
-    }    
-  }  
+    
+    function confirmMessage() {    
+        var userEmail = document.getElementById("clearProfile").value;    
+        if (userEmail.trim() === "") {
+            alert("No email has been entered.");
+            return false;
+        }
+        else {
+            var message = "Are you sure you want to clear this user\'s profile? \nThis action cannot be undone.";
+            return confirm(message);
+        }    
+    }  
 </script>
 
 </body>

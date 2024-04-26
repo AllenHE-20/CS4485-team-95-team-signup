@@ -6,6 +6,11 @@
 <%- include('partials/header.ejs'); %>
 
 <div class="function-container">
+    <a href="/adminHomepage">
+        <div class="function-item">
+            <button class="goback-button">Previous Page</button>
+        </div>
+    </a>
     <div class="function-item">        
         <form action="/admin/generate-teams" method="get">
             <label for="maxTeam">Max Team Size</label>
@@ -41,9 +46,7 @@
             <% for (let i = 0; i < genTeams.length; i++) { %>    
                 <li class="profile-item" style="display: block;">                                                                    
                     <div class="genCard">    
-                        <h1>
-                            Team <%= genTeams[i].teamID %>                             
-                        </h1>   
+                        <h1>New Team</h1>   
 
                         <p>Members:                             
                             <% if(genTeams[i].currentMembers.length > 0) { %>

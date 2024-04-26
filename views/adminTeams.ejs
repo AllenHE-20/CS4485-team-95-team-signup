@@ -6,8 +6,13 @@
 <%- include('partials/header.ejs'); %>
     
 <div class="function-container">
+    <a href="/adminHomepage">
+        <div class="function-item">
+            <button class="goback-button">Previous Page</button>
+        </div>
+    </a>
     <div class="function-item">
-        <input type="text" id="searchInput" placeholder="Search teams">
+        <input type="text" id="searchInput" placeholder="Search teams" onkeyup="filterTeams()">
     </div>
 </div>
 
@@ -15,14 +20,15 @@
     
     <% for (let i = 0; i < teams.length; i++) { %>    
         <div class="teamCard">                     
-            <h1>Team <%= teams[i].id %></h1>                    
+            <h1 class="teamName">Team <%= teams[i].id %></h1>                    
             <form action="/admin/disband-team" method="post">
                 <input type="hidden" name="team" value="<%= teams[i].id %>" />
                 <input type="submit" class="deleteTeam" id="deleteTeam" value="Delete Team" />
             </form>
+
             <% (teams[i].members).forEach(member => { %>           
                 <div class="teamMembers">
-                    <form action="/admin/drop-from-team" method="post">
+                    <form action="/admin/drop-from-team" method="post" onsubmit="return confirmMember()">
                         <input name="user" type="hidden" value="<%= member.userID %>" />
                         <input type="submit" class="deleteMember" value="-" />
                     </form>
@@ -44,7 +50,7 @@
             </div>                                                    
 
             <h2>Assigned Project</h2>            
-            <form action="/admin/set-project" method="post">
+            <form action="/admin/set-project" method="post" onsubmit="return confirmTeam()">
                 <input type="hidden" name="team" value="<%= teams[i].id %>" />
                 <select name="assignProject" id="assignProject">
                     <option value="">Assign New Project</option>
@@ -56,6 +62,7 @@
                     <input type="submit" value="Submit" />
                 </div>
             </form>
+
             <% if (teams[i].projectID != null) { %>                                            
                 <% for (let j=0; j < projects.length; j++) { %>   
                     <% if (teams[i].projectID === projects[j].projectID) { %> 
@@ -66,9 +73,36 @@
                     <% } %>
                 <% } %>                 
             <% } %>
+
         </div>    
     <% } %>                 
 </main>
+
+<script>
+    function filterTeams() {        
+        input = document.getElementById('searchInput');
+        const searchText = input.value.trim().toLowerCase();
+        const teamCards = document.querySelectorAll('.teamCard');
+    
+        teamCards.forEach(teamCard => {
+            const teamName = teamCard.querySelector('.teamName').textContent.toLowerCase(); 
+            const memberNames = Array.from(teamCard.querySelectorAll('.teamMembers p')).map(p => p.textContent.toLowerCase());
+                        
+            const matches = teamName.includes(searchText) || memberNames.some(name => name.includes(searchText));                        
+            teamCard.style.display = matches ? "" : 'none';
+        });          
+    }
+
+    function confirmTeam() {                       
+        var message = "Are you sure you want assign this team to a project?";
+        return confirm(message);
+    }    
+
+    function confirmMember() {                       
+        var message = "Are you sure you want to remove this member?";
+        return confirm(message);
+    }    
+</script>
 
 </body>
 </html>

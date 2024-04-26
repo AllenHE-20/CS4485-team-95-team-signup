@@ -620,6 +620,7 @@ main {
     border-radius: 5px; 
     padding: 10px; 
     display: flex;
+    align-items: center;    
 }
 
 .function-item {
@@ -1001,9 +1002,6 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
-.editProjectButton:hover {
-}
-
 .addteam-button {
     background-color: #ff7b00;
     border: none;
@@ -1349,7 +1347,6 @@ input[type="email"] {
     border-radius: 5px;
     font-size: 14px;
     width: 200px;
-
   }
 
 input[type="submit"]{
@@ -1689,4 +1686,21 @@ textarea#message{
 
 .upload-picture-new input[file]{
     display: none;
+}
+
+select#newMember{
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #a8a6a6;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+select#assignProject{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px;
 }

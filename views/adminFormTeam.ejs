@@ -4,7 +4,13 @@
 <body>
 
 <%- include('partials/header.ejs'); %>
-    
+
+<div class="function-container">
+    <div class="function-item">
+        <button class="goback-button" onclick="goBack()">Previous Page</button>
+    </div>
+</div>
+
 <main class="adminPage">
     <h1>Random Team Formation</h1>        
     <form action="/admin/generate-teams" method="get">
@@ -15,6 +21,12 @@
         </div>
     </form>
 </main>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
 </body>
 </html>

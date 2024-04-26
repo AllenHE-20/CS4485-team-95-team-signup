@@ -4,13 +4,30 @@
 <body>
 
 <%- include('partials/header.ejs'); %>
-    
+
+<div class="function-container">
+    <div class="function-item">
+        <button class="goback-button" onclick="goBack()">Previous Page</button>
+    </div>
+</div>
+
 <main class="adminPage">
     <h1>Manage Database</h1>
-    <ul class=setting-links><a href="/admin/database-clear">Clear Database</a></ul>
-    <!-- TODO: Ask for confirmation -->
-    </div>
+    <p>Use this page to clear the database of all information to prepare for a new semester. </p>
+    <div class=setting-links><a href="/admin/database-clear" onclick="return confirmMessage()">Clear Database</a></div>
 </main>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }    
+    
+    function confirmMessage() {    
+        var message = "Are you sure you want to clear the database? This cannot be undone."
+        return confirm(message);
+    }
+    
+</script>
 
 </body>
 </html>

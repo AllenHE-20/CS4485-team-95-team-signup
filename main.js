@@ -780,7 +780,7 @@ app.get("/admin/database-clear", auth.isAdmin, async (req, res) => {
     const [files] = await database.pool.query(`
         SELECT S.resumeFile, S.avatar
         FROM Student S, UTD D, user U
-        WHERE U.userID = D.userID AND D.netID = U.netID AND NOT U.admin`);
+        WHERE U.userID = D.userID AND D.netID = S.netID AND NOT U.admin`);
     files.forEach((resumeFile, avatar) => {
         try {
             fs.unlink(path.join("public/user-files", resumeFile));

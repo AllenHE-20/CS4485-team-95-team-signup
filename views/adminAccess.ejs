@@ -6,6 +6,12 @@
 
         <%- include('partials/header.ejs'); %>
 
+        <div class="function-container">
+            <div class="function-item">
+                <button class="goback-button" onclick="goBack()">Previous Page</button>
+            </div>
+        </div>
+
             <main class=adminPage>
                 <h1>Manage User Access</h1>
                 <p>To give access to a new user, please enter their name and email address: </p>
@@ -47,27 +53,32 @@
             </main>
 
     <script>
+        function goBack() {
+            window.history.back();
+        }
+
         function confirmMessage() {    
-        var newEmail = document.getElementById("emailInput").value;
-        var firstName = document.getElementById("firstNameInput").value;    
-        var lastName = document.getElementById("lastNameInput").value;
-        if (firstName.trim() === "") {
-            alert("No first name has been entered.");
-            return false;
+            var newEmail = document.getElementById("emailInput").value;
+            var firstName = document.getElementById("firstNameInput").value;    
+            var lastName = document.getElementById("lastNameInput").value;                      
+            
+            if (firstName.trim() === "") {
+                alert("No first name has been entered.");
+                return false;
+            }
+            else if (lastName.trim() === ""){
+                alert("No last name has been entered.")
+                return false;
+            }
+            else if (newEmail.trim() === ""){
+                alert("No email has been entered.");
+                return false;
+            }
+            else {
+                var message = firstName +" " + lastName + " has been given access. \nTheir email can now be used to register a new account.";
+                return alert(message);
+            }    
         }
-        else if (lastName.trim() === ""){
-            alert("No last name has been entered.")
-            return false;
-        }
-        else if (newEmail.trim() === ""){
-            alert("No email has been entered.");
-            return false;
-        }
-        else {
-            var message = firstName +" " + lastName + " has been given access. \nTheir email can now be used to register a new account.";
-            return alert(message);
-        }    
-    }
     </script>
 
     </body>
