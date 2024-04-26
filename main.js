@@ -990,7 +990,7 @@ app.post("/admin/projects/edit", auth.isAdmin, express.json(), async (req, res) 
     }
 });
 
-app.post("/admin/projects/delete", auth.isAdmin, express.json(), async (req, res) => {
+app.post("/admin/projects/delete", auth.isAdmin, urlencodedParser, async (req, res) => {
     const result = schemas.adminDeleteProject.validate(req.body);
     if (result.error)
         return res.status(httpStatus.BAD_REQUEST).send(result.error.details[0].message);
