@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Team Formation"}); %>
-<body>
+<%- include("partials/doc-head.ejs", {title: "Team Formation" }); %>
 
-<%- include('partials/header.ejs'); %>
+    <body>
 
-<div class="function-container">
-    <div class="function-item">
-        <button class="goback-button" onclick="goBack()">Previous Page</button>
-    </div>
-</div>
+        <%- include('partials/header.ejs'); %>
 
-<main class="adminPage">
-    <h1>Random Team Formation</h1>        
-    <form action="/admin/generate-teams" method="get">
-        <label for="maxTeam">Max Team Size</label>
-        <input type="text" name="maxTeam" id="maxTeam" />
-        <div class="submitButton">
-            <input type="submit" value="Generate" />
-        </div>
-    </form>
-</main>
+            <div class="function-container">
+                <div class="function-item">
+                    <button class="goback-button" onclick="goBack()">Previous Page</button>
+                </div>
+            </div>
 
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
+            <main class="adminPage">
+                <h1>Team Formation by Preference</h1>
+                <form action="/admin/generate-teams" method="get">
+                    <label for="maxTeam">Max Team Size</label>
+                    <input type="text" name="maxTeam" id="maxTeam" />
+                    <div class="submitButton">
+                        <input type="submit" value="Generate" />
+                    </div>
+                </form>
+            </main>
 
-</body>
+            <script>
+                function goBack() {
+                    window.history.back();
+                }
+            </script>
+
+    </body>
+
 </html>

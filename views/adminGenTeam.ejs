@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("partials/doc-head.ejs", {title: "Team Formation"}); %>
-<body>
+<%- include("partials/doc-head.ejs", {title: "Team Formation" }); %>
 
-<%- include('partials/header.ejs'); %>
+    <body>
 
-<div class="function-container">
-    <a href="/adminHomepage">
-        <div class="function-item">
-            <button class="goback-button">Previous Page</button>
-        </div>
-    </a>
-    <div class="function-item">        
-        <form action="/admin/generate-teams" method="get">
-            <label for="maxTeam">Max Team Size</label>
-            <input type="text" name="maxTeam" id="maxTeam" />            
-            <input type="submit" value="Regenerate" />            
-        </form>        
-    </div>
-    
-    <div class="function-item" id="save-item">                
-        <form id="saveTeamsForm" action="/admin/save-teams" method="post">                                     
-            <% for (let i = 0; i < genTeams.length; i++) { %>
-                <% const team = {
-                    teamID: genTeams[i].teamID,
-                    newMemberIDs: []
-                }; %>
+        <%- include('partials/header.ejs'); %>
 
-                <input type="hidden" name="teams[<%= i %>][id]" value="<%= team.teamID %>">                                                
-                
-                <% for (let j = 0; j < (genTeams[i].newMembers).length; j++) { %>
-                    <% team.newMemberIDs.push(genTeams[i].newMembers[j].id); %>
-                    <input type="hidden" name="teams[<%= i %>][newMemberIDs][<%= j %>]" value="<%= team.newMemberIDs[j] %>">                    
-                <% } %>                                
-            <% } %>                                                                       
-            <input id="saveAllTeams" type="submit" value="Save All Teams" />
-        </form>    
-    </div>
-</div>
-    
-<main class="adminPage">   
-    
-    <article>
-        <ul class="profile-list" id="projectList">    
-            <% for (let i = 0; i < genTeams.length; i++) { %>    
-                <li class="profile-item" style="display: block;">                                                                    
-                    <div class="genCard">    
-                        <h1>New Team</h1>   
+            <div class="function-container">
+                <a href="/adminHomepage">
+                    <div class="function-item">
+                        <button class="goback-button">Previous Page</button>
+                    </div>
+                </a>
+                <div class="function-item">
+                    <form action="/admin/generate-teams" method="get">
+                        <label for="maxTeam">Max Team Size</label>
+                        <input type="text" name="maxTeam" id="maxTeam" />
+                        <input type="submit" value="Regenerate" />
+                    </form>
+                </div>
 
-                        <p>Members:                             
-                            <% if(genTeams[i].currentMembers.length > 0) { %>
-                                <% for (let j=0; j < (genTeams[i].currentMembers).length; j++) { %>
-                                    <a class="genProfile" href="/users/<%= genTeams[i].currentMembers[j].id %>" target="_blank">
-                                        <%= genTeams[i].currentMembers[j].name %></a>,
-                                <% } %>                                
-                            <% } %>
+                <div class="function-item" id="save-item">
+                    <form id="saveTeamsForm" action="/admin/save-teams" method="post">
+                        <% for (let i=0; i < genTeams.length; i++) { %>
+                            <% const team={ teamID: genTeams[i].teamID, newMemberIDs: [] }; %>
 
-                            <% for (let j=0; j < genTeams[i].newMembers.length; j++) { %>
-                                <% if(j != (genTeams[i].newMembers.length)-1) { %>
-                                    <a class="genProfile" href="/users/<%= genTeams[i].newMembers[j].id %>" target="_blank">
-                                        <%= (genTeams[i].newMembers[j].name) %></a>,
-                                <% } else { %>
-                                    <a class="genProfile" href="/users/<%= genTeams[i].newMembers[j].id %>" target="_blank">
-                                        <%= (genTeams[i].newMembers[j].name) %></a>                                    
-                                <% } %>
-                            <% } %>               
-                        </p>        
+                                <input type="hidden" name="teams[<%= i %>][id]" value="<%= team.teamID %>">
 
-                        <p>Project Preferences:
-                            <% if(genTeams[i].projectPreferences.length === 0) { %>
-                                N/A
-                            <% } else { %>                                
-                                <%= genTeams[i].projectPreferences.join(', ') %>
+                                <% for (let j=0; j < (genTeams[i].newMembers).length; j++) { %>
+                                    <% team.newMemberIDs.push(genTeams[i].newMembers[j].id); %>
+                                        <input type="hidden" name="teams[<%= i %>][newMemberIDs][<%= j %>]"
+                                            value="<%= team.newMemberIDs[j] %>">
+                                        <% } %>
+                                            <% } %>
+                                                <input id="saveAllTeams" type="submit" value="Save All Teams" />
+                    </form>
+                </div>
+            </div>
+
+            <main class="adminPage">
+
+                <article>
+                    <ul class="profile-list" id="projectList">
+                        <% for (let i=0; i < genTeams.length; i++) { %>
+                            <li class="profile-item" style="display: block;">
+                                <div class="genCard">
+                                    <h1>New Team</h1>
+
+                                    <p>Members:
+                                        <% if(genTeams[i].currentMembers.length> 0) { %>
+                                            <% for (let j=0; j < (genTeams[i].currentMembers).length; j++) { %>
+                                                <a class="genProfile"
+                                                    href="/users/<%= genTeams[i].currentMembers[j].id %>"
+                                                    target="_blank">
+                                                    <%= genTeams[i].currentMembers[j].name %>
+                                                </a>,
+                                                <% } %>
+                                                    <% } %>
+
+                                                        <% for (let j=0; j < genTeams[i].newMembers.length; j++) { %>
+                                                            <% if(j !=(genTeams[i].newMembers.length)-1) { %>
+                                                                <a class="genProfile"
+                                                                    href="/users/<%= genTeams[i].newMembers[j].id %>"
+                                                                    target="_blank">
+                                                                    <%= (genTeams[i].newMembers[j].name) %>
+                                                                </a>,
+                                                                <% } else { %>
+                                                                    <a class="genProfile"
+                                                                        href="/users/<%= genTeams[i].newMembers[j].id %>"
+                                                                        target="_blank">
+                                                                        <%= (genTeams[i].newMembers[j].name) %>
+                                                                    </a>
+                                                                    <% } %>
+                                                                        <% } %>
+                                    </p>
+
+                                    <p>Project Preferences:
+                                        <% if(genTeams[i].projectPreferences.length===0) { %>
+                                            N/A
+                                            <% } else { %>
+                                                <%= genTeams[i].projectPreferences.join(', ') %>
                             <% } %>
                         </p>
 
@@ -81,14 +89,14 @@
                             <% } else { %>
                                 <% if((genTeams[i].currentSkills).length > 0) { %>
                                     <% if((genTeams[i].newSkills).length > 0) { %>                                        
-                                        <%= genTeams[i].currentSkills.join(', ') %>,
-                                        <%= genTeams[i].newSkills.join(', ') %>
+                                        <%= genTeams[i].currentSkills.join(' , ') %>,
+                                        <%= genTeams[i].newSkills.join(' , ') %>
                                     <% } else { %>
-                                        <%= genTeams[i].currentSkills.join(', ') %>
-                                        <%= genTeams[i].newSkills.join(', ') %>
+                                        <%= genTeams[i].currentSkills.join(' , ') %>
+                                        <%= genTeams[i].newSkills.join(' , ') %>
                                     <% }%>     
                                 <% } else { %>
-                                    <%= genTeams[i].newSkills.join(', ') %>
+                                    <%= genTeams[i].newSkills.join(' , ') %>
                                 <% } %>
                             <% } %>
                         </p>
